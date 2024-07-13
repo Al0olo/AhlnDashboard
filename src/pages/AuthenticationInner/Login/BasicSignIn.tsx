@@ -31,7 +31,7 @@ const BasicSignIn = () => {
         }
     });
 
-    document.title = "Basic SignIn | Velzon - React Admin & Dashboard Template";
+    document.title = "AHLN | Dashboard";
     return (
         <React.Fragment>
             <ParticlesAuth>
@@ -45,7 +45,7 @@ const BasicSignIn = () => {
                                             <img src={logoLight} alt="" height="20" />
                                         </Link>
                                     </div>
-                                    <p className="mt-3 fs-15 fw-medium">Premium Admin & Dashboard Template</p>
+                                    <p className="mt-3 fs-15 fw-medium">AHLNAdmin Dashboard</p>
                                 </div>
                             </Col>
                         </Row>
@@ -56,7 +56,7 @@ const BasicSignIn = () => {
                                     <CardBody className="p-4">
                                         <div className="text-center mt-2">
                                             <h5 className="text-primary">Welcome Back !</h5>
-                                            <p className="text-muted">Sign in to continue to Velzon.</p>
+                                            <p className="text-muted">Sign in to continue to AHLN.</p>
                                         </div>
                                         <div className="p-2 mt-4">
                                             <Form
@@ -115,25 +115,10 @@ const BasicSignIn = () => {
                                                     <Button color="success" className="btn btn-success w-100" type="submit">Sign In</Button>
                                                 </div>
 
-                                                <div className="mt-4 text-center">
-                                                    <div className="signin-other-title">
-                                                        <h5 className="fs-13 mb-4 title">Sign In with</h5>
-                                                    </div>
-                                                    <div>
-                                                        <Button color="primary" className="btn-icon"><i className="ri-facebook-fill fs-16"></i></Button>{" "}
-                                                        <Button color="danger" className="btn-icon"><i className="ri-google-fill fs-16"></i></Button>{" "}
-                                                        <Button color="dark" className="btn-icon"><i className="ri-github-fill fs-16"></i></Button>{" "}
-                                                        <Button color="info" className="btn-icon"><i className="ri-twitter-fill fs-16"></i></Button>
-                                                    </div>
-                                                </div>
                                             </Form>
                                         </div>
                                     </CardBody>
                                 </Card>
-
-                                <div className="mt-4 text-center">
-                                    <p className="mb-0">Don't have an account ? <Link to="/auth-signup-basic" className="fw-semibold text-primary text-decoration-underline"> Signup </Link> </p>
-                                </div>
 
                             </Col>
                         </Row>
