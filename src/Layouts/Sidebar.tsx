@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import SimpleBar from "simplebar-react";
 //import logo
 import logoSm from "../assets/images/logo-sm.png";
-import logoDark from "../assets/images/logo-dark.png";
-import logoLight from "../assets/images/logo-light.png";
+import logoDark from "../assets/images/ahln_logo.jpeg";
+import logoLight from "../assets/images/ahln_logo.jpeg";
 
 //Import Components
 import VerticalLayout from "./VerticalLayouts";
