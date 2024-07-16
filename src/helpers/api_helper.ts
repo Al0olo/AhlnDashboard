@@ -20,13 +20,15 @@ axios.interceptors.response.use(
     return response.data ? response.data : response;
   },
   function (error) {
+    console.log("Fireeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed   ", error.response.status)
+
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     let message;
-    switch (error.status) {
+    switch (error.response.status) {
       case 500:
         message = "Internal Server Error";
         break;
-      case 401:
+      case 400:
         message = "Invalid credentials";
         break;
       case 404:
@@ -97,11 +99,11 @@ class APIClient {
   };
 }
 const getLoggedinUser = () => {
-  const user = sessionStorage.getItem("authUser");
+  const user = sessionStorage.getItem('authUser')
   if (!user) {
     return null;
   } else {
-    return JSON.parse(user);
+    return JSON.parse(user).data;
   }
 };
 

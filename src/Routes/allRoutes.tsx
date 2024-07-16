@@ -169,7 +169,7 @@ import PrivecyPolicy from '../pages/Pages/PrivacyPolicy';
 import TermsCondition from '../pages/Pages/TermsCondition';
 import JobLanding from "../pages/Job_Landing/Job";
 
-// User Profile
+// User Profilez
 import UserProfile from "../pages/Authentication/user-profile";
 
 import ToDoList from "../pages/ToDo";

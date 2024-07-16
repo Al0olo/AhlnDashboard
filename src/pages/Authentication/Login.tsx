@@ -66,7 +66,7 @@ const Login = (props: any) => {
             setLoader(true)
         }
     });
-
+ 
     // const signIn = (type: any) => {
     //     dispatch(socialLogin(type, props.router.navigate));
     // };
