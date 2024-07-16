@@ -25,6 +25,10 @@ export const postFakeLogin = (data : any) => api.create(url.POST_FAKE_LOGIN, dat
 // postForgetPwd
 export const postFakeForgetPwd = (data : any) => api.create(url.POST_FAKE_PASSWORD_FORGET, data);
 
+// Edit profile
+export const postJwtProfile = (data : any) => api.create(url.POST_EDIT_JWT_PROFILE, data);
+
+export const postFakeProfile = (data : any) => api.update(url.POST_EDIT_PROFILE + '/' + data.idx, data);
 
 
 // Calendar

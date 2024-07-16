@@ -2,7 +2,6 @@
 import { getFirebaseBackend } from "../../../helpers/firebase_helper";
 import {
   postFakeRegister,
-  postJwtRegister,
 } from "../../../helpers/fakebackend_helper";
 
 // action
@@ -22,9 +21,6 @@ export const registerUser = (user : any) => async (dispatch : any) => {
 
     if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
       response = fireBaseBackend.registerUser(user.email, user.password);
-      // yield put(registerUserSuccessful(response));
-    } else if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
-      response = postJwtRegister('/post-jwt-register', user);
       // yield put(registerUserSuccessful(response));
     } else if (process.env.REACT_APP_API_URL) {
       response = postFakeRegister(user);

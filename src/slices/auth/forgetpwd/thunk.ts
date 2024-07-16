@@ -5,29 +5,17 @@ import { getFirebaseBackend } from "../../../helpers/firebase_helper";
 
 import {
   postFakeForgetPwd,
-  postJwtForgetPwd,
 } from "../../../helpers/fakebackend_helper";
 
-const fireBaseBackend : any= getFirebaseBackend();
+// const fireBaseBackend : any= getFirebaseBackend();
 
 export const userForgetPassword = (user : any, history : any) => async (dispatch : any) => {
   try {
       let response;
-      if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-
-          response = fireBaseBackend.forgetPassword(
-              user.email
-          )
-
-      } else if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
-          response = postJwtForgetPwd(
-              user.email
-          )
-      } else {
+      
           response = postFakeForgetPwd(
               user.email
           )
-      }
 
       const data = await response;
 
