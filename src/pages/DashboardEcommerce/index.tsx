@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Col, Container, Row } from "reactstrap";
 import Widget from "./Widgets";
-import BestSellingProducts from "./BestSellingProducts";
+// import BestSellingProducts from "./BestSellingProducts";
 import RecentActivity from "./RecentActivity";
 import RecentOrders from "./RecentOrders";
 import Revenue from "./Revenue";
-import SalesByLocations from "./SalesByLocations";
+// import SalesByLocations from "./SalesByLocations";
 import Section from "./Section";
-import StoreVisits from "./StoreVisits";
-import TopSellers from "./TopSellers";
+// import StoreVisits from "./StoreVisits";
+// import TopSellers from "./TopSellers";
 
 const DashboardEcommerce = () => {
   document.title = "Dashboard | Velzon - React Admin & Dashboard Template";
@@ -31,18 +31,19 @@ const DashboardEcommerce = () => {
                   <Widget />
                 </Row>
                 <Row>
-                  <Col xl={8}>
+                  <Col>
                     <Revenue />
                   </Col>
-                  <SalesByLocations />
                 </Row>
-                <Row>
+                {/* <Row>
                   <BestSellingProducts />
                   <TopSellers />
-                </Row>
+                </Row> */}
                 <Row>
-                  <StoreVisits />
-                  <RecentOrders />
+                  {/* <StoreVisits /> */}
+                  <Col>
+                    <RecentOrders />
+                  </Col>
                 </Row>
               </div>
             </Col>
