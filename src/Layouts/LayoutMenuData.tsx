@@ -35,27 +35,27 @@ const Navdata = () => {
 
 
     // Authentication
-    const [isSignIn, setIsSignIn] = useState<boolean>(false);
-    const [isSignUp, setIsSignUp] = useState<boolean>(false);
-    const [isPasswordReset, setIsPasswordReset] = useState<boolean>(false);
-    const [isPasswordCreate, setIsPasswordCreate] = useState<boolean>(false);
-    const [isLockScreen, setIsLockScreen] = useState<boolean>(false);
-    const [isLogout, setIsLogout] = useState<boolean>(false);
-    const [isSuccessMessage, setIsSuccessMessage] = useState<boolean>(false);
-    const [isVerification, setIsVerification] = useState<boolean>(false);
-    const [isError, setIsError] = useState<boolean>(false);
+    // const [isSignIn, setIsSignIn] = useState<boolean>(false);
+    // const [isSignUp, setIsSignUp] = useState<boolean>(false);
+    // const [isPasswordReset, setIsPasswordReset] = useState<boolean>(false);
+    // const [isPasswordCreate, setIsPasswordCreate] = useState<boolean>(false);
+    // const [isLockScreen, setIsLockScreen] = useState<boolean>(false);
+    // const [isLogout, setIsLogout] = useState<boolean>(false);
+    // const [isSuccessMessage, setIsSuccessMessage] = useState<boolean>(false);
+    // const [isVerification, setIsVerification] = useState<boolean>(false);
+    // const [isError, setIsError] = useState<boolean>(false);
 
-    // Pages
-    const [isProfile, setIsProfile] = useState<boolean>(false);
+    // // Pages
+    // const [isProfile, setIsProfile] = useState<boolean>(false);
     const [isLanding, setIsLanding] = useState<boolean>(false);
 
 
     // Charts
-    const [isApex, setIsApex] = useState<boolean>(false);
+    // const [isApex, setIsApex] = useState<boolean>(false);
 
-    // Multi Level
-    const [isLevel1, setIsLevel1] = useState<boolean>(false);
-    const [isLevel2, setIsLevel2] = useState<boolean>(false);
+    // // Multi Level
+    // const [isLevel1, setIsLevel1] = useState<boolean>(false);
+    // const [isLevel2, setIsLevel2] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState('Dashboard');
 
@@ -145,29 +145,29 @@ const Navdata = () => {
             id: "dashboard",
             label: "Dashboards",
             icon: "ri-dashboard-2-line",
-            link: "/#",
+            link: "/dashboard",
             stateVariables: isDashboard,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsDashboard(!isDashboard);
-                setIscurrentState('Dashboard');
-                updateIconSidebar(e);
-            },
-            subItems: [
-                {
-                    id: "analytics",
-                    label: "Analytics",
-                    link: "/dashboard-analytics",
-                    parentId: "dashboard",
-                },
+            // click: function (e: any) {
+            //     e.preventDefault();
+            //     setIsDashboard(!isDashboard);
+            //     setIscurrentState('Dashboard');
+            //     updateIconSidebar(e);
+            // },
+            // subItems: [
+            //     {
+            //         id: "analytics",
+            //         label: "Analytics",
+            //         link: "/dashboard-analytics",
+            //         parentId: "dashboard",
+            //     },
 
-                {
-                    id: "ecommerce",
-                    label: "Admin",
-                    link: "/dashboard",
-                    parentId: "dashboard",
-                },
-            ],
+            //     {
+            //         id: "ecommerce",
+            //         label: "Admin",
+            //         link: "/dashboard",
+            //         parentId: "dashboard",
+            //     },
+            // ],
         },
         {
             id: "apps",
