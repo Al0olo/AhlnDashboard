@@ -1,5 +1,4 @@
 import { APIClient } from "./api_helper";
-import authHeader from "./jwt-token-access/auth-token-header";
 
 import * as url from "./url_helper";
 
