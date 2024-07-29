@@ -1,47 +1,35 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { SignupAction } from "./thunk";
 
-export const initialState : any= {
+export const initialState: any = {
   registrationError: null,
   message: null,
   loading: false,
   user: null,
   success: false,
-  error: false
+  error: false,
 };
 
-const registerSlice = createSlice({
-  name: "profile",
-  initialState,
-  reducers: {
-    registerUserSuccessful(state, action) {
-      state.user = action.payload;
-      state.loading = false;
-      state.success = true;
-      state.registrationError = null;
-    },
-    registerUserFailed(state, action) {
-      state.user = null;
-      state.loading = false;
-      state.registrationError = action.payload;
-      state.error = true;
-    },
-    resetRegisterFlagChange(state) {
-      state.success = false;
+const registerReducer = createSlice({
+  name: "registerReducers",
+  initialState: initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(SignupAction.pending, (state) => {
+      state.loading = true;
       state.error = false;
-    },
-    apiErrorChange(state, action){
-      state.error = action.payload;
+    });
+    builder.addCase(SignupAction.fulfilled, (state, action: any) => {
+      state.user = action?.payload;
+      state.success = true;
       state.loading = false;
-      state.isUserLogout = false;
-    }
-  }
+    });
+    builder.addCase(SignupAction.rejected, (state, { payload }: any) => {
+      state.loading = false;
+      state.success = false;
+      state.error = payload;
+    });
+  },
 });
 
-export const {
-  registerUserSuccessful,
-  registerUserFailed,
-  resetRegisterFlagChange,
-  apiErrorChange
-} = registerSlice.actions;
-
-export default registerSlice.reducer;
+export const registerSlices = registerReducer.reducer;

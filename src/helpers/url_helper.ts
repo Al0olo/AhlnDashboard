@@ -1,12 +1,18 @@
 //REGISTER
 export const POST_FAKE_REGISTER = "/auth/register";
+export const POST_FAKE_LOGOUT = "/auth/logout";
+export const POST_FAKE_VERIFY_EMAIL = "/auth/verify-email";
 
 //LOGIN
 export const POST_FAKE_LOGIN = "/auth/login";
 export const POST_FAKE_JWT_LOGIN = "/post-jwt-login";
-export const POST_FAKE_PASSWORD_FORGET = "/auth/forgot-password";
+export const POST_FAKE_PASSWORD_FORGET = "/auth/resend-otp";
+export const POST_FAKE_PASSWORD_RESET = "/auth/update-password";
 export const POST_FAKE_JWT_PASSWORD_FORGET = "/jwt-forget-pwd";
 export const SOCIAL_LOGIN = "/social-login";
+
+//BOX
+export const GET_BOXES = "/box/get-all";
 
 //PROFILE
 export const POST_EDIT_JWT_PROFILE = "/post-jwt-profile";
@@ -27,7 +33,7 @@ export const ADD_MESSAGE = "add/message";
 export const GET_CHANNELS = "/channels";
 export const DELETE_MESSAGE = "delete/message";
 
-//Mailbox
+// Mailbox
 export const GET_MAIL_DETAILS = "/mail";
 export const DELETE_MAIL = "/delete/mail";
 export const UNREAD_MAIL = "/unread/mail";
@@ -49,7 +55,7 @@ export const UPDATE_ORDER = "/update/order";
 export const DELETE_ORDER = "/delete/order";
 
 // Customers
-export const GET_CUSTOMERS = "/apps/customer";
+export const GET_CUSTOMERS = "/users/get-all";
 export const ADD_NEW_CUSTOMER = "/apps/customer";
 export const UPDATE_CUSTOMER = "/apps/customer";
 export const DELETE_CUSTOMER = "/apps/customer";
@@ -120,7 +126,8 @@ export const GET_MONTHLY_DATA = "/monthly-data";
 // Audiences Metrics
 export const GET_ALLAUDIENCESMETRICS_DATA = "/allAudiencesMetrics-data";
 export const GET_MONTHLYAUDIENCESMETRICS_DATA = "/monthlyAudiencesMetrics-data";
-export const GET_HALFYEARLYAUDIENCESMETRICS_DATA = "/halfyearlyAudiencesMetrics-data";
+export const GET_HALFYEARLYAUDIENCESMETRICS_DATA =
+  "/halfyearlyAudiencesMetrics-data";
 export const GET_YEARLYAUDIENCESMETRICS_DATA = "/yearlyAudiencesMetrics-data";
 
 // Users by Device
@@ -243,7 +250,7 @@ export const GET_API_KEY = "/api-key";
 export const GET_CANDIDATE = "/candidates";
 export const ADD_NEW_CANDIDATE = "add/candidates";
 export const UPDATE_CANDIDATE = "update/candidates";
-export const DELETE_CANDIDATE = "delete/candidates"
+export const DELETE_CANDIDATE = "delete/candidates";
 
 export const GET_CANDIDATE_GRID = "/category-grid";
 export const ADD_CANDIDATE_GRID = "/add/category-grid";

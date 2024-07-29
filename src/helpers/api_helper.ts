@@ -3,26 +3,39 @@ import config from "config";
 
 const { api } = config;
 
-// default
-axios.defaults.baseURL = api.API_URL;
-// content type
-axios.defaults.headers.post["Content-Type"] = "application/json";
-
-// content type
-const authUser: any = sessionStorage.getItem("authUser")
-const token = JSON.parse(authUser) ? JSON.parse(authUser).token : null;
-if (token)
-  axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-
-// intercepting to capture errors
-axios.interceptors.response.use(
-  function (response) {
-    return response.data ? response.data : response;
+const AxiosInstance = axios.create({
+  baseURL: api.API_URL, // project server-url
+  headers: {
+    "Accept-Language": "en",
+    "Content-Type": "application/json",
   },
-  function (error) {
-    console.log("Fireeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed   ", error.response.status)
+  withCredentials: true,
+});
 
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
+// Set the baseURL and content type headers
+AxiosInstance.defaults.baseURL = api.API_URL;
+AxiosInstance.defaults.headers.post["Content-Type"] = "application/json";
+
+// Request interceptor to include the token
+AxiosInstance.interceptors.request.use(
+  (config: any) => {
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor to handle errors
+AxiosInstance.interceptors.response.use(
+  (response) => response.data,
+  (error: any) => {
+    console.error("Request failed:", error.response.status);
+
     let message;
     switch (error.response.status) {
       case 500:
@@ -32,79 +45,70 @@ axios.interceptors.response.use(
         message = "Invalid credentials";
         break;
       case 404:
-        message = "Sorry! the data you are looking for could not be found";
+        message = "Sorry! The data you are looking for could not be found";
         break;
       default:
-        message = error.message || error;
+        message = error.message || "An error occurred";
     }
     return Promise.reject(message);
   }
 );
+
 /**
  * Sets the default authorization
- * @param {*} token
+ * @param token - JWT token
  */
-const setAuthorization = (token:string) => {
-  axios.defaults.headers.common["Authorization"] = "Bearer " + token;
-};
-
-class APIClient {
-  /**
-   * Fetches data from given url
-   */
-
-  //  get = (url, params) => {
-  //   return axios.get(url, params);
-  // };
-  get = (url: string, params?: any): Promise<AxiosResponse> => {
-    let response: Promise<AxiosResponse>;
-
-    let paramKeys: string[] = [];
-
-    if (params) {
-      Object.keys(params).map(key => {
-        paramKeys.push(key + '=' + params[key]);
-        return paramKeys;
-      });
-
-      const queryString = paramKeys && paramKeys.length ? paramKeys.join('&') : "";
-      response = axios.get(`${url}?${queryString}`, params);
-    } else {
-      response = axios.get(`${url}`, params);
-    }
-
-    return response;
-  };
-  /**
-   * post given data to url
-   */
-  create = (url:string, data:any) => {
-    return axios.post(url, data);
-  };
-  /**
-   * Updates data
-   */
-  update = (url:string, data:any) => {
-    return axios.patch(url, data);
-  };
-
-  put = (url:string, data:any) => {
-    return axios.put(url, data);
-  };
-  /**
-   * Delete
-   */
-  delete = (url: string, config?: AxiosRequestConfig): Promise<AxiosResponse> => {
-    return axios.delete(url, { ...config });
-  };
-}
-const getLoggedinUser = () => {
-  const user = sessionStorage.getItem('authUser')
-  if (!user) {
-    return null;
+const setAuthorization = (token: string) => {
+  if (token) {
+    sessionStorage.setItem("token", token);
+    AxiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   } else {
-    return JSON.parse(user).data;
+    delete AxiosInstance.defaults.headers.common["Authorization"];
+    sessionStorage.removeItem("token");
   }
 };
 
-export { APIClient, setAuthorization, getLoggedinUser };
+/**
+ * Removes the authorization header and token from storage
+ */
+const removeAuthorization = () => {
+  delete AxiosInstance.defaults.headers.common["Authorization"];
+  sessionStorage.removeItem("token");
+};
+
+class APIClient {
+  get = (url: string, params?: any): Promise<AxiosResponse> => {
+    const paramKeys: string[] = params
+      ? Object.keys(params).map((key) => `${key}=${params[key]}`)
+      : [];
+
+    const queryString = paramKeys.length ? `?${paramKeys.join("&")}` : "";
+    return AxiosInstance.get(`${url}${queryString}`);
+  };
+
+  create = (url: string, data: any) => {
+    return AxiosInstance.post(url, data);
+  };
+
+  update = (url: string, data: any) => {
+    return AxiosInstance.patch(url, data);
+  };
+
+  put = (url: string, data: any) => {
+    return AxiosInstance.put(url, data);
+  };
+
+  delete = (
+    url: string,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse> => {
+    return AxiosInstance.delete(url, { ...config });
+  };
+}
+
+const getLoggedinUser = () => {
+  const user = sessionStorage.getItem("authUser");
+  return user ? JSON.parse(user).data : null;
+};
+
+export { APIClient, setAuthorization, removeAuthorization, getLoggedinUser };

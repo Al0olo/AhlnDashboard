@@ -1,30 +1,22 @@
-import { userForgetPasswordSuccess, userForgetPasswordError } from "./reducer"
+// import { userForgetPasswordSuccess, userForgetPasswordError } from "./reducer";
 
 //Include Both Helper File with needed methods
-import { getFirebaseBackend } from "../../../helpers/firebase_helper";
+// import { getFirebaseBackend } from "../../../helpers/firebase_helper";
 
-import {
-  postFakeForgetPwd,
-} from "../../../helpers/fakebackend_helper";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { postFakeForgetPwd } from "../../../helpers/fakebackend_helper";
 
 // const fireBaseBackend : any= getFirebaseBackend();
 
-export const userForgetPassword = (user : any, history : any) => async (dispatch : any) => {
-  try {
-      let response;
-      
-          response = postFakeForgetPwd(
-              user.email
-          )
+export const ForgetPasswordAction = createAsyncThunk(
+  "auth/forgetpwd",
+  async (user: any, thunkApi: any) => {
+    try {
+      let response = await postFakeForgetPwd(user);
 
-      const data = await response;
-
-      if (data) {
-          dispatch(userForgetPasswordSuccess(
-              "Reset link are sended to your mailbox, check there first"
-          ))
-      }
-  } catch (forgetError) {
-      dispatch(userForgetPasswordError(forgetError))
+      return response;
+    } catch (error) {
+      return thunkApi.rejectWithValue(error);
+    }
   }
-}
+);

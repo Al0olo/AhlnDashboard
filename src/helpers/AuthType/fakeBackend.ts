@@ -74,7 +74,7 @@ import {
   apiKey,
   productsData,
   orders,
-  customerList,
+  // customerList,
   crmcontacts,
   companies,
   leads,
@@ -391,18 +391,18 @@ const fakeBackend = () => {
   });
 
   // Ecommerce / Customer
-  mock.onGet(url.GET_CUSTOMERS).reply(() => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (customerList) {
-          // Passing fake JSON data as response
-          resolve([200, customerList]);
-        } else {
-          reject([400, "Cannot get file data"]);
-        }
-      });
-    });
-  });
+  // mock.onGet(url.GET_CUSTOMERS).reply(() => {
+  //   return new Promise((resolve, reject) => {
+  //     setTimeout(() => {
+  //       if (customerList) {
+  //         // Passing fake JSON data as response
+  //         resolve([200, customerList]);
+  //       } else {
+  //         reject([400, "Cannot get file data"]);
+  //       }
+  //     });
+  //   });
+  // });
 
   mock.onDelete(url.DELETE_CUSTOMER).reply((config) => {
     return new Promise((resolve, reject) => {

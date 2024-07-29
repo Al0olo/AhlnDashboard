@@ -1,38 +1,48 @@
 import PropTypes from "prop-types";
 import React, { useEffect } from "react";
-import { Navigate } from "react-router-dom";
-
-import { logoutUser } from "../../slices/thunks";
-
-//redux
-import { useSelector, useDispatch } from "react-redux";
-
-import withRouter from "../../Components/Common/withRouter";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "reselect";
+import { toast } from "react-toastify";
 
-const Logout = (props :any) => {
-  const dispatch :any= useDispatch();
+import { LogoutAction } from "../../slices/thunks";
 
-const isUserLogoutSelector = createSelector(
-    (state :any) => state.Login,
-    (isUserLogout) => isUserLogout.isUserLogout
-  );
-  const isUserLogout = useSelector(isUserLogoutSelector);
+const Logout: React.FC = () => {
+  const dispatch: any = useDispatch();
+  const navigate = useNavigate();
+
+  // const isUserLogoutSelector = createSelector(
+  //   (state: any) => state.auth,
+  //   (auth) => auth.isUserLogout
+  // );
+  // const isUserLogout = useSelector(isUserLogoutSelector);
 
   useEffect(() => {
-    dispatch(logoutUser());
-  }, [dispatch]);
+    const token = sessionStorage.getItem("token");
 
-  if (isUserLogout) {
-    return <Navigate to="/login" />;
-  }
+    if (token) {
+      dispatch(LogoutAction()).then((res: any) => {
+        if (res.type === "auth/logout/fulfilled") {
+          toast("Logout successful", {
+            position: "top-right",
+            hideProgressBar: false,
+            className: "bg-success text-white",
+            progress: undefined,
+            toastId: "",
+          });
 
-  return <></>;
+          sessionStorage.removeItem("token");
+          navigate("/login");
+        } else {
+          toast.error("Logout failed. Please try again.");
+        }
+      });
+    } else if (!token) {
+      navigate("/login");
+    }
+  }, [dispatch, navigate]);
+
+  return null;
 };
 
-Logout.propTypes = {
-  history: PropTypes.object,
-};
-
-
-export default withRouter(Logout);
+export default Logout;

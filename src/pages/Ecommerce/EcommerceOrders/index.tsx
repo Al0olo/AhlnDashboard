@@ -15,7 +15,7 @@ import {
   ModalBody,
   Label,
   Input,
-  FormFeedback
+  FormFeedback,
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import classnames from "classnames";
@@ -44,13 +44,12 @@ import {
 } from "../../../slices/thunks";
 
 import Loader from "../../../Components/Common/Loader";
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { createSelector } from "reselect";
 import moment from "moment";
 
 const EcommerceOrders = () => {
-
   const [modal, setModal] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState("1");
 
@@ -64,9 +63,7 @@ const EcommerceOrders = () => {
     })
   );
   // Inside your component
-  const {
-    orders, isOrderSuccess, error
-  } = useSelector(selectLayoutProperties);
+  const { orders, isOrderSuccess, error } = useSelector(selectLayoutProperties);
   const [orderList, setOrderList] = useState<any>([]);
   const [order, setOrder] = useState<any>([]);
 
@@ -178,13 +175,13 @@ const EcommerceOrders = () => {
     enableReinitialize: true,
 
     initialValues: {
-      orderId: (order && order.orderId) || '',
-      customer: (order && order.customer) || '',
-      product: (order && order.product) || '',
-      orderDate: (order && order.orderDate) || '',
-      amount: (order && order.amount) || '',
-      payment: (order && order.payment) || '',
-      status: (order && order.status) || '',
+      orderId: (order && order.orderId) || "",
+      customer: (order && order.customer) || "",
+      product: (order && order.product) || "",
+      orderDate: (order && order.orderDate) || "",
+      amount: (order && order.amount) || "",
+      payment: (order && order.payment) || "",
+      status: (order && order.status) || "",
     },
     validationSchema: Yup.object({
       orderId: Yup.string().required("Please Enter order Id"),
@@ -193,7 +190,7 @@ const EcommerceOrders = () => {
       orderDate: Yup.string().required("Please Enter Order Date"),
       amount: Yup.string().required("Please Enter Total Amount"),
       payment: Yup.string().required("Please Enter Payment Method"),
-      status: Yup.string().required("Please Enter Delivery Status")
+      status: Yup.string().required("Please Enter Delivery Status"),
     }),
     onSubmit: (values) => {
       if (isEdit) {
@@ -205,7 +202,7 @@ const EcommerceOrders = () => {
           orderDate: values.orderDate,
           amount: values.amount,
           payment: values.payment,
-          status: values.status
+          status: values.status,
         };
         // update order
         dispatch(onUpdateOrder(updateOrder));
@@ -219,7 +216,7 @@ const EcommerceOrders = () => {
           orderDate: values["orderDate"],
           amount: values["amount"],
           payment: values["payment"],
-          status: values["status"]
+          status: values["status"],
         };
         // save new order
         dispatch(onAddNewOrder(newOrder));
@@ -246,7 +243,6 @@ const EcommerceOrders = () => {
     }
   }, [orders]);
 
-
   const toggle = useCallback(() => {
     if (modal) {
       setModal(false);
@@ -256,24 +252,26 @@ const EcommerceOrders = () => {
     }
   }, [modal]);
 
-  const handleOrderClick = useCallback((arg: any) => {
-    const order = arg;
-    setOrder({
-      id: order.id,
-      orderId: order.orderId,
-      customer: order.customer,
-      product: order.product,
-      orderDate: order.orderDate,
-      ordertime: order.ordertime,
-      amount: order.amount,
-      payment: order.payment,
-      status: order.status
-    });
+  const handleOrderClick = useCallback(
+    (arg: any) => {
+      const order = arg;
+      setOrder({
+        id: order.id,
+        orderId: order.orderId,
+        customer: order.customer,
+        product: order.product,
+        orderDate: order.orderDate,
+        ordertime: order.ordertime,
+        amount: order.amount,
+        payment: order.payment,
+        status: order.status,
+      });
 
-    setIsEdit(true);
-    toggle();
-  }, [toggle]);
-
+      setIsEdit(true);
+      toggle();
+    },
+    [toggle]
+  );
 
   // Checked All
   const checkedAll = useCallback(() => {
@@ -293,13 +291,16 @@ const EcommerceOrders = () => {
 
   // Delete Multiple
   const [selectedCheckBoxDelete, setSelectedCheckBoxDelete] = useState<any>([]);
-  const [isMultiDeleteButton, setIsMultiDeleteButton] = useState<boolean>(false);
+  const [isMultiDeleteButton, setIsMultiDeleteButton] =
+    useState<boolean>(false);
 
   const deleteMultiple = () => {
     const checkall: any = document.getElementById("checkBoxAll");
     selectedCheckBoxDelete.forEach((element: any) => {
       dispatch(onDeleteOrder(element.value));
-      setTimeout(() => { toast.clearWaitingQueue(); }, 3000);
+      setTimeout(() => {
+        toast.clearWaitingQueue();
+      }, 3000);
     });
     setIsMultiDeleteButton(false);
     checkall.checked = false;
@@ -307,21 +308,36 @@ const EcommerceOrders = () => {
 
   const deleteCheckbox = () => {
     const ele = document.querySelectorAll(".orderCheckBox:checked");
-    ele.length > 0 ? setIsMultiDeleteButton(true) : setIsMultiDeleteButton(false);
+    ele.length > 0
+      ? setIsMultiDeleteButton(true)
+      : setIsMultiDeleteButton(false);
     setSelectedCheckBoxDelete(ele);
   };
-
 
   // Column
   const columns = useMemo(
     () => [
       {
-        header: <input type="checkbox" id="checkBoxAll" className="form-check-input" onClick={() => checkedAll()} />,
+        header: (
+          <input
+            type="checkbox"
+            id="checkBoxAll"
+            className="form-check-input"
+            onClick={() => checkedAll()}
+          />
+        ),
         cell: (cell: any) => {
-          return <input type="checkbox" className="orderCheckBox form-check-input" value={cell.getValue()} onChange={() => deleteCheckbox()} />;
+          return (
+            <input
+              type="checkbox"
+              className="orderCheckBox form-check-input"
+              value={cell.getValue()}
+              onChange={() => deleteCheckbox()}
+            />
+          );
         },
-        id: '#',
-        accessorKey: 'id',
+        id: "#",
+        accessorKey: "id",
         enableColumnFilter: false,
         enableSorting: false,
       },
@@ -330,7 +346,14 @@ const EcommerceOrders = () => {
         accessorKey: "orderId",
         enableColumnFilter: false,
         cell: (cell: any) => {
-          return <Link to="/apps-ecommerce-order-details" className="fw-medium link-primary">{cell.getValue()}</Link>;
+          return (
+            <Link
+              to="/apps-ecommerce-order-details"
+              className="fw-medium link-primary"
+            >
+              {cell.getValue()}
+            </Link>
+          );
         },
       },
       {
@@ -350,7 +373,10 @@ const EcommerceOrders = () => {
         cell: (cell: any) => (
           <>
             {handleValidDate(cell.getValue())},
-            <small className="text-muted"> {handleValidTime(cell.getValue())}</small>
+            <small className="text-muted">
+              {" "}
+              {handleValidTime(cell.getValue())}
+            </small>
           </>
         ),
       },
@@ -365,27 +391,62 @@ const EcommerceOrders = () => {
         enableColumnFilter: false,
       },
       {
-        header: 'Delivery Status',
-        accessorKey: 'status',
+        header: "Delivery Status",
+        accessorKey: "status",
         enableColumnFilter: false,
         cell: (cell: any) => {
           switch (cell.getValue()) {
             case "Pending":
-              return <span className="badge text-uppercase bg-warning-subtle text-warning"> {cell.getValue()} </span>;
+              return (
+                <span className="badge text-uppercase bg-warning-subtle text-warning">
+                  {" "}
+                  {cell.getValue()}{" "}
+                </span>
+              );
             case "Cancelled":
-              return <span className="badge text-uppercase bg-danger-subtle text-danger"> {cell.getValue()} </span>;
+              return (
+                <span className="badge text-uppercase bg-danger-subtle text-danger">
+                  {" "}
+                  {cell.getValue()}{" "}
+                </span>
+              );
             case "Inprogress":
-              return <span className="badge text-uppercase bg-secondary-subtle text-secondary"> {cell.getValue()} </span>;
+              return (
+                <span className="badge text-uppercase bg-secondary-subtle text-secondary">
+                  {" "}
+                  {cell.getValue()}{" "}
+                </span>
+              );
             case "Pickups":
-              return <span className="badge text-uppercase bg-info-subtle text-info"> {cell.getValue()} </span>;
+              return (
+                <span className="badge text-uppercase bg-info-subtle text-info">
+                  {" "}
+                  {cell.getValue()}{" "}
+                </span>
+              );
             case "Returns":
-              return <span className="badge text-uppercase bg-primary-subtle text-primary"> {cell.getValue()} </span>;
+              return (
+                <span className="badge text-uppercase bg-primary-subtle text-primary">
+                  {" "}
+                  {cell.getValue()}{" "}
+                </span>
+              );
             case "Delivered":
-              return <span className="badge text-uppercase bg-success-subtle text-success"> {cell.getValue()} </span>;
+              return (
+                <span className="badge text-uppercase bg-success-subtle text-success">
+                  {" "}
+                  {cell.getValue()}{" "}
+                </span>
+              );
             default:
-              return <span className="badge text-uppercase bg-warning-subtle text-warning"> {cell.getValue()} </span>;
+              return (
+                <span className="badge text-uppercase bg-warning-subtle text-warning">
+                  {" "}
+                  {cell.getValue()}{" "}
+                </span>
+              );
           }
-        }
+        },
       },
 
       {
@@ -449,7 +510,8 @@ const EcommerceOrders = () => {
     } else {
       meridiem = "AM";
     }
-    const updateTime = moment(getTime, 'hh:mm').format('hh:mm') + " " + meridiem;
+    const updateTime =
+      moment(getTime, "hh:mm").format("hh:mm") + " " + meridiem;
     return updateTime;
   };
 
@@ -493,20 +555,30 @@ const EcommerceOrders = () => {
                         type="button"
                         className="btn btn-secondary add-btn"
                         id="create-btn"
-                        onClick={() => { setIsEdit(false); toggle(); }}
+                        onClick={() => {
+                          setIsEdit(false);
+                          toggle();
+                        }}
                       >
                         <i className="ri-add-line align-bottom me-1"></i> Create
                         Order
                       </button>{" "}
-                      <button type="button" className="btn btn-success" onClick={() => setIsExportCSV(true)}>
+                      <button
+                        type="button"
+                        className="btn btn-success"
+                        onClick={() => setIsExportCSV(true)}
+                      >
                         <i className="ri-file-download-line align-bottom me-1"></i>{" "}
                         Export
-                      </button>
-                      {" "}
-                      {isMultiDeleteButton && <button className="btn btn-soft-danger"
-                        onClick={() => setDeleteModalMulti(true)}
-                      ><i
-                        className="ri-delete-bin-2-line"></i></button>}
+                      </button>{" "}
+                      {isMultiDeleteButton && (
+                        <button
+                          className="btn btn-soft-danger"
+                          onClick={() => setDeleteModalMulti(true)}
+                        >
+                          <i className="ri-delete-bin-2-line"></i>
+                        </button>
+                      )}
                     </div>
                   </div>
                 </Row>
@@ -520,8 +592,7 @@ const EcommerceOrders = () => {
                   >
                     <NavItem>
                       <NavLink
-                        className={classnames(
-                          { active: activeTab === "1" })}
+                        className={classnames({ active: activeTab === "1" })}
                         onClick={() => {
                           toggleTab("1", "all");
                         }}
@@ -533,8 +604,7 @@ const EcommerceOrders = () => {
                     </NavItem>
                     <NavItem>
                       <NavLink
-                        className={classnames(
-                          { active: activeTab === "2" })}
+                        className={classnames({ active: activeTab === "2" })}
                         onClick={() => {
                           toggleTab("2", "Delivered");
                         }}
@@ -546,8 +616,7 @@ const EcommerceOrders = () => {
                     </NavItem>
                     <NavItem>
                       <NavLink
-                        className={classnames(
-                          { active: activeTab === "3" })}
+                        className={classnames({ active: activeTab === "3" })}
                         onClick={() => {
                           toggleTab("3", "Pickups");
                         }}
@@ -562,8 +631,7 @@ const EcommerceOrders = () => {
                     </NavItem>
                     <NavItem>
                       <NavLink
-                        className={classnames(
-                          { active: activeTab === "4" })}
+                        className={classnames({ active: activeTab === "4" })}
                         onClick={() => {
                           toggleTab("4", "Returns");
                         }}
@@ -575,8 +643,7 @@ const EcommerceOrders = () => {
                     </NavItem>
                     <NavItem>
                       <NavLink
-                        className={classnames(
-                          { active: activeTab === "5" })}
+                        className={classnames({ active: activeTab === "5" })}
                         onClick={() => {
                           toggleTab("5", "Cancelled");
                         }}
@@ -591,35 +658,36 @@ const EcommerceOrders = () => {
                   {isOrderSuccess && orderList.length ? (
                     <TableContainer
                       columns={columns}
-                      data={(orderList || [])}
+                      data={orderList || []}
                       isGlobalFilter={true}
                       customPageSize={8}
                       divClass="table-responsive table-card mb-1 mt-0"
                       tableClass="align-middle table-nowrap"
                       theadClass="table-light text-muted text-uppercase"
                       isOrderFilter={true}
-                      SearchPlaceholder='Search for order ID, customer, order status or something...'
+                      SearchPlaceholder="Search for order ID, customer, order status or something..."
                     />
-                  ) : (<Loader error={error} />)
-                  }
+                  ) : (
+                    <Loader error={error} />
+                  )}
                 </div>
                 <Modal id="showModal" isOpen={modal} toggle={toggle} centered>
                   <ModalHeader className="bg-light p-3" toggle={toggle}>
                     {!!isEdit ? "Edit Order" : "Add Order"}
                   </ModalHeader>
-                  <Form className="tablelist-form" onSubmit={(e: any) => {
-                    e.preventDefault();
-                    validation.handleSubmit();
-                    return false;
-                  }}>
+                  <Form
+                    className="tablelist-form"
+                    onSubmit={(e: any) => {
+                      e.preventDefault();
+                      validation.handleSubmit();
+                      return false;
+                    }}
+                  >
                     <ModalBody>
                       <input type="hidden" id="id-field" />
 
                       <div className="mb-3">
-                        <Label
-                          htmlFor="id-field"
-                          className="form-label"
-                        >
+                        <Label htmlFor="id-field" className="form-label">
                           Order Id
                         </Label>
                         <Input
@@ -635,13 +703,18 @@ const EcommerceOrders = () => {
                           onBlur={validation.handleBlur}
                           value={validation.values.orderId || ""}
                           invalid={
-                            validation.touched.orderId && validation.errors.orderId ? true : false
+                            validation.touched.orderId &&
+                            validation.errors.orderId
+                              ? true
+                              : false
                           }
                         />
-                        {validation.touched.orderId && validation.errors.orderId ? (
-                          <FormFeedback type="invalid">{validation.errors.orderId}</FormFeedback>
+                        {validation.touched.orderId &&
+                        validation.errors.orderId ? (
+                          <FormFeedback type="invalid">
+                            {validation.errors.orderId}
+                          </FormFeedback>
                         ) : null}
-
                       </div>
 
                       <div className="mb-3">
@@ -664,13 +737,18 @@ const EcommerceOrders = () => {
                           onBlur={validation.handleBlur}
                           value={validation.values.customer || ""}
                           invalid={
-                            validation.touched.customer && validation.errors.customer ? true : false
+                            validation.touched.customer &&
+                            validation.errors.customer
+                              ? true
+                              : false
                           }
                         />
-                        {validation.touched.customer && validation.errors.customer ? (
-                          <FormFeedback type="invalid">{validation.errors.customer}</FormFeedback>
+                        {validation.touched.customer &&
+                        validation.errors.customer ? (
+                          <FormFeedback type="invalid">
+                            {validation.errors.customer}
+                          </FormFeedback>
                         ) : null}
-
                       </div>
 
                       <div className="mb-3">
@@ -689,17 +767,27 @@ const EcommerceOrders = () => {
                           onBlur={validation.handleBlur}
                           value={validation.values.product || ""}
                           invalid={
-                            validation.touched.product && validation.errors.product ? true : false
+                            validation.touched.product &&
+                            validation.errors.product
+                              ? true
+                              : false
                           }
                         >
                           {productname.map((item, key) => (
                             <React.Fragment key={key}>
-                              {item.options.map((item, key) => (<option value={item.value} key={key}>{item.label}</option>))}
+                              {item.options.map((item, key) => (
+                                <option value={item.value} key={key}>
+                                  {item.label}
+                                </option>
+                              ))}
                             </React.Fragment>
                           ))}
                         </Input>
-                        {validation.touched.product && validation.errors.product ? (
-                          <FormFeedback type="invalid">{validation.errors.product}</FormFeedback>
+                        {validation.touched.product &&
+                        validation.errors.product ? (
+                          <FormFeedback type="invalid">
+                            {validation.errors.product}
+                          </FormFeedback>
                         ) : null}
                       </div>
 
@@ -719,11 +807,19 @@ const EcommerceOrders = () => {
                             altFormat: "d M, Y, G:i K",
                             dateFormat: "d M, Y, G:i K",
                           }}
-                          onChange={(orderDate: any) => validation.setFieldValue("orderDate", moment(orderDate[0]).format("DD MMMM ,YYYY"))}
-                          value={validation.values.orderDate || ''}
+                          onChange={(orderDate: any) =>
+                            validation.setFieldValue(
+                              "orderDate",
+                              moment(orderDate[0]).format("DD MMMM ,YYYY")
+                            )
+                          }
+                          value={validation.values.orderDate || ""}
                         />
-                        {validation.errors.orderDate && validation.touched.orderDate ? (
-                          <FormFeedback type="invalid" className='d-block'>{validation.errors.orderDate}</FormFeedback>
+                        {validation.errors.orderDate &&
+                        validation.touched.orderDate ? (
+                          <FormFeedback type="invalid" className="d-block">
+                            {validation.errors.orderDate}
+                          </FormFeedback>
                         ) : null}
                       </div>
 
@@ -743,13 +839,18 @@ const EcommerceOrders = () => {
                               onBlur={validation.handleBlur}
                               value={validation.values.amount || ""}
                               invalid={
-                                validation.touched.amount && validation.errors.amount ? true : false
+                                validation.touched.amount &&
+                                validation.errors.amount
+                                  ? true
+                                  : false
                               }
                             />
-                            {validation.touched.amount && validation.errors.amount ? (
-                              <FormFeedback type="invalid">{validation.errors.amount}</FormFeedback>
+                            {validation.touched.amount &&
+                            validation.errors.amount ? (
+                              <FormFeedback type="invalid">
+                                {validation.errors.amount}
+                              </FormFeedback>
                             ) : null}
-
                           </div>
                         </div>
                         <div className="col-md-6">
@@ -767,21 +868,29 @@ const EcommerceOrders = () => {
                               className="form-select"
                               onChange={validation.handleChange}
                               onBlur={validation.handleBlur}
-                              value={
-                                validation.values.payment || ""
-                              }
+                              value={validation.values.payment || ""}
                               invalid={
-                                validation.touched.payment && validation.errors.payment ? true : false
+                                validation.touched.payment &&
+                                validation.errors.payment
+                                  ? true
+                                  : false
                               }
                             >
                               {orderpayement.map((item, key) => (
                                 <React.Fragment key={key}>
-                                  {item.options.map((item, key) => (<option value={item.value} key={key}>{item.label}</option>))}
+                                  {item.options.map((item, key) => (
+                                    <option value={item.value} key={key}>
+                                      {item.label}
+                                    </option>
+                                  ))}
                                 </React.Fragment>
                               ))}
                             </Input>
-                            {validation.touched.payment && validation.errors.payment ? (
-                              <FormFeedback type="invalid">{validation.errors.payment}</FormFeedback>
+                            {validation.touched.payment &&
+                            validation.errors.payment ? (
+                              <FormFeedback type="invalid">
+                                {validation.errors.payment}
+                              </FormFeedback>
                             ) : null}
                           </div>
                         </div>
@@ -801,21 +910,29 @@ const EcommerceOrders = () => {
                           className="form-select"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
-                          value={
-                            validation.values.status || ""
-                          }
+                          value={validation.values.status || ""}
                           invalid={
-                            validation.touched.status && validation.errors.status ? true : false
+                            validation.touched.status &&
+                            validation.errors.status
+                              ? true
+                              : false
                           }
                         >
                           {orderstatus.map((item, key) => (
                             <React.Fragment key={key}>
-                              {item.options.map((item, key) => (<option value={item.value} key={key}>{item.label}</option>))}
+                              {item.options.map((item, key) => (
+                                <option value={item.value} key={key}>
+                                  {item.label}
+                                </option>
+                              ))}
                             </React.Fragment>
                           ))}
                         </Input>
-                        {validation.touched.status && validation.errors.status ? (
-                          <FormFeedback type="invalid">{validation.errors.status}</FormFeedback>
+                        {validation.touched.status &&
+                        validation.errors.status ? (
+                          <FormFeedback type="invalid">
+                            {validation.errors.status}
+                          </FormFeedback>
                         ) : null}
                       </div>
                     </ModalBody>
@@ -832,9 +949,7 @@ const EcommerceOrders = () => {
                         </button>
 
                         <button type="submit" className="btn btn-success">
-                          {!!isEdit
-                            ? "Update"
-                            : "Add Customer"}
+                          {!!isEdit ? "Update" : "Add Customer"}
                         </button>
                       </div>
                     </div>
@@ -851,5 +966,3 @@ const EcommerceOrders = () => {
 };
 
 export default EcommerceOrders;
-
-
