@@ -28,8 +28,8 @@ const config: Config = {
     APP_ID: "",
   },
   api: {
-    // API_URL: "http://192.168.1.41:5000/api",
-    API_URL: "http://localhost:5000/api",
+    API_URL: "http://192.168.1.41:5000/api",
+    // API_URL: "http://localhost:5000/api",
   },
 };
 

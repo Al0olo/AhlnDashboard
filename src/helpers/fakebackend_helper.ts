@@ -115,6 +115,29 @@ export const trashMail = (forId: any) =>
   api.delete(url.TRASH_MAIL, { headers: { forId } });
 
 // Ecommerce
+
+//Model-Start
+
+// get Models
+export const getModels = () => { 
+  return api.get(url.GET_MODELS) };
+
+// delete Model
+export const deleteModels = (model: any) =>{
+ 
+ return api.delete(url.DELETE_MODEL+model);
+}
+// add Models
+export const addNewModel = (model: any) =>
+  api.create(url.ADD_NEW_MODEL, model);
+// update Models
+export const updateModel = (Model: any) =>
+  api.update(url.UPDATE_MODEL, Model);
+//Models-End
+
+
+//Product-Start
+
 // get Products
 export const getProducts = () => api.get(url.GET_PRODUCTS);
 
@@ -128,6 +151,7 @@ export const addNewProduct = (product: any) =>
 // update Products
 export const updateProduct = (product: any) =>
   api.update(url.UPDATE_PRODUCT, product);
+//Products-End
 
 // get Orders
 export const getOrders = () => api.get(url.GET_ORDERS);

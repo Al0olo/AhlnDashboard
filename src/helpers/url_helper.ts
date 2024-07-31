@@ -42,6 +42,13 @@ export const LABEL_MAIL = "/label/mail";
 export const TRASH_MAIL = "/trash/mail";
 
 // Ecommerce
+//Models
+
+// Models
+export const GET_MODELS = "box-generation/get-all";
+export const DELETE_MODEL = "/box-generation/delete/";
+export const ADD_NEW_MODEL = "/box-generation/new";
+export const UPDATE_MODEL = "/box-generation/update";
 // Product
 export const GET_PRODUCTS = "/product";
 export const DELETE_PRODUCT = "/delete/product";

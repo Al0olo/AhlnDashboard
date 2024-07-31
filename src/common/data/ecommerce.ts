@@ -181,7 +181,39 @@ const productsData = [
     categories: "furniture",
   },
 ];
-
+//Models
+const modelsData=[
+  [
+    {
+        id: "AHLN_24_BG0000001",
+        model_name: "model 222",
+        createdat: "2024-07-01T06:06:14.401Z",
+        updatedat: "2024-07-01T06:06:14.401Z",
+        number_of_doors: 2,
+        width: null,
+        height: null,
+        color: null,
+        model_image: null,
+        has_outside_camera: true,
+        has_inside_camera: true,
+        has_tablet: true
+    },
+    {
+        id: "AHLN_24_BG0000002",
+        model_name: "model second",
+        createdat: "2024-07-01T06:33:52.457Z",
+        updatedat: "2024-07-01T06:33:52.457Z",
+        number_of_doors: 3,
+        width: null,
+        height: null,
+        color: null,
+        model_image: null,
+        has_outside_camera: true,
+        has_inside_camera: true,
+        has_tablet: true
+    }
+]
+]
 // Ecommerce > Product Details
 const productDetailsWidgets = [
   {
@@ -832,6 +864,7 @@ const productsReview = [
 ];
 
 export {
+  modelsData,
   productsData,
   productDetailsWidgets,
   reviews,

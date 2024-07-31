@@ -1,5 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  getModels,
+  addNewModel,
+  updateModel,
+  deleteModels,
   getProducts,
   addNewProduct,
   updateProduct,
@@ -15,6 +19,7 @@ import {
   getSellers,
 } from "./thunk";
 export const initialState: any = {
+  models: [],
   products: [],
   orders: [],
   sellers: [],
@@ -27,6 +32,25 @@ const EcommerceSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    //Models
+    builder.addCase(getModels.fulfilled, (state: any, action: any) => {
+      state.models = action.payload;
+    });
+    
+    builder.addCase(updateModel.fulfilled, (state: any, action: any) => {
+      state.models = state.models.map((model: any) =>
+        model.id === action.payload.id
+          ? { ...model, ...action.payload }
+          : model
+      );
+    });
+    builder.addCase(deleteModels.fulfilled, (state: any, action: any) => {
+      state.models = (state.models || []).filter(
+        (model: any) =>
+          model.id.toString() !== action.payload.model.toString()
+      );
+    });
+    //End Models
     builder.addCase(getProducts.fulfilled, (state: any, action: any) => {
       state.products = action.payload;
     });
