@@ -4,11 +4,16 @@ import { combineReducers } from "redux";
 import LayoutReducer from "./layouts/reducer";
 
 // Authentication
-import LoginReducer from "./auth/login/reducer";
-import AccountReducer from "./auth/register/reducer";
-import ForgetPasswordReducer from "./auth/forgetpwd/reducer";
+import { loginSlices } from "./auth/login/reducer";
+import { authSlices } from "./auth/logout/reducer";
+import { registerSlices } from "./auth/register/reducer";
+import { forgotPasswordSlices } from "./auth/forgetpwd/reducer";
+import { verifySlices } from "./auth/verifyOtp/reducer";
+
 import ProfileReducer from "./auth/profile/reducer";
 
+//Boxes
+import { boxSlices } from "./boxes/reducer";
 //Calendar
 import CalendarReducer from "./calendar/reducer";
 //Chat
@@ -70,32 +75,35 @@ import JobReducer from "./jobs/reducer";
 import APIKeyReducer from "./apiKey/reducer";
 
 const rootReducer = combineReducers({
-    Layout: LayoutReducer,
-    Login: LoginReducer,
-    Account: AccountReducer,
-    ForgetPassword: ForgetPasswordReducer,
-    Profile: ProfileReducer,
-    Calendar: CalendarReducer,
-    Chat: chatReducer,
-    Projects: ProjectsReducer,
-    Ecommerce: EcommerceReducer,
-    Tasks: TasksReducer,
-    Crypto: CryptoReducer,
-    Tickets: TicketsReducer,
-    Crm: CrmReducer,
-    Invoice: InvoiceReducer,
-    Mailbox: MailboxReducer,
-    DashboardAnalytics: DashboardAnalyticsReducer,
-    DashboardCRM: DashboardCRMReducer,
-    DashboardEcommerce: DashboardEcommerceReducer,
-    DashboardCrypto: DashboardCryptoReducer,
-    DashboardProject: DashboardProjectReducer,
-    DashboardNFT: DashboardNFTReducer,
-    Team: TeamDataReducer,
-    FileManager: FileManagerReducer,
-    Todos: TodosReducer,
-    Jobs: JobReducer,
-    APIKey: APIKeyReducer
+  Layout: LayoutReducer,
+  Login: loginSlices,
+  Logout: authSlices,
+  Boxes: boxSlices,
+  Account: registerSlices,
+  ForgetPassword: forgotPasswordSlices,
+  VerifyPasswordOtp: verifySlices,
+  Profile: ProfileReducer,
+  Calendar: CalendarReducer,
+  Chat: chatReducer,
+  Projects: ProjectsReducer,
+  Ecommerce: EcommerceReducer,
+  Tasks: TasksReducer,
+  Crypto: CryptoReducer,
+  Tickets: TicketsReducer,
+  Crm: CrmReducer,
+  Invoice: InvoiceReducer,
+  Mailbox: MailboxReducer,
+  DashboardAnalytics: DashboardAnalyticsReducer,
+  DashboardCRM: DashboardCRMReducer,
+  DashboardEcommerce: DashboardEcommerceReducer,
+  DashboardCrypto: DashboardCryptoReducer,
+  DashboardProject: DashboardProjectReducer,
+  DashboardNFT: DashboardNFTReducer,
+  Team: TeamDataReducer,
+  FileManager: FileManagerReducer,
+  Todos: TodosReducer,
+  Jobs: JobReducer,
+  APIKey: APIKeyReducer,
 });
 
 export default rootReducer;
