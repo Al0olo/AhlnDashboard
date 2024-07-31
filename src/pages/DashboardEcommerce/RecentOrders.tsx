@@ -9,7 +9,7 @@ const RecentOrders = () => {
             <Col>
                 <Card>
                     <CardHeader className="align-items-center d-flex">
-                        <h4 className="card-title mb-0 flex-grow-1">Recent Orders</h4>
+                        <h4 className="card-title mb-0 flex-grow-1">New Arrivals</h4>
                         <div className="flex-shrink-0">
                             <button type="button" className="btn btn-soft-secondary btn-sm">
                                 <i className="ri-file-list-3-line align-middle"></i> Generate Report

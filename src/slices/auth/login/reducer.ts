@@ -1,47 +1,35 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { LoginAction } from "./thunk";
 
-export const initialState :any= {
-  user: {},
-  error: "", // for error message
+export const initialState: any = {
+  loginError: null,
+  message: null,
   loading: false,
-  isUserLogout: false,
-  errorMsg: false, // for error
+  user: null,
+  success: false,
+  error: false,
 };
 
-const loginSlice = createSlice({
-  name: "login",
-  initialState,
-  reducers: {
-    apiError(state : any, action : any) {
-      console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA    : ",action.payload)
-      console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB    : ",action)
-      state.error = action.payload;
-      state.loading = true;
-      state.isUserLogout = false;
-      state.errorMsg = true;
-    },
-    loginSuccess(state, action) {
-      state.user = action.payload
-      
+const loginReducer = createSlice({
+  name: "loginReducers",
+  initialState: initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(LoginAction.pending, (state) => {
       state.loading = false;
-      state.errorMsg = false;
-    },
-    logoutUserSuccess(state, action) {
-      state.isUserLogout = true
-    },
-    reset_login_flag(state : any) {
-      state.error = null
+      state.error = false;
+    });
+    builder.addCase(LoginAction.fulfilled, (state, action: any) => {
+      state.user = action?.payload;
+      state.success = true;
       state.loading = false;
-      state.errorMsg = false;
-    }
+    });
+    builder.addCase(LoginAction.rejected, (state, { payload }: any) => {
+      state.loading = false;
+      state.success = false;
+      state.error = payload;
+    });
   },
 });
 
-export const {
-  apiError,
-  loginSuccess,
-  logoutUserSuccess,
-  reset_login_flag
-} = loginSlice.actions
-
-export default loginSlice.reducer;
+export const loginSlices = loginReducer.reducer;

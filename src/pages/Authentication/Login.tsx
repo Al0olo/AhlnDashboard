@@ -1,110 +1,103 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-  Card,
-  CardBody,
+  Row,
   Col,
+  CardBody,
+  Card,
+  Alert,
   Container,
   Input,
   Label,
-  Row,
-  Button,
   Form,
   FormFeedback,
-  Alert,
+  Button,
   Spinner,
 } from "reactstrap";
-import ParticlesAuth from "../AuthenticationInner/ParticlesAuth";
+
+// Formik Validation
+import * as Yup from "yup";
+import { useFormik } from "formik";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+// action
+import { LoginAction } from "../../slices/thunks";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
 
-import { Link } from "react-router-dom";
-import withRouter from "../../Components/Common/withRouter";
-// Formik validation
-import * as Yup from "yup";
-import { useFormik } from "formik";
+import { Link, useNavigate } from "react-router-dom";
 
-// actions
-import { loginUser, resetLoginFlag } from "../../slices/thunks";
-
-import logoLight from "../../assets/images/ahln_logo.jpeg";
-import { createSelector } from "reselect";
 //import images
+import logoLight from "../../assets/images/ahln_logo.jpeg";
+import ParticlesAuth from "../AuthenticationInner/ParticlesAuth";
+import { createSelector } from "reselect";
+import axios from "axios";
 
 const Login = (props: any) => {
-  const dispatch: any = useDispatch();
-
-  const selectLayoutState = (state: any) => state;
-  const loginpageData = createSelector(selectLayoutState, (state) => ({
-    user: state.Account.user,
-    error: state.Login.error,
-    loading: state.Login.loading,
-    errorMsg: state.Login.errorMsg,
-  }));
-  // Inside your component
-  const { user, error, errorMsg } = useSelector(loginpageData);
-
-  const [userLogin, setUserLogin] = useState<any>([]);
-  const [passwordShow, setPasswordShow] = useState<boolean>(false);
   const [loader, setLoader] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (user && user) {
-      const updatedUserData =
-        process.env.REACT_APP_DEFAULTAUTH === "firebase"
-          ? user.multiFactor.user.email
-          : user.user.email;
-      const updatedUserPassword =
-        process.env.REACT_APP_DEFAULTAUTH === "firebase"
-          ? ""
-          : user.user.confirm_password;
-      setUserLogin({
-        email: updatedUserData,
-        password: updatedUserPassword,
-      });
-    }
-  }, [user]);
+  const history = useNavigate();
+  const dispatch: any = useDispatch();
 
-  const validation: any = useFormik({
+  const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
 
     initialValues: {
-      email: userLogin.email || "admin@themesbrand.com" || "",
-      password: userLogin.password || "123456" || "",
+      email: "",
+      password: "",
     },
     validationSchema: Yup.object({
       email: Yup.string().required("Please Enter Your Email"),
-      password: Yup.string().required("Please Enter Your Password"),
+      password: Yup.string().required("Please enter your password"),
     }),
     onSubmit: (values) => {
-      dispatch(loginUser(values, props.router.navigate));
+      console.log(values);
       setLoader(true);
+      dispatch(LoginAction(values)).then((res: { payload: any; type: any }) => {
+        if (res.type === "auth/login/fulfilled" && res.payload.success) {
+          toast("Login successful", {
+            position: "top-right",
+            hideProgressBar: false,
+            className: "bg-success text-white",
+            progress: undefined,
+            toastId: "",
+          });
+
+          console.log("TOKKKKKK" + res.payload.token);
+
+          sessionStorage.setItem("token", res.payload.token);
+          history("/dashboard");
+
+          setLoader(false);
+        } else if (res.type === "auth/login/rejected") {
+          toast(res.payload, {
+            position: "top-right",
+            hideProgressBar: false,
+            className: "bg-danger text-white",
+            progress: undefined,
+            toastId: "",
+          });
+          setLoader(false);
+        }
+      });
     },
   });
 
-  // const signIn = (type: any) => {
-  //     dispatch(socialLogin(type, props.router.navigate));
-  // };
+  const logindatatype = createSelector(
+    (state: any) => state,
+    (account) => ({
+      success: account.success,
+      error: account.error,
+    })
+  );
+  // Inside your component
+  const { error, success } = useSelector(logindatatype);
 
-  //handleTwitterLoginResponse
-  // const twitterResponse = e => {}
+  document.title = "Basic Login | Ahln - React Admin & Dashboard Template";
 
-  //for facebook and google authentication
-  // const socialResponse = (type: any) => {
-  //     signIn(type);
-  // };
-
-  useEffect(() => {
-    if (errorMsg) {
-      setTimeout(() => {
-        dispatch(resetLoginFlag());
-        setLoader(false);
-      }, 3000);
-    }
-  }, [dispatch, errorMsg]);
-
-  document.title = "AHLN - Dashboard";
   return (
     <React.Fragment>
       <ParticlesAuth>
@@ -118,7 +111,9 @@ const Login = (props: any) => {
                       <img src={logoLight} alt="" height="20" />
                     </Link>
                   </div>
-                  <p className="mt-3 fs-15 fw-medium">AHLN Admin Dashboard</p>
+                  <p className="mt-3 fs-15 fw-medium">
+                    Premium Admin & Dashboard Template
+                  </p>
                 </div>
               </Col>
             </Row>
@@ -128,12 +123,9 @@ const Login = (props: any) => {
                 <Card className="mt-4">
                   <CardBody className="p-4">
                     <div className="text-center mt-2">
-                      <h5 className="text-primary">Welcome Back !</h5>
-                      <p className="text-muted">Sign in to continue to AHLN.</p>
+                      <h5 className="text-primary">Welcome Back!</h5>
+                      <p className="text-muted">Sign in to continue to Ahln.</p>
                     </div>
-                    {error && error ? (
-                      <Alert color="danger"> {error} </Alert>
-                    ) : null}
                     <div className="p-2 mt-4">
                       <Form
                         onSubmit={(e) => {
@@ -141,16 +133,37 @@ const Login = (props: any) => {
                           validation.handleSubmit();
                           return false;
                         }}
+                        className="needs-validation"
                         action="#"
                       >
+                        {/* {success && success ? (
+                          <>
+                            {toast("Login successful", {
+                              position: "top-right",
+                              hideProgressBar: false,
+                              className: "bg-success text-white",
+                              progress: undefined,
+                              toastId: "",
+                            })}
+                            <ToastContainer autoClose={2000} limit={1} />
+                          </>
+                        ) : null} */}
+
+                        {/* {error && error ? (
+                          <Alert color="danger">
+                            <div>Invalid email or password</div>
+                          </Alert>
+                        ) : null} */}
+
                         <div className="mb-3">
-                          <Label htmlFor="email" className="form-label">
-                            Email
+                          <Label htmlFor="useremail" className="form-label">
+                            Email <span className="text-danger">*</span>
                           </Label>
                           <Input
+                            id="email"
                             name="email"
                             className="form-control"
-                            placeholder="Enter email"
+                            placeholder="Enter email address"
                             type="email"
                             onChange={validation.handleChange}
                             onBlur={validation.handleBlur}
@@ -165,77 +178,43 @@ const Login = (props: any) => {
                           {validation.touched.email &&
                           validation.errors.email ? (
                             <FormFeedback type="invalid">
-                              {validation.errors.email}
+                              <div>{validation.errors.email}</div>
                             </FormFeedback>
                           ) : null}
                         </div>
 
                         <div className="mb-3">
-                          <div className="float-end">
-                            <Link to="/forgot-password" className="text-muted">
-                              Forgot password?
-                            </Link>
-                          </div>
-                          <Label
-                            className="form-label"
-                            htmlFor="password-input"
-                          >
-                            Password
+                          <Label htmlFor="userpassword" className="form-label">
+                            Password <span className="text-danger">*</span>
                           </Label>
-                          <div className="position-relative auth-pass-inputgroup mb-3">
-                            <Input
-                              name="password"
-                              value={validation.values.password || ""}
-                              type={passwordShow ? "text" : "password"}
-                              className="form-control pe-5"
-                              placeholder="Enter Password"
-                              onChange={validation.handleChange}
-                              onBlur={validation.handleBlur}
-                              invalid={
-                                validation.touched.password &&
-                                validation.errors.password
-                                  ? true
-                                  : false
-                              }
-                            />
-                            {validation.touched.password &&
-                            validation.errors.password ? (
-                              <FormFeedback type="invalid">
-                                {validation.errors.password}
-                              </FormFeedback>
-                            ) : null}
-                            <Button
-                              className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted"
-                              type="button"
-                              id="password-addon"
-                              onClick={() => setPasswordShow(!passwordShow)}
-                            >
-                              <i className="ri-eye-fill align-middle"></i>
-                            </Button>
-                          </div>
-                        </div>
-
-                        <div className="form-check">
                           <Input
-                            className="form-check-input"
-                            type="checkbox"
-                            value=""
-                            id="auth-remember-check"
+                            name="password"
+                            type="password"
+                            placeholder="Enter Password"
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.password || ""}
+                            invalid={
+                              validation.touched.password &&
+                              validation.errors.password
+                                ? true
+                                : false
+                            }
                           />
-                          <Label
-                            className="form-check-label"
-                            htmlFor="auth-remember-check"
-                          >
-                            Remember me
-                          </Label>
+                          {validation.touched.password &&
+                          validation.errors.password ? (
+                            <FormFeedback type="invalid">
+                              <div>{validation.errors.password}</div>
+                            </FormFeedback>
+                          ) : null}
                         </div>
 
                         <div className="mt-4">
                           <Button
                             color="success"
-                            disabled={loader && true}
-                            className="btn btn-success w-100"
+                            className="w-100"
                             type="submit"
+                            disabled={loader && true}
                           >
                             {loader && (
                               <Spinner size="sm" className="me-2">
@@ -246,10 +225,67 @@ const Login = (props: any) => {
                             Sign In
                           </Button>
                         </div>
+
+                        <div className="mt-3 text-center">
+                          <Link
+                            className="text-muted fs-13"
+                            to="/forgot-password"
+                          >
+                            Forgot password?
+                          </Link>
+                        </div>
+
+                        {/* 
+                        <div className="mt-4 text-center">
+                          <div className="signin-other-title">
+                            <h5 className="fs-13 mb-4 title text-muted">
+                              Sign in with
+                            </h5>
+                          </div>
+
+                          <div>
+                            <button
+                              type="button"
+                              className="btn btn-primary btn-icon waves-effect waves-light"
+                            >
+                              <i className="ri-facebook-fill fs-16"></i>
+                            </button>{" "}
+                            <button
+                              type="button"
+                              className="btn btn-danger btn-icon waves-effect waves-light"
+                            >
+                              <i className="ri-google-fill fs-16"></i>
+                            </button>{" "}
+                            <button
+                              type="button"
+                              className="btn btn-dark btn-icon waves-effect waves-light"
+                            >
+                              <i className="ri-github-fill fs-16"></i>
+                            </button>{" "}
+                            <button
+                              type="button"
+                              className="btn btn-info btn-icon waves-effect waves-light"
+                            >
+                              <i className="ri-twitter-fill fs-16"></i>
+                            </button>
+                          </div>
+                        </div> */}
                       </Form>
                     </div>
                   </CardBody>
                 </Card>
+                <div className="mt-4 text-center mb-7">
+                  <p className="mb-0">
+                    Don't have an account?{" "}
+                    <Link
+                      to="/register"
+                      className="fw-semibold text-primary text-decoration-underline"
+                    >
+                      {" "}
+                      Sign up{" "}
+                    </Link>{" "}
+                  </p>
+                </div>
               </Col>
             </Row>
           </Container>
@@ -259,4 +295,4 @@ const Login = (props: any) => {
   );
 };
 
-export default withRouter(Login);
+export default Login;
