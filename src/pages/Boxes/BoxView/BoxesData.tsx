@@ -50,7 +50,6 @@ import { createSelector } from "reselect";
 
 const BoxesData = () => {
   const dispatch: any = useDispatch();
-  const token = localStorage.getItem("token");
   const selectLayoutState = (state: any) => state.Boxes;
   const selectLayoutProperties = createSelector(selectLayoutState, (state) => ({
     boxsList: state.boxsList,

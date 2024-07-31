@@ -60,8 +60,10 @@ AxiosInstance.interceptors.response.use(
  */
 const setAuthorization = (token: string) => {
   if (token) {
-    sessionStorage.setItem("token", token);
-    AxiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    // sessionStorage.setItem("token", token);
+    AxiosInstance.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${JSON.parse(token)}`;
   } else {
     delete AxiosInstance.defaults.headers.common["Authorization"];
     sessionStorage.removeItem("token");

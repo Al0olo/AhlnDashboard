@@ -12,8 +12,8 @@ export const getLoggedInUser = () => {
 };
 
 // Fetches boxes for a given user
-export const getBoxes = (userId: string) => {
-  return api.get(url.GET_BOXES, { authHeader: { userId } });
+export const getBoxes = () => {
+  return api.get(url.GET_BOXES);
 };
 
 //is user is logged in
@@ -26,12 +26,7 @@ export const postFakeRegister = (data: any) =>
   api.create(url.POST_FAKE_REGISTER, data);
 
 // Logout Method
-export const postFakeLogout = () =>
-  api.create(url.POST_FAKE_LOGOUT, {
-    headers: {
-      Authorization: "Bearer " + getLoggedInUser()?.accessToken,
-    },
-  });
+export const postFakeLogout = () => api.create(url.POST_FAKE_LOGOUT, {});
 
 // Login Method
 export const postFakeLogin = (data: any) =>

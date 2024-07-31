@@ -32,7 +32,6 @@ import {
   addNewCustomer as onAddNewCustomer,
   updateCustomer as onUpdateCustomer,
   deleteCustomer as onDeleteCustomer,
-  getCustomers,
 } from "../../../slices/thunks";
 
 //redux
@@ -131,7 +130,7 @@ const EcommerceCustomers = () => {
         validation.resetForm();
       } else {
         const newCustomer = {
-          id: (Math.floor(Math.random() * (30 - 20)) + 20).toString(),
+          id: "",
           customer: values["customer"],
           email: values["email"],
           phone: values["phone"],
@@ -174,12 +173,16 @@ const EcommerceCustomers = () => {
     [toggle]
   );
 
+  // useEffect(() => {
+  //   if (customers && !customers.length) {
+  //     // setCustomer(onGetCustomers());
+  //     dispatch(onGetCustomers());
+  //   }
+  // }, [dispatch, customers]);
+
   useEffect(() => {
-    if (customers && !customers.length) {
-      // setCustomer(onGetCustomers());
-      dispatch(onGetCustomers());
-    }
-  }, [dispatch, customers]);
+    dispatch(onGetCustomers());
+  }, [dispatch]);
 
   // useEffect(() => {
   //   setCustomer(customers);
@@ -370,7 +373,7 @@ const EcommerceCustomers = () => {
   // Export Modal
   const [isExportCSV, setIsExportCSV] = useState<boolean>(false);
 
-  document.title = "Customers | Velzon - React Admin & Dashboard Template";
+  document.title = "Customers | Ahln - React Admin & Dashboard";
   return (
     <React.Fragment>
       <div className="page-content">

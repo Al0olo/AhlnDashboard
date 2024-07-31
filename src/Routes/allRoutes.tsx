@@ -208,7 +208,6 @@ const authProtectedRoutes = [
   },
 
   { path: "/apps-todo", component: <ToDoList /> },
-  { path: "/customers", component: <ToDoList /> },
 
   //EMail
   { path: "/apps-mailbox", component: <MailInbox /> },

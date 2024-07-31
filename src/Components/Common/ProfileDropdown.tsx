@@ -134,12 +134,12 @@ const ProfileDropdown = () => {
           </Link>
         </DropdownItem>
         <DropdownItem className="p-0">
-          <button type="button" className="dropdown-item" onClick={logout}>
+          <Link className="dropdown-item" onClick={logout} to={"/login"}>
             <i className="mdi mdi-logout text-muted fs-16 align-middle me-1"></i>{" "}
             <span className="align-middle" data-key="t-logout">
               Logout
             </span>
-          </button>
+          </Link>
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

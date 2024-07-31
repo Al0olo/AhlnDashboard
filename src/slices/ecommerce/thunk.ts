@@ -23,7 +23,7 @@ export const getProducts = createAsyncThunk(
   "ecommerce/getProducts",
   async () => {
     try {
-      const response = getProductsApi();
+      let response = await getProductsApi();
       return response;
     } catch (error) {
       return error;
@@ -53,7 +53,7 @@ export const getCustomers = createAsyncThunk(
   "ecommerce/getCustomers",
   async () => {
     try {
-      const response = getCustomersApi();
+      let response = await getCustomersApi();
       console.log(response);
 
       return response;

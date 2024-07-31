@@ -214,14 +214,9 @@ const Login = (props: any) => {
                             color="success"
                             className="w-100"
                             type="submit"
-                            disabled={loader && true}
+                            disabled={loader}
                           >
-                            {loader && (
-                              <Spinner size="sm" className="me-2">
-                                {" "}
-                                Loading...{" "}
-                              </Spinner>
-                            )}
+                            {loader && <Spinner>Loading...</Spinner>}
                             Sign In
                           </Button>
                         </div>
