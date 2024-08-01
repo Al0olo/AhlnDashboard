@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Button,
   Card,
@@ -29,13 +29,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 //import images
+import { useAppSelector } from "redux-hooks";
 import { createSelector } from "reselect";
 import logoLight from "../../assets/images/ahln_logo.jpeg";
 import ParticlesAuth from "../AuthenticationInner/ParticlesAuth";
 
 const Login = (props: any) => {
-  const [loader, setLoader] = useState<boolean>(false);
 
+  let { loading } = useAppSelector((state) => state.Login)
   const history = useNavigate();
   const dispatch: any = useDispatch();
 
@@ -53,7 +54,6 @@ const Login = (props: any) => {
     }),
     onSubmit: (values) => {
       console.log(values);
-      setLoader(true);
       dispatch(LoginAction(values)).then((res: { payload: any; type: any }) => {
         if (res.type === "auth/login/fulfilled" && res.payload.success) {
           toast("Login successful", {
@@ -69,7 +69,6 @@ const Login = (props: any) => {
           sessionStorage.setItem("token", res.payload.token);
           history("/dashboard");
 
-          setLoader(false);
         } else if (res.type === "auth/login/rejected") {
           toast(res.payload, {
             position: "top-right",
@@ -78,7 +77,6 @@ const Login = (props: any) => {
             progress: undefined,
             toastId: "",
           });
-          setLoader(false);
         }
       });
     },
@@ -134,24 +132,6 @@ const Login = (props: any) => {
                         className="needs-validation"
                         action="#"
                       >
-                        {/* {success && success ? (
-                          <>
-                            {toast("Login successful", {
-                              position: "top-right",
-                              hideProgressBar: false,
-                              className: "bg-success text-white",
-                              progress: undefined,
-                              toastId: "",
-                            })}
-                            <ToastContainer autoClose={2000} limit={1} />
-                          </>
-                        ) : null} */}
-
-                        {/* {error && error ? (
-                          <Alert color="danger">
-                            <div>Invalid email or password</div>
-                          </Alert>
-                        ) : null} */}
 
                         <div className="mb-3">
                           <Label htmlFor="useremail" className="form-label">
@@ -212,10 +192,10 @@ const Login = (props: any) => {
                             color="success"
                             className="w-100"
                             type="submit"
-                            disabled={loader && true}
+                            disabled={loading && true}
                           >
-                            {loader && (
-                              <Spinner size="sm" className="me-2">
+                            {loading && (
+                              <Spinner size="sm" >
                                 {" "}
                                 Loading...{" "}
                               </Spinner>
@@ -233,41 +213,6 @@ const Login = (props: any) => {
                           </Link>
                         </div>
 
-                        {/* 
-                        <div className="mt-4 text-center">
-                          <div className="signin-other-title">
-                            <h5 className="fs-13 mb-4 title text-muted">
-                              Sign in with
-                            </h5>
-                          </div>
-
-                          <div>
-                            <button
-                              type="button"
-                              className="btn btn-primary btn-icon waves-effect waves-light"
-                            >
-                              <i className="ri-facebook-fill fs-16"></i>
-                            </button>{" "}
-                            <button
-                              type="button"
-                              className="btn btn-danger btn-icon waves-effect waves-light"
-                            >
-                              <i className="ri-google-fill fs-16"></i>
-                            </button>{" "}
-                            <button
-                              type="button"
-                              className="btn btn-dark btn-icon waves-effect waves-light"
-                            >
-                              <i className="ri-github-fill fs-16"></i>
-                            </button>{" "}
-                            <button
-                              type="button"
-                              className="btn btn-info btn-icon waves-effect waves-light"
-                            >
-                              <i className="ri-twitter-fill fs-16"></i>
-                            </button>
-                          </div>
-                        </div> */}
                       </Form>
                     </div>
                   </CardBody>
