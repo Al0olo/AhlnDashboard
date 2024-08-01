@@ -8,7 +8,7 @@ export const LoginAction = createAsyncThunk(
       let response = await postFakeLogin(user);
       console.log("response", response);
       return response;
-    } catch (error) {
+    } catch (error: any) {
       console.log("error", error);
 
       return thunkApi.rejectWithValue(error);

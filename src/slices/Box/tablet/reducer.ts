@@ -1,30 +1,30 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { BoxAction } from "./thunk";
+import { TabletAction } from "./thunk";
 
 export const initialState: any = {
-  boxError: null,
+  tabletError: null,
   message: null,
   loading: false,
-  user: null,
+  data: null,
   success: false,
   error: false,
 };
 
-const boxReducer = createSlice({
-  name: "boxReducers",
+const tabletReducer = createSlice({
+  name: "tabletReducers",
   initialState: initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(BoxAction.pending, (state) => {
+    builder.addCase(TabletAction.pending, (state) => {
       state.loading = true;
       state.error = false;
     });
-    builder.addCase(BoxAction.fulfilled, (state, action: any) => {
-      state.user = action?.payload;
+    builder.addCase(TabletAction.fulfilled, (state, action: any) => {
+      state.data = action?.payload;
       state.success = true;
       state.loading = false;
     });
-    builder.addCase(BoxAction.rejected, (state, { payload }: any) => {
+    builder.addCase(TabletAction.rejected, (state, { payload }: any) => {
       state.loading = false;
       state.success = false;
       state.error = payload;
@@ -32,4 +32,4 @@ const boxReducer = createSlice({
   },
 });
 
-export const boxSlices = boxReducer.reducer;
+export const tabletSlices = tabletReducer.reducer;

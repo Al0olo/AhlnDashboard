@@ -15,6 +15,14 @@ export const getLoggedInUser = () => {
 export const getBoxes = () => {
   return api.get(url.GET_BOXES);
 };
+export const addBox = (data: any) => {
+  return api.get(url.ADD_BOX , data);
+};
+
+// Fetches boxes for a given user
+export const getTablets = () => {
+  return api.get(url.GET_TABLETS);
+};
 
 //is user is logged in
 export const isUserAuthenticated = () => {

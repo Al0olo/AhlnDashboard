@@ -11,7 +11,10 @@ export * from "./auth/verify/thunk";
 export * from "./auth/verifyOtp/thunk";
 
 //Boxes
-export * from "./boxes/thunk";
+export * from "./Box/boxes/thunk";
+
+//Tablets
+export * from "./Box/tablet/thunk";
 
 //Calendar
 export * from "./calendar/thunk";

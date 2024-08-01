@@ -329,8 +329,8 @@ const Navdata = () => {
             // Routes needs to be adjusted
             { id: 1, label: "Boxes List", link: "/boxes" },
             { id: 2, label: "Box Generation", link: "/apps-tickets-details" },
-            { id: 3, label: "Boxes Tablets", link: "/apps-tickets-details" },
-            { id: 4, label: "Boxes Addresses", link: "/apps-tickets-details" },
+            { id: 3, label: "Tablets", link: "/tablets" },
+            { id: 4, label: "Addresses", link: "/addresses" },
             { id: 5, label: "Boxes Locker", link: "/apps-tickets-details" },
             { id: 6, label: "Boxes Images", link: "/apps-tickets-details" },
             { id: 7, label: "User Boxes", link: "/apps-tickets-details" },

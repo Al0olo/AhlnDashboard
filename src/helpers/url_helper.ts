@@ -13,6 +13,10 @@ export const SOCIAL_LOGIN = "/social-login";
 
 //BOX
 export const GET_BOXES = "/box/get-all";
+export const ADD_BOX = "/box/new";
+
+// TABLETS
+export const GET_TABLETS = "/tablet/get-all";
 
 //PROFILE
 export const POST_EDIT_JWT_PROFILE = "/post-jwt-profile";

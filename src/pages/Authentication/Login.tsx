@@ -4,7 +4,6 @@ import {
   Col,
   CardBody,
   Card,
-  Alert,
   Container,
   Input,
   Label,
@@ -18,7 +17,7 @@ import {
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // action
@@ -33,7 +32,6 @@ import { Link, useNavigate } from "react-router-dom";
 import logoLight from "../../assets/images/ahln_logo.jpeg";
 import ParticlesAuth from "../AuthenticationInner/ParticlesAuth";
 import { createSelector } from "reselect";
-import axios from "axios";
 
 const Login = (props: any) => {
   const [loader, setLoader] = useState<boolean>(false);
