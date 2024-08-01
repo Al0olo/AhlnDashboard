@@ -9,7 +9,7 @@ import logoLight from "../assets/images/ahln_logo.jpeg";
 //Import Components
 import VerticalLayout from "./VerticalLayouts";
 import TwoColumnLayout from "./TwoColumnLayout";
-import { Container } from "reactstrap";
+import { Button, Container } from "reactstrap";
 import HorizontalLayout from "./HorizontalLayout";
 
 const Sidebar = ({ layoutType }: any) => {
@@ -62,14 +62,14 @@ const Sidebar = ({ layoutType }: any) => {
               <img src={logoLight} alt="" height="17" />
             </span>
           </Link>
-          <button
+          <Button
             onClick={addEventListenerOnSmHoverMenu}
             type="button"
             className="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover"
             id="vertical-hover"
           >
             <i className="ri-record-circle-line"></i>
-          </button>
+          </Button>
         </div>
         {layoutType === "horizontal" ? (
           <div id="scrollbar">

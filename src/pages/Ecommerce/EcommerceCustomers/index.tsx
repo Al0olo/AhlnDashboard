@@ -13,6 +13,8 @@ import {
   Label,
   Input,
   FormFeedback,
+  Button,
+  FormFeedback,
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
@@ -38,6 +40,8 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import TableContainer from "../../../Components/Common/TableContainer";
 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../Components/Common/Loader";
@@ -107,12 +111,18 @@ const EcommerceCustomers = () => {
       phone: (customer && customer.phone) || "",
       date: (customer && customer.date) || "",
       status: (customer && customer.status) || "",
+      customer: (customer && customer.customer) || "",
+      email: (customer && customer.email) || "",
+      phone: (customer && customer.phone) || "",
+      date: (customer && customer.date) || "",
+      status: (customer && customer.status) || "",
     },
     validationSchema: Yup.object({
       customer: Yup.string().required("Please Enter Customer Name"),
       email: Yup.string().required("Please Enter Your Email"),
       phone: Yup.string().required("Please Enter Your Phone"),
       date: Yup.string().required("Please Enter date"),
+      status: Yup.string().required("Please Enter Your Status"),
       status: Yup.string().required("Please Enter Your Status"),
     }),
     onSubmit: (values) => {
@@ -136,6 +146,7 @@ const EcommerceCustomers = () => {
           phone: values["phone"],
           date: values["date"],
           status: values["status"],
+          status: values["status"],
         };
         // save new customer
         dispatch(onAddNewCustomer(newCustomer));
@@ -157,6 +168,9 @@ const EcommerceCustomers = () => {
   const handleCustomerClick = useCallback(
     (arg: any) => {
       const customer = arg;
+  const handleCustomerClick = useCallback(
+    (arg: any) => {
+      const customer = arg;
 
       setCustomer({
         id: customer.id,
@@ -166,7 +180,20 @@ const EcommerceCustomers = () => {
         date: customer.date,
         status: customer.status,
       });
+      setCustomer({
+        id: customer.id,
+        customer: customer.customer,
+        email: customer.email,
+        phone: customer.phone,
+        date: customer.date,
+        status: customer.status,
+      });
 
+      setIsEdit(true);
+      toggle();
+    },
+    [toggle]
+  );
       setIsEdit(true);
       toggle();
     },
@@ -183,6 +210,10 @@ const EcommerceCustomers = () => {
   useEffect(() => {
     dispatch(onGetCustomers());
   }, [dispatch]);
+    if (customers && !customers.length) {
+      dispatch(onGetCustomers());
+    }
+  }, [dispatch, customers]);
 
   // useEffect(() => {
   //   setCustomer(customers);
@@ -195,6 +226,7 @@ const EcommerceCustomers = () => {
   //   }
   // }, [customers]);
 
+  // Node API
   // Node API
   // useEffect(() => {
   //   if (isCustomerCreated) {
@@ -229,11 +261,16 @@ const EcommerceCustomers = () => {
   const [selectedCheckBoxDelete, setSelectedCheckBoxDelete] = useState<any>([]);
   const [isMultiDeleteButton, setIsMultiDeleteButton] =
     useState<boolean>(false);
+  const [isMultiDeleteButton, setIsMultiDeleteButton] =
+    useState<boolean>(false);
 
   const deleteMultiple = () => {
     const checkall: any = document.getElementById("checkBoxAll");
     selectedCheckBoxDelete.forEach((element: any) => {
       dispatch(onDeleteCustomer(element.value));
+      setTimeout(() => {
+        toast.clearWaitingQueue();
+      }, 3000);
       setTimeout(() => {
         toast.clearWaitingQueue();
       }, 3000);
@@ -247,6 +284,9 @@ const EcommerceCustomers = () => {
     ele.length > 0
       ? setIsMultiDeleteButton(true)
       : setIsMultiDeleteButton(false);
+    ele.length > 0
+      ? setIsMultiDeleteButton(true)
+      : setIsMultiDeleteButton(false);
     setSelectedCheckBoxDelete(ele);
   };
 
@@ -254,6 +294,14 @@ const EcommerceCustomers = () => {
   const columns = useMemo(
     () => [
       {
+        header: (
+          <Input
+            type="checkbox"
+            id="checkBoxAll"
+            className="form-check-input"
+            onClick={() => checkedAll()}
+          />
+        ),
         header: (
           <input
             type="checkbox"
@@ -264,6 +312,14 @@ const EcommerceCustomers = () => {
         ),
         cell: (cell: any) => {
           return (
+            <Input
+              type="checkbox"
+              className="customerCheckBox form-check-input"
+              value={cell.getValue()}
+              onChange={() => deleteCheckbox()}
+            />
+          );
+          return (
             <input
               type="checkbox"
               className="customerCheckBox form-check-input"
@@ -272,6 +328,8 @@ const EcommerceCustomers = () => {
             />
           );
         },
+        id: "#",
+        accessorKey: "id",
         id: "#",
         accessorKey: "id",
         enableColumnFilter: false,
@@ -302,6 +360,7 @@ const EcommerceCustomers = () => {
         accessorKey: "date",
         enableColumnFilter: false,
         cell: (cell: any) => <>{handleValidDate(cell.getValue())}</>,
+        cell: (cell: any) => <>{handleValidDate(cell.getValue())}</>,
       },
       {
         header: "Status",
@@ -316,7 +375,19 @@ const EcommerceCustomers = () => {
                   {cell.getValue()}{" "}
                 </span>
               );
+              return (
+                <span className="badge text-uppercase bg-success-subtle text-success">
+                  {" "}
+                  {cell.getValue()}{" "}
+                </span>
+              );
             case "Block":
+              return (
+                <span className="badge text-uppercase bg-danger-subtle text-danger">
+                  {" "}
+                  {cell.getValue()}{" "}
+                </span>
+              );
               return (
                 <span className="badge text-uppercase bg-danger-subtle text-danger">
                   {" "}
@@ -330,7 +401,14 @@ const EcommerceCustomers = () => {
                   {cell.getValue()}{" "}
                 </span>
               );
+              return (
+                <span className="badge text-uppercase bg-info-subtle text-info">
+                  {" "}
+                  {cell.getValue()}{" "}
+                </span>
+              );
           }
+        },
         },
       },
       {
@@ -346,6 +424,10 @@ const EcommerceCustomers = () => {
                     const customerData = cellProps.row.original;
                     handleCustomerClick(customerData);
                   }}
+                  onClick={() => {
+                    const customerData = cellProps.row.original;
+                    handleCustomerClick(customerData);
+                  }}
                 >
                   <i className="ri-pencil-fill fs-16"></i>
                 </Link>
@@ -354,6 +436,10 @@ const EcommerceCustomers = () => {
                 <Link
                   to="#"
                   className="text-danger d-inline-block remove-item-btn"
+                  onClick={() => {
+                    const customerData = cellProps.row.original;
+                    onClickDelete(customerData);
+                  }}
                   onClick={() => {
                     const customerData = cellProps.row.original;
                     onClickDelete(customerData);
@@ -410,6 +496,14 @@ const EcommerceCustomers = () => {
                     <div className="col-sm-auto">
                       <div>
                         {isMultiDeleteButton && (
+                          <Button
+                            className="btn btn-soft-danger me-1"
+                            onClick={() => setDeleteModalMulti(true)}
+                          >
+                            <i className="ri-delete-bin-2-line"></i>
+                          </Button>
+                        )}
+                        {isMultiDeleteButton && (
                           <button
                             className="btn btn-soft-danger me-1"
                             onClick={() => setDeleteModalMulti(true)}
@@ -425,10 +519,19 @@ const EcommerceCustomers = () => {
                             setIsEdit(false);
                             toggle();
                           }}
+                          onClick={() => {
+                            setIsEdit(false);
+                            toggle();
+                          }}
                         >
                           <i className="ri-add-line align-bottom me-1"></i> Add
                           Customer
                         </button>{" "}
+                        <button
+                          type="button"
+                          className="btn btn-secondary"
+                          onClick={() => setIsExportCSV(true)}
+                        >
                         <button
                           type="button"
                           className="btn btn-secondary"
@@ -447,12 +550,17 @@ const EcommerceCustomers = () => {
                       <TableContainer
                         columns={columns}
                         data={customers || []}
+                        data={customers || []}
                         isGlobalFilter={true}
                         customPageSize={10}
                         isCustomerFilter={true}
                         theadClass="table-light text-muted"
                         SearchPlaceholder="Search for customer, email, phone, status or something..."
+                        SearchPlaceholder="Search for customer, email, phone, status or something..."
                       />
+                    ) : (
+                      <Loader error={error} />
+                    )}
                     ) : (
                       <Loader error={error} />
                     )}
@@ -462,6 +570,14 @@ const EcommerceCustomers = () => {
                     <ModalHeader className="bg-light p-3" toggle={toggle}>
                       {!!isEdit ? "Edit Customer" : "Add Customer"}
                     </ModalHeader>
+                    <Form
+                      className="tablelist-form"
+                      onSubmit={(e: any) => {
+                        e.preventDefault();
+                        validation.handleSubmit();
+                        return false;
+                      }}
+                    >
                     <Form
                       className="tablelist-form"
                       onSubmit={(e: any) => {
@@ -514,8 +630,17 @@ const EcommerceCustomers = () => {
                               validation.errors.customer
                                 ? true
                                 : false
+                              validation.touched.customer &&
+                              validation.errors.customer
+                                ? true
+                                : false
                             }
                           />
+                          {validation.touched.customer &&
+                          validation.errors.customer ? (
+                            <FormFeedback type="invalid">
+                              {validation.errors.customer}
+                            </FormFeedback>
                           {validation.touched.customer &&
                           validation.errors.customer ? (
                             <FormFeedback type="invalid">
@@ -541,8 +666,17 @@ const EcommerceCustomers = () => {
                               validation.errors.email
                                 ? true
                                 : false
+                              validation.touched.email &&
+                              validation.errors.email
+                                ? true
+                                : false
                             }
                           />
+                          {validation.touched.email &&
+                          validation.errors.email ? (
+                            <FormFeedback type="invalid">
+                              {validation.errors.email}
+                            </FormFeedback>
                           {validation.touched.email &&
                           validation.errors.email ? (
                             <FormFeedback type="invalid">
@@ -568,8 +702,17 @@ const EcommerceCustomers = () => {
                               validation.errors.phone
                                 ? true
                                 : false
+                              validation.touched.phone &&
+                              validation.errors.phone
+                                ? true
+                                : false
                             }
                           />
+                          {validation.touched.phone &&
+                          validation.errors.phone ? (
+                            <FormFeedback type="invalid">
+                              {validation.errors.phone}
+                            </FormFeedback>
                           {validation.touched.phone &&
                           validation.errors.phone ? (
                             <FormFeedback type="invalid">
@@ -600,8 +743,18 @@ const EcommerceCustomers = () => {
                               )
                             }
                             value={validation.values.date || ""}
+                            onChange={(date: any) =>
+                              validation.setFieldValue(
+                                "date",
+                                moment(date[0]).format("DD MMMM ,YYYY")
+                              )
+                            }
+                            value={validation.values.date || ""}
                           />
                           {validation.errors.date && validation.touched.date ? (
+                            <FormFeedback type="invalid" className="d-block">
+                              {validation.errors.date}
+                            </FormFeedback>
                             <FormFeedback type="invalid" className="d-block">
                               {validation.errors.date}
                             </FormFeedback>
@@ -621,7 +774,12 @@ const EcommerceCustomers = () => {
                             onChange={validation.handleChange}
                             onBlur={validation.handleBlur}
                             value={validation.values.status || ""}
+                            value={validation.values.status || ""}
                             invalid={
+                              validation.touched.status &&
+                              validation.errors.status
+                                ? true
+                                : false
                               validation.touched.status &&
                               validation.errors.status
                                 ? true
@@ -635,10 +793,16 @@ const EcommerceCustomers = () => {
                                     {item.label}
                                   </option>
                                 ))}
+                                {item.options.map((item, key) => (
+                                  <option value={item.value} key={key}>
+                                    {item.label}
+                                  </option>
+                                ))}
                               </React.Fragment>
                             ))}
                           </Input>
                           {validation.touched.status &&
+                          validation.errors.status ? (
                           validation.errors.status ? (
                             <FormFeedback type="invalid">
                               {validation.errors.status}
@@ -658,7 +822,21 @@ const EcommerceCustomers = () => {
                             {" "}
                             Close{" "}
                           </button>
+                          <button
+                            type="button"
+                            className="btn btn-light"
+                            onClick={() => {
+                              setModal(false);
+                            }}
+                          >
+                            {" "}
+                            Close{" "}
+                          </button>
 
+                          <button type="submit" className="btn btn-success">
+                            {" "}
+                            {!!isEdit ? "Update" : "Add Customer"}{" "}
+                          </button>
                           <button type="submit" className="btn btn-success">
                             {" "}
                             {!!isEdit ? "Update" : "Add Customer"}{" "}
