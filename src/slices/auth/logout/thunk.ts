@@ -1,15 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { postFakeLogout } from "../../../helpers/fakebackend_helper";
 
-export const LogoutAction = createAsyncThunk("auth/logout", async () => {
+export const LogoutAction = createAsyncThunk("auth/logout", async (args, thunkApi) => {
   try {
-    let response = await postFakeLogout();
-    return response.data;
+    await sessionStorage.removeItem("authUser");
+    // let response = await postFakeLogout();
+    return null;
   } catch (error: any) {
-    if (error.response && error.response.data) {
-      return error.response.data;
-    } else {
-      return error({ message: "Network error" });
-    }
+    return thunkApi.rejectWithValue(error);
+
   }
 });

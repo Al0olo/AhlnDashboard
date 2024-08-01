@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import {
-  Row,
-  Col,
-  CardBody,
+  Button,
   Card,
+  CardBody,
+  Col,
   Container,
-  Input,
-  Label,
   Form,
   FormFeedback,
-  Button,
+  Input,
+  Label,
+  Row,
   Spinner,
 } from "reactstrap";
 
 // Formik Validation
-import * as Yup from "yup";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -24,14 +24,14 @@ import "react-toastify/dist/ReactToastify.css";
 import { LoginAction } from "../../slices/thunks";
 
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Link, useNavigate } from "react-router-dom";
 
 //import images
+import { createSelector } from "reselect";
 import logoLight from "../../assets/images/ahln_logo.jpeg";
 import ParticlesAuth from "../AuthenticationInner/ParticlesAuth";
-import { createSelector } from "reselect";
 
 const Login = (props: any) => {
   const [loader, setLoader] = useState<boolean>(false);
@@ -168,13 +168,13 @@ const Login = (props: any) => {
                             value={validation.values.email || ""}
                             invalid={
                               validation.touched.email &&
-                              validation.errors.email
+                                validation.errors.email
                                 ? true
                                 : false
                             }
                           />
                           {validation.touched.email &&
-                          validation.errors.email ? (
+                            validation.errors.email ? (
                             <FormFeedback type="invalid">
                               <div>{validation.errors.email}</div>
                             </FormFeedback>
@@ -194,13 +194,13 @@ const Login = (props: any) => {
                             value={validation.values.password || ""}
                             invalid={
                               validation.touched.password &&
-                              validation.errors.password
+                                validation.errors.password
                                 ? true
                                 : false
                             }
                           />
                           {validation.touched.password &&
-                          validation.errors.password ? (
+                            validation.errors.password ? (
                             <FormFeedback type="invalid">
                               <div>{validation.errors.password}</div>
                             </FormFeedback>

@@ -3,9 +3,11 @@ import { getLoggedinUser } from "../../helpers/api_helper";
 
 const useProfile = () => {
   const userProfileSession = getLoggedinUser();
+  console.log("userProfileSession", userProfileSession);
+
   var token =
-  userProfileSession &&
-  userProfileSession["token"];
+    userProfileSession &&
+    userProfileSession["token"];
   const [loading, setLoading] = useState(userProfileSession ? false : true);
   const [userProfile, setUserProfile] = useState(
     userProfileSession ? userProfileSession : null
@@ -18,10 +20,11 @@ const useProfile = () => {
       userProfileSession["token"];
     setUserProfile(userProfileSession ? userProfileSession : null);
     setLoading(token ? false : true);
-  }, []);
+  }, [userProfileSession]);
 
 
-  return { userProfile, loading,token };
+  return { userProfile, loading, token };
 };
 
 export { useProfile };
+

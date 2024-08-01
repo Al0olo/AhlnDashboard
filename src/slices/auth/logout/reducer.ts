@@ -9,6 +9,7 @@ interface AuthState {
   success: boolean;
   error: any;
   isUserLogout: boolean;
+  token: string,
 }
 
 export const initialState: AuthState = {
@@ -19,6 +20,7 @@ export const initialState: AuthState = {
   success: false,
   error: null,
   isUserLogout: false,
+  token: ""
 };
 
 const authReducer = createSlice({
@@ -36,6 +38,7 @@ const authReducer = createSlice({
         state.success = true;
         state.loading = false;
         state.isUserLogout = true;
+        state.token = ""
       }
     );
     builder.addCase(
