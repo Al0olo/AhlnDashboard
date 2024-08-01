@@ -1,34 +1,34 @@
-import React, { useState, useEffect } from "react";
 import { isEmpty } from "lodash";
+import React, { useEffect, useState } from "react";
 
 import {
-  Container,
-  Row,
-  Col,
-  Card,
   Alert,
-  CardBody,
   Button,
-  Label,
-  Input,
-  FormFeedback,
+  Card,
+  CardBody,
+  Col,
+  Container,
   Form,
+  FormFeedback,
+  Input,
+  Label,
+  Row,
 } from "reactstrap";
 
 // Formik Validation
-import * as Yup from "yup";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import avatar from "../../assets/images/users/avatar-1.jpg";
 // actions
-import { editProfile, resetProfileFlag } from "../../slices/thunks";
 import { createSelector } from "reselect";
+import { editProfile, resetProfileFlag } from "../../slices/thunks";
 
 const UserProfile = () => {
-  const dispatch : any = useDispatch();
+  const dispatch: any = useDispatch();
 
   const [email, setemail] = useState("admin@gmail.com");
   const [idx, setidx] = useState("1");
@@ -36,7 +36,7 @@ const UserProfile = () => {
   const [userName, setUserName] = useState("Admin");
 
   const userprofileData = createSelector(
-    (state : any) => state.Profile,
+    (state: any) => state.Profile,
     (state) => ({
       user: state.user,
       success: state.success,
@@ -45,13 +45,13 @@ const UserProfile = () => {
   );
   // Inside your component
   const {
-    user, success, error 
+    user, success, error
   } = useSelector(userprofileData);
 
 
   useEffect(() => {
-    if (sessionStorage.getItem("token")) {
-      const storedUser = sessionStorage.getItem("token");
+    if (sessionStorage.getItem("authUser")) {
+      const storedUser = sessionStorage.getItem("authUser");
       if (storedUser) {
         const obj = JSON.parse(storedUser);
 
@@ -66,8 +66,8 @@ const UserProfile = () => {
         ) {
           if (!isEmpty(user)) {
             obj.data.first_name = user.first_name;
-            sessionStorage.removeItem("token");
-            sessionStorage.setItem("token", JSON.stringify(obj));
+            sessionStorage.removeItem("authUser");
+            sessionStorage.setItem("authUser", JSON.stringify(obj));
           }
 
           setUserName(obj.data.first_name || "Admin");

@@ -69,10 +69,10 @@ const setAuthorization = (token: string) => {
     // sessionStorage.setItem("token", token);
     AxiosInstance.defaults.headers.common[
       "Authorization"
-    ] = `Bearer ${JSON.parse(token)}`;
+    ] = `Bearer ${token}`;
   } else {
     delete AxiosInstance.defaults.headers.common["Authorization"];
-    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("authUser");
   }
 };
 
@@ -81,7 +81,7 @@ const setAuthorization = (token: string) => {
  */
 const removeAuthorization = () => {
   delete AxiosInstance.defaults.headers.common["Authorization"];
-  sessionStorage.removeItem("token");
+  sessionStorage.removeItem("authUser");
 };
 
 class APIClient {
@@ -116,7 +116,8 @@ class APIClient {
 
 const getLoggedinUser = () => {
   const user = sessionStorage.getItem("authUser");
-  return user ? JSON.parse(user).data : null;
+  return user ? JSON.parse(user) : null;
 };
 
-export { APIClient, setAuthorization, removeAuthorization, getLoggedinUser };
+export { APIClient, getLoggedinUser, removeAuthorization, setAuthorization };
+

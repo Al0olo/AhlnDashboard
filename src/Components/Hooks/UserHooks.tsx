@@ -3,15 +3,11 @@ import { getLoggedinUser } from "../../helpers/api_helper";
 
 const useProfile = () => {
   const userProfileSession = getLoggedinUser();
-  console.log("userProfileSession", userProfileSession);
-
-  var token =
-    userProfileSession &&
-    userProfileSession["token"];
+  var token = userProfileSession && userProfileSession["token"];
   const [loading, setLoading] = useState(userProfileSession ? false : true);
-  const [userProfile, setUserProfile] = useState(
-    userProfileSession ? userProfileSession : null
-  );
+  const [userProfile, setUserProfile] = useState(userProfileSession ? userProfileSession : null);
+  console.log("Yasserrtoken=>", token);
+  console.log("userProfileuseProfileuseProfileuseProfile", userProfile);
 
   useEffect(() => {
     const userProfileSession = getLoggedinUser();
@@ -20,7 +16,7 @@ const useProfile = () => {
       userProfileSession["token"];
     setUserProfile(userProfileSession ? userProfileSession : null);
     setLoading(token ? false : true);
-  }, [userProfileSession]);
+  }, [token]);
 
 
   return { userProfile, loading, token };

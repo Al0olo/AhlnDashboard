@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   Dropdown,
   DropdownItem,
@@ -8,7 +9,6 @@ import {
   DropdownToggle,
 } from "reactstrap";
 import { createSelector } from "reselect";
-import { toast } from "react-toastify";
 
 import avatar1 from "../../assets/images/users/avatar-1.jpg";
 import { LogoutAction } from "../../slices/thunks";
@@ -36,28 +36,23 @@ const ProfileDropdown = () => {
   };
 
   const logout = () => {
-    const token = sessionStorage.getItem("token");
 
-    if (token) {
-      dispatch(LogoutAction()).then((res: any) => {
-        if (res.type === "auth/logout/fulfilled") {
-          toast("Logout successful", {
-            position: "top-right",
-            hideProgressBar: false,
-            className: "bg-success text-white",
-            progress: undefined,
-            toastId: "",
-          });
+    dispatch(LogoutAction()).then((res: any) => {
+      if (res.type === "auth/logout/fulfilled") {
+        navigate("/login");
+        toast("Logout successful", {
+          position: "top-right",
+          hideProgressBar: false,
+          className: "bg-success text-white",
+          progress: undefined,
+          toastId: "",
+        });
+        sessionStorage.removeItem("authUser");
+      } else {
+        toast.error("Logout failed. Please try again.");
+      }
+    });
 
-          sessionStorage.removeItem("token");
-          navigate("/login");
-        } else {
-          toast.error("Logout failed. Please try again.");
-        }
-      });
-    } else {
-      navigate("/login");
-    }
   };
 
   return (

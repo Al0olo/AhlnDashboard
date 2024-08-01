@@ -1,17 +1,15 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { postFakeLogin } from "../../../helpers/fakebackend_helper";
+import { postLogin } from "../../../helpers/fakebackend_helper";
 
-export const LoginAction = createAsyncThunk(
-  "auth/login",
-  async (user: any, thunkApi: any) => {
-    try {
-      let response = await postFakeLogin(user);
-      console.log("response", response);
-      return response;
-    } catch (error: any) {
-      console.log("error", error);
+export const LoginAction = createAsyncThunk("auth/login", async (user: any, thunkApi: any) => {
+  try {
+    let response = await postLogin(user);
+    sessionStorage.setItem("authUser", JSON.stringify(response))
 
-      return thunkApi.rejectWithValue(error);
-    }
+    return response;
+  } catch (error: any) {
+    console.log("LoginActionError", error);
+    return thunkApi.rejectWithValue(error);
   }
+}
 );

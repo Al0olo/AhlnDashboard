@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { LogoutAction } from "slices/thunks";
 import { LoginAction } from "./thunk";
 
 export const initialState: any = {
@@ -29,6 +30,16 @@ const loginReducer = createSlice({
       state.success = false;
       state.error = payload;
     });
+
+
+    builder.addCase(
+      LogoutAction.fulfilled,
+      (state, action: PayloadAction<any>) => {
+        state.user = null;
+        state.success = true;
+        state.loading = false;
+      }
+    );
   },
 });
 

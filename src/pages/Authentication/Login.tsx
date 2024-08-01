@@ -24,13 +24,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { LoginAction } from "../../slices/thunks";
 
 //redux
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { Link, useNavigate } from "react-router-dom";
 
 //import images
 import { useAppSelector } from "redux-hooks";
-import { createSelector } from "reselect";
 import logoLight from "../../assets/images/ahln_logo.jpeg";
 import ParticlesAuth from "../AuthenticationInner/ParticlesAuth";
 
@@ -55,7 +54,7 @@ const Login = (props: any) => {
     onSubmit: (values) => {
       console.log(values);
       dispatch(LoginAction(values)).then((res: { payload: any; type: any }) => {
-        if (res.type === "auth/login/fulfilled" && res.payload.success) {
+        if (res.type === "auth/login/fulfilled") {
           toast("Login successful", {
             position: "top-right",
             hideProgressBar: false,
@@ -64,7 +63,6 @@ const Login = (props: any) => {
             toastId: "",
           });
 
-          console.log("TOKKKKKK" + res.payload.token);
 
           sessionStorage.setItem("token", res.payload.token);
           history("/dashboard");
@@ -82,15 +80,6 @@ const Login = (props: any) => {
     },
   });
 
-  const logindatatype = createSelector(
-    (state: any) => state,
-    (account) => ({
-      success: account.success,
-      error: account.error,
-    })
-  );
-  // Inside your component
-  const { error, success } = useSelector(logindatatype);
 
   document.title = "Basic Login | Ahln - React Admin & Dashboard Template";
 

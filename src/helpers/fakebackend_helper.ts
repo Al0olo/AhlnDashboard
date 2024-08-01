@@ -6,7 +6,7 @@ const api = new APIClient();
 
 // Gets the logged in user data from local session
 export const getLoggedInUser = () => {
-  const user = localStorage.getItem("authUser");
+  const user = sessionStorage.getItem("authUser");
   if (user) return JSON.parse(user).data;
   return null;
 };
@@ -16,7 +16,7 @@ export const getBoxes = () => {
   return api.get(url.GET_BOXES);
 };
 export const addBox = (data: any) => {
-  return api.get(url.ADD_BOX , data);
+  return api.get(url.ADD_BOX, data);
 };
 
 // Fetches boxes for a given user
@@ -37,7 +37,7 @@ export const postFakeRegister = (data: any) =>
 export const postFakeLogout = () => api.create(url.POST_FAKE_LOGOUT, {});
 
 // Login Method
-export const postFakeLogin = (data: any) =>
+export const postLogin = (data: any) =>
   api.create(url.POST_FAKE_LOGIN, data);
 
 // postForgetPwd
@@ -127,13 +127,14 @@ export const trashMail = (forId: any) =>
 //Model-Start
 
 // get Models
-export const getModels = () => { 
-  return api.get(url.GET_MODELS) };
+export const getModels = () => {
+  return api.get(url.GET_MODELS)
+};
 
 // delete Model
-export const deleteModels = (model: any) =>{
- 
- return api.delete(url.DELETE_MODEL+model);
+export const deleteModels = (model: any) => {
+
+  return api.delete(url.DELETE_MODEL + model);
 }
 // add Models
 export const addNewModel = (model: any) =>

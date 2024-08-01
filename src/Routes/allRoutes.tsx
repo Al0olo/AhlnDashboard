@@ -1,4 +1,3 @@
-import React from "react";
 import { Navigate } from "react-router-dom";
 
 //Dashboard
@@ -10,9 +9,9 @@ import DashboardEcommerce from "../pages/DashboardEcommerce";
 import MailInbox from "../pages/EmailInbox";
 
 //Invoices
-import InvoiceList from "../pages/Invoices/InvoiceList";
 import InvoiceCreate from "../pages/Invoices/InvoiceCreate";
 import InvoiceDetails from "../pages/Invoices/InvoiceDetails";
+import InvoiceList from "../pages/Invoices/InvoiceList";
 
 // Support Tickets
 import ListView from "../pages/SupportTickets/ListView";
@@ -20,71 +19,71 @@ import TicketsDetails from "../pages/SupportTickets/TicketsDetails";
 
 //Ecommerce Pages
 //Models
-import EcommerceModels from "../pages/Ecommerce/EcommerceModels/index";
-import EcommerceModelDetail from "../pages/Ecommerce/EcommerceModels/EcommerceModelDetail";
 import EcommerceAddModel from "../pages/Ecommerce/EcommerceModels/EcommerceAddModel";
+import EcommerceModelDetail from "../pages/Ecommerce/EcommerceModels/EcommerceModelDetail";
+import EcommerceModels from "../pages/Ecommerce/EcommerceModels/index";
 
 //Products
-import EcommerceProducts from "../pages/Ecommerce/EcommerceProducts/index";
-import EcommerceProductDetail from "../pages/Ecommerce/EcommerceProducts/EcommerceProductDetail";
 import EcommerceAddProduct from "../pages/Ecommerce/EcommerceProducts/EcommerceAddProduct";
+import EcommerceProductDetail from "../pages/Ecommerce/EcommerceProducts/EcommerceProductDetail";
+import EcommerceProducts from "../pages/Ecommerce/EcommerceProducts/index";
 //Orders
-import EcommerceOrders from "../pages/Ecommerce/EcommerceOrders/index";
-import EcommerceOrderDetail from "../pages/Ecommerce/EcommerceOrders/EcommerceOrderDetail";
-import EcommerceCustomers from "../pages/Ecommerce/EcommerceCustomers/index";
 import EcommerceCart from "../pages/Ecommerce/EcommerceCart";
 import EcommerceCheckout from "../pages/Ecommerce/EcommerceCheckout";
-import EcommerceSellers from "../pages/Ecommerce/EcommerceSellers/index";
+import EcommerceCustomers from "../pages/Ecommerce/EcommerceCustomers/index";
+import EcommerceOrderDetail from "../pages/Ecommerce/EcommerceOrders/EcommerceOrderDetail";
+import EcommerceOrders from "../pages/Ecommerce/EcommerceOrders/index";
 import EcommerceSellerDetail from "../pages/Ecommerce/EcommerceSellers/EcommerceSellerDetail";
+import EcommerceSellers from "../pages/Ecommerce/EcommerceSellers/index";
 
 // Base Ui
+import UiAccordions from "../pages/BaseUi/UiAccordion&Collapse/UiAccordion&Collapse";
 import UiAlerts from "../pages/BaseUi/UiAlerts/UiAlerts";
 import UiBadges from "../pages/BaseUi/UiBadges/UiBadges";
 import UiButtons from "../pages/BaseUi/UiButtons/UiButtons";
-import UiColors from "../pages/BaseUi/UiColors/UiColors";
 import UiCards from "../pages/BaseUi/UiCards/UiCards";
 import UiCarousel from "../pages/BaseUi/UiCarousel/UiCarousel";
+import UiColors from "../pages/BaseUi/UiColors/UiColors";
 import UiDropdowns from "../pages/BaseUi/UiDropdowns/UiDropdowns";
+import UiEmbedVideo from "../pages/BaseUi/UiEmbedVideo/UiEmbedVideo";
+import UiGeneral from "../pages/BaseUi/UiGeneral/UiGeneral";
 import UiGrid from "../pages/BaseUi/UiGrid/UiGrid";
 import UiImages from "../pages/BaseUi/UiImages/UiImages";
-import UiTabs from "../pages/BaseUi/UiTabs/UiTabs";
-import UiAccordions from "../pages/BaseUi/UiAccordion&Collapse/UiAccordion&Collapse";
+import UiList from "../pages/BaseUi/UiLists/UiLists";
+import UiMediaobject from "../pages/BaseUi/UiMediaobject/UiMediaobject";
 import UiModals from "../pages/BaseUi/UiModals/UiModals";
+import UiNotifications from "../pages/BaseUi/UiNotifications/UiNotifications";
 import UiOffcanvas from "../pages/BaseUi/UiOffcanvas/UiOffcanvas";
 import UiPlaceholders from "../pages/BaseUi/UiPlaceholders/UiPlaceholders";
 import UiProgress from "../pages/BaseUi/UiProgress/UiProgress";
-import UiNotifications from "../pages/BaseUi/UiNotifications/UiNotifications";
-import UiMediaobject from "../pages/BaseUi/UiMediaobject/UiMediaobject";
-import UiEmbedVideo from "../pages/BaseUi/UiEmbedVideo/UiEmbedVideo";
-import UiTypography from "../pages/BaseUi/UiTypography/UiTypography";
-import UiList from "../pages/BaseUi/UiLists/UiLists";
-import UiGeneral from "../pages/BaseUi/UiGeneral/UiGeneral";
 import UiRibbons from "../pages/BaseUi/UiRibbons/UiRibbons";
+import UiTabs from "../pages/BaseUi/UiTabs/UiTabs";
+import UiTypography from "../pages/BaseUi/UiTypography/UiTypography";
 import UiUtilities from "../pages/BaseUi/UiUtilities/UiUtilities";
 
 // Advance Ui
-import UiScrollbar from "../pages/AdvanceUi/UiScrollbar/UiScrollbar";
 import UiAnimation from "../pages/AdvanceUi/UiAnimation/UiAnimation";
-import UiSwiperSlider from "../pages/AdvanceUi/UiSwiperSlider/UiSwiperSlider";
-import UiRatings from "../pages/AdvanceUi/UiRatings/UiRatings";
 import UiHighlight from "../pages/AdvanceUi/UiHighlight/UiHighlight";
+import UiRatings from "../pages/AdvanceUi/UiRatings/UiRatings";
+import UiScrollbar from "../pages/AdvanceUi/UiScrollbar/UiScrollbar";
+import UiSwiperSlider from "../pages/AdvanceUi/UiSwiperSlider/UiSwiperSlider";
 
 // Widgets
 import Widgets from "../pages/Widgets/Index";
 
 //Forms
 import BasicElements from "../pages/Forms/BasicElements/BasicElements";
-import FormSelect from "../pages/Forms/FormSelect/FormSelect";
-import FormEditor from "../pages/Forms/FormEditor/FormEditor";
 import CheckBoxAndRadio from "../pages/Forms/CheckboxAndRadio/CheckBoxAndRadio";
-import Masks from "../pages/Forms/Masks/Masks";
 import FileUpload from "../pages/Forms/FileUpload/FileUpload";
+import FormAdvanced from "../pages/Forms/FormAdvanced/FormAdvanced";
+import FormEditor from "../pages/Forms/FormEditor/FormEditor";
+import Formlayouts from "../pages/Forms/FormLayouts/Formlayouts";
 import FormPickers from "../pages/Forms/FormPickers/FormPickers";
 import FormRangeSlider from "../pages/Forms/FormRangeSlider/FormRangeSlider";
-import Formlayouts from "../pages/Forms/FormLayouts/Formlayouts";
+import FormSelect from "../pages/Forms/FormSelect/FormSelect";
 import FormValidation from "../pages/Forms/FormValidation/FormValidation";
 import FormWizard from "../pages/Forms/FormWizard/FormWizard";
-import FormAdvanced from "../pages/Forms/FormAdvanced/FormAdvanced";
+import Masks from "../pages/Forms/Masks/Masks";
 import Select2 from "../pages/Forms/Select2/Select2";
 
 //Tables
@@ -92,12 +91,12 @@ import BasicTables from "../pages/Tables/BasicTables/BasicTables";
 import ReactTable from "../pages/Tables/ReactTables";
 
 //Icon pages
-import RemixIcons from "../pages/Icons/RemixIcons/RemixIcons";
 import BoxIcons from "../pages/Icons/BoxIcons/BoxIcons";
-import MaterialDesign from "../pages/Icons/MaterialDesign/MaterialDesign";
+import CryptoIcons from "../pages/Icons/CryptoIcons/CryptoIcons";
 import FeatherIcons from "../pages/Icons/FeatherIcons/FeatherIcons";
 import LineAwesomeIcons from "../pages/Icons/LineAwesomeIcons/LineAwesomeIcons";
-import CryptoIcons from "../pages/Icons/CryptoIcons/CryptoIcons";
+import MaterialDesign from "../pages/Icons/MaterialDesign/MaterialDesign";
+import RemixIcons from "../pages/Icons/RemixIcons/RemixIcons";
 
 //Maps
 import GoogleMaps from "../pages/Maps/GoogleMaps/GoogleMaps";
@@ -105,86 +104,86 @@ import GoogleMaps from "../pages/Maps/GoogleMaps/GoogleMaps";
 //AuthenticationInner pages
 import BasicSignIn from "../pages/AuthenticationInner/Login/BasicSignIn";
 import CoverSignIn from "../pages/AuthenticationInner/Login/CoverSignIn";
+import BasicPasswReset from "../pages/AuthenticationInner/PasswordReset/BasicPasswReset";
 import BasicSignUp from "../pages/AuthenticationInner/Register/BasicSignUp";
 import CoverSignUp from "../pages/AuthenticationInner/Register/CoverSignUp";
-import BasicPasswReset from "../pages/AuthenticationInner/PasswordReset/BasicPasswReset";
 //pages
-import Starter from "../pages/Pages/Starter/Starter";
-import SimplePage from "../pages/Pages/Profile/SimplePage/SimplePage";
-import Settings from "../pages/Pages/Profile/Settings/Settings";
-import Team from "../pages/Pages/Team/Team";
-import Timeline from "../pages/Pages/Timeline/Timeline";
+import ComingSoon from "../pages/Pages/ComingSoon/ComingSoon";
 import Faqs from "../pages/Pages/Faqs/Faqs";
-import Pricing from "../pages/Pages/Pricing/Pricing";
 import Gallery from "../pages/Pages/Gallery/Gallery";
 import Maintenance from "../pages/Pages/Maintenance/Maintenance";
-import ComingSoon from "../pages/Pages/ComingSoon/ComingSoon";
-import SiteMap from "../pages/Pages/SiteMap/SiteMap";
+import Pricing from "../pages/Pages/Pricing/Pricing";
+import Settings from "../pages/Pages/Profile/Settings/Settings";
+import SimplePage from "../pages/Pages/Profile/SimplePage/SimplePage";
 import SearchResults from "../pages/Pages/SearchResults/SearchResults";
+import SiteMap from "../pages/Pages/SiteMap/SiteMap";
+import Starter from "../pages/Pages/Starter/Starter";
+import Team from "../pages/Pages/Team/Team";
+import Timeline from "../pages/Pages/Timeline/Timeline";
 
-import CoverPasswReset from "../pages/AuthenticationInner/PasswordReset/CoverPasswReset";
+import Alt404 from "../pages/AuthenticationInner/Errors/Alt404";
+import Basic404 from "../pages/AuthenticationInner/Errors/Basic404";
+import Cover404 from "../pages/AuthenticationInner/Errors/Cover404";
+import Error500 from "../pages/AuthenticationInner/Errors/Error500";
 import BasicLockScreen from "../pages/AuthenticationInner/LockScreen/BasicLockScr";
 import CoverLockScreen from "../pages/AuthenticationInner/LockScreen/CoverLockScr";
 import BasicLogout from "../pages/AuthenticationInner/Logout/BasicLogout";
 import CoverLogout from "../pages/AuthenticationInner/Logout/CoverLogout";
+import CoverPasswReset from "../pages/AuthenticationInner/PasswordReset/CoverPasswReset";
 import BasicSuccessMsg from "../pages/AuthenticationInner/SuccessMessage/BasicSuccessMsg";
 import CoverSuccessMsg from "../pages/AuthenticationInner/SuccessMessage/CoverSuccessMsg";
 import BasicTwosVerify from "../pages/AuthenticationInner/TwoStepVerification/BasicTwosVerify";
 import CoverTwosVerify from "../pages/AuthenticationInner/TwoStepVerification/CoverTwosVerify";
-import Basic404 from "../pages/AuthenticationInner/Errors/Basic404";
-import Cover404 from "../pages/AuthenticationInner/Errors/Cover404";
-import Alt404 from "../pages/AuthenticationInner/Errors/Alt404";
-import Error500 from "../pages/AuthenticationInner/Errors/Error500";
 
+import Offlinepage from "../pages/AuthenticationInner/Errors/Offlinepage";
 import BasicPasswCreate from "../pages/AuthenticationInner/PasswordCreate/BasicPasswCreate";
 import CoverPasswCreate from "../pages/AuthenticationInner/PasswordCreate/CoverPasswCreate";
-import Offlinepage from "../pages/AuthenticationInner/Errors/Offlinepage";
 
 //login
-import Login from "../pages/Authentication/Login";
 import ForgetPasswordPage from "../pages/Authentication/ForgetPassword";
 import ForgetPasswordOtpPage from "../pages/Authentication/ForgotPasswordOtpPage";
+import Login from "../pages/Authentication/Login";
 import Logout from "../pages/Authentication/Logout";
 import Register from "../pages/Authentication/Register";
 import VerifyEmailPage from "../pages/Authentication/VerifyEmailPage";
 
 //Charts
-import LineCharts from "../pages/Charts/ApexCharts/LineCharts";
 import AreaCharts from "../pages/Charts/ApexCharts/AreaCharts";
-import ColumnCharts from "../pages/Charts/ApexCharts/ColumnCharts";
 import BarCharts from "../pages/Charts/ApexCharts/BarCharts";
-import MixedCharts from "../pages/Charts/ApexCharts/MixedCharts";
-import TimelineCharts from "../pages/Charts/ApexCharts/TimelineCharts";
-import CandlestickChart from "../pages/Charts/ApexCharts/CandlestickChart";
 import BoxplotCharts from "../pages/Charts/ApexCharts/BoxplotCharts";
 import BubbleChart from "../pages/Charts/ApexCharts/BubbleChart";
-import ScatterCharts from "../pages/Charts/ApexCharts/ScatterCharts";
+import CandlestickChart from "../pages/Charts/ApexCharts/CandlestickChart";
+import ColumnCharts from "../pages/Charts/ApexCharts/ColumnCharts";
 import HeatmapCharts from "../pages/Charts/ApexCharts/HeatmapCharts";
-import TreemapCharts from "../pages/Charts/ApexCharts/TreemapCharts";
+import LineCharts from "../pages/Charts/ApexCharts/LineCharts";
+import MixedCharts from "../pages/Charts/ApexCharts/MixedCharts";
 import PieCharts from "../pages/Charts/ApexCharts/PieCharts";
-import RadialbarCharts from "../pages/Charts/ApexCharts/RadialbarCharts";
-import RadarCharts from "../pages/Charts/ApexCharts/RadarCharts";
 import PolarCharts from "../pages/Charts/ApexCharts/PolarCharts";
+import RadarCharts from "../pages/Charts/ApexCharts/RadarCharts";
+import RadialbarCharts from "../pages/Charts/ApexCharts/RadialbarCharts";
+import ScatterCharts from "../pages/Charts/ApexCharts/ScatterCharts";
+import TimelineCharts from "../pages/Charts/ApexCharts/TimelineCharts";
+import TreemapCharts from "../pages/Charts/ApexCharts/TreemapCharts";
 import ChartsJs from "../pages/Charts/ChartsJs/index";
 import Echarts from "../pages/Charts/ECharts/index";
 
 // Landing Index
-import OnePage from "../pages/Landing/OnePage";
 import NFTLanding from "../pages/Landing/NFTLanding";
+import OnePage from "../pages/Landing/OnePage";
 
+import JobLanding from "../pages/Job_Landing/Job";
 import PrivecyPolicy from "../pages/Pages/PrivacyPolicy";
 import TermsCondition from "../pages/Pages/TermsCondition";
-import JobLanding from "../pages/Job_Landing/Job";
 
 // User Profilez
 import UserProfile from "../pages/Authentication/user-profile";
 
-import ToDoList from "../pages/ToDo";
-import UILink from "../pages/BaseUi/UiLink/Index";
-import RangeArea from "../pages/Charts/ApexCharts/RangeAreaCharts/Index";
-import FunnelCharts from "../pages/Charts/ApexCharts/FunnelCharts/Index";
 import BoxView from "pages/Boxes/Box/BoxView";
 import TabletView from "pages/Boxes/Tablets/TabletView";
+import UILink from "../pages/BaseUi/UiLink/Index";
+import FunnelCharts from "../pages/Charts/ApexCharts/FunnelCharts/Index";
+import RangeArea from "../pages/Charts/ApexCharts/RangeAreaCharts/Index";
+import ToDoList from "../pages/ToDo";
 
 const authProtectedRoutes = [
   { path: "/dashboard-analytics", component: <DashboardAnalytics /> },
@@ -192,30 +191,30 @@ const authProtectedRoutes = [
   { path: "/index", component: <DashboardEcommerce /> },
   //Models
 
-{ path: "/apps-ecommerce-models", component: <EcommerceModels /> },
-{
-  path: "/apps-ecommerce-model-details/:_id",
-  component: <EcommerceModelDetail />,
-},
-{
-  path: "/apps-ecommerce-model-details",
-  component: <EcommerceModelDetail />,
-},
-{ path: "/apps-ecommerce-add-model", component: <EcommerceAddModel /> },
+  { path: "/apps-ecommerce-models", component: <EcommerceModels /> },
+  {
+    path: "/apps-ecommerce-model-details/:_id",
+    component: <EcommerceModelDetail />,
+  },
+  {
+    path: "/apps-ecommerce-model-details",
+    component: <EcommerceModelDetail />,
+  },
+  { path: "/apps-ecommerce-add-model", component: <EcommerceAddModel /> },
 
-//Products
+  //Products
 
-{ path: "/apps-ecommerce-products", component: <EcommerceProducts /> },
-{
-  path: "/apps-ecommerce-product-details/:_id",
-  component: <EcommerceProductDetail />,
-},
-{
-  path: "/apps-ecommerce-product-details",
-  component: <EcommerceProductDetail />,
-},
-{ path: "/apps-ecommerce-add-product", component: <EcommerceAddProduct /> },
-//Orders
+  { path: "/apps-ecommerce-products", component: <EcommerceProducts /> },
+  {
+    path: "/apps-ecommerce-product-details/:_id",
+    component: <EcommerceProductDetail />,
+  },
+  {
+    path: "/apps-ecommerce-product-details",
+    component: <EcommerceProductDetail />,
+  },
+  { path: "/apps-ecommerce-add-product", component: <EcommerceAddProduct /> },
+  //Orders
 
   { path: "/apps-ecommerce-orders", component: <EcommerceOrders /> },
   {
@@ -368,8 +367,8 @@ const authProtectedRoutes = [
 
 const publicRoutes: any = [
   // Authentication Page
-  { path: "/logout", component: <Logout /> },
   { path: "/login", component: <Login /> },
+  { path: "/logout", component: <Logout /> },
   { path: "/forgot-password", component: <ForgetPasswordPage /> },
   { path: "/forgot-password-otp", component: <ForgetPasswordOtpPage /> },
   { path: "/verify-email", component: <VerifyEmailPage /> },
@@ -407,3 +406,4 @@ const publicRoutes: any = [
 ];
 
 export { authProtectedRoutes, publicRoutes };
+
