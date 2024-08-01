@@ -176,7 +176,8 @@ import ToDoList from "../pages/ToDo";
 import UILink from "../pages/BaseUi/UiLink/Index";
 import RangeArea from "../pages/Charts/ApexCharts/RangeAreaCharts/Index";
 import FunnelCharts from "../pages/Charts/ApexCharts/FunnelCharts/Index";
-import BoxView from "pages/Boxes/BoxView";
+import BoxView from "pages/Boxes/Box/BoxView";
+import TabletView from "pages/Boxes/Tablets/TabletView";
 
 const authProtectedRoutes = [
   { path: "/dashboard-analytics", component: <DashboardAnalytics /> },
@@ -223,6 +224,7 @@ const authProtectedRoutes = [
 
   //Boxes
   { path: "/boxes", component: <BoxView /> },
+  { path: "/tablets", component: <TabletView /> },
 
   //charts
   { path: "/charts-apex-line", component: <LineCharts /> },

@@ -30,10 +30,16 @@ AxiosInstance.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle errors
+// Enhanced response interceptor to handle errors
 AxiosInstance.interceptors.response.use(
   (response) => response.data,
   (error: any) => {
+    if (!error.response) {
+      // Network error or no response
+      console.error("Network error or no response:", error);
+      return Promise.reject("Network error or server is not responding.");
+    }
+
     console.error("Request failed:", error.response.status);
 
     let message;
