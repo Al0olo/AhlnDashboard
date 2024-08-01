@@ -64,6 +64,7 @@ import { jobApplication, jobCandidates, jobCategories } from "./appsJobs";
 
 //Ecommerce
 import {
+  modelsData,
   productsData,
   productDetailsWidgets,
   reviews,
@@ -139,6 +140,7 @@ export {
   events,
   defaultevent,
   mailbox,
+  modelsData,
   productsData,
   productDetailsWidgets,
   reviews,
