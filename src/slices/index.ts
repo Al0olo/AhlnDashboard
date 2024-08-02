@@ -21,6 +21,9 @@ import { tabletSlices } from "./Box/tablet/reducer";
 //Address
 import { addressSlices } from "./Box/Address/reducer";
 
+// Delivery Packages
+import { deliverySlices } from "./delivery/deliveryPackage/reducer";
+
 //Calendar
 import CalendarReducer from "./calendar/reducer";
 //Chat
@@ -88,6 +91,7 @@ const rootReducer = combineReducers({
   Boxes: boxSlices,
   Tablets: tabletSlices,
   Address: addressSlices,
+  Delivery: deliverySlices,
   Account: registerSlices,
   ForgetPassword: forgotPasswordSlices,
   VerifyPasswordOtp: verifySlices,

@@ -236,7 +236,7 @@ const BoxesData = () => {
           />
         ),
         id: "#",
-        accessorKey: "id",
+        accessorKey: "",
         enableColumnFilter: false,
         enableSorting: false,
       },

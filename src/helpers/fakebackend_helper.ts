@@ -77,6 +77,16 @@ export const deleteAddress = (data: any) => {
   return api.delete(`${url.DELETE_ADDRESS}/${data}`);
 };
 
+// DELIVERY PACKAGE
+// Get Delivery Packages
+export const getDeliveryPackages = () => {
+  return api.get(url.GET_DELIVERY_ALL);
+};
+// Get One Delivery Package
+export const getOneDeliveryPackage = (data: any) => {
+  return api.get(`${url.DELETE_ADDRESS}/${data}`);
+};
+
 //is user is logged in
 export const isUserAuthenticated = () => {
   return getLoggedInUser() !== null;

@@ -13,7 +13,6 @@ export const GetTabletsAction = createAsyncThunk(
   async (_, thunkApi) => {
     try {
       const response = await getTablets();
-      toast.success("Tablets Retrieved Successfully", { autoClose: 3000 });
 
       return response.data;
     } catch (error: any) {
@@ -27,7 +26,6 @@ export const GetOneTabletAction = createAsyncThunk(
   async (tablet: any, thunkApi) => {
     try {
       const response = await getOneTablet(tablet);
-      toast.success("Tablet Retrieved Successfully", { autoClose: 3000 });
       return response.data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.response?.data || error.message);
@@ -41,7 +39,6 @@ export const AddTabletAction = createAsyncThunk(
     try {
       const response = await addTablet(tablet);
       const data = await response;
-      console.log("tablet", tablet);
 
       toast.success("Tablet Added Successfully", { autoClose: 3000 });
       return data;
@@ -69,7 +66,6 @@ export const DeleteTabletAction = createAsyncThunk(
   "tablet/delete",
   async (tablet: string, thunkApi) => {
     try {
-      console.log("tablet", tablet);
 
       const response = await deleteTablet(tablet);
       const data = await response;

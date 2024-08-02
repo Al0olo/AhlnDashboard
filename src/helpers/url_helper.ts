@@ -32,6 +32,10 @@ export const ADD_ADDRESS = "/address/new";
 export const UPDATE_ADDRESS = "/address/update";
 export const DELETE_ADDRESS = "/address/delete";
 
+// DELIVERY
+export const GET_DELIVERY_ALL = "/delivery-package/get-all";
+export const GET_ONE_DELIVERY = "/delivery-package/get-one";
+
 //PROFILE
 export const POST_EDIT_JWT_PROFILE = "/post-jwt-profile";
 export const POST_EDIT_PROFILE = "/user";

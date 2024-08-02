@@ -19,6 +19,9 @@ export * from "./Box/tablet/thunk";
 //Address
 export * from "./Box/Address/thunk";
 
+//Delivery Package
+export * from "./delivery/deliveryPackage/thunk";
+
 //Calendar
 export * from "./calendar/thunk";
 //Chat

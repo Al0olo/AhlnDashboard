@@ -28,6 +28,7 @@ const Navdata = () => {
   const [isInvoices, setIsInvoices] = useState<boolean>(false);
   const [isSupportTickets, setIsSupportTickets] = useState<boolean>(false);
   const [isBox, setIsBox] = useState<boolean>(false);
+  const [isDelivery, setIsDelivery] = useState<boolean>(false);
   // const [isNFTMarketplace, setIsNFTMarketplace] = useState<boolean>(false);
   // const [isJobs, setIsJobs] = useState<boolean>(false);
   // const [isJobList, setIsJobList] = useState<boolean>(false);
@@ -352,6 +353,31 @@ const Navdata = () => {
             { id: 5, label: "Boxes Locker", link: "/apps-tickets-details" },
             { id: 6, label: "Boxes Images", link: "/apps-tickets-details" },
             { id: 7, label: "User Boxes", link: "/apps-tickets-details" },
+          ],
+        },
+        {
+          id: "delivery",
+          label: "Delivery",
+          link: "/#",
+          isChildItem: true,
+          click: function (e: any) {
+            e.preventDefault();
+            setIsDelivery(!isDelivery);
+          },
+          parentId: "apps",
+          stateVariables: isDelivery,
+          childItems: [
+            // Routes needs to be adjusted
+            {
+              id: 1,
+              label: "Delivery Packages List",
+              link: "/delivery-packages",
+            },
+            {
+              id: 2,
+              label: "Shipping Companies",
+              link: "/shipping-companies",
+            },
           ],
         },
       ],
