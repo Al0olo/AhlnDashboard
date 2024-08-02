@@ -1,34 +1,32 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { setAuthorization } from "../helpers/api_helper";
-
+import { useAppDispatch } from "redux-hooks";
 import { useProfile } from "../Components/Hooks/UserHooks";
-
+import { setAuthorization } from "../helpers/api_helper";
 import { LogoutAction } from "../slices/auth/logout/thunk";
 
-const AuthProtected = (props: any) => {
-  const dispatch: any = useDispatch();
+const AuthProtected = ({ children }: any) => {
+  const dispatch = useAppDispatch();
   const { userProfile, loading, token } = useProfile();
   console.log("userProfile", userProfile, loading, token);
 
   useEffect(() => {
-    if (userProfile && !loading && token) {
+    if (userProfile && token) {
       setAuthorization(token);
-    } else if (!userProfile && loading && !token) {
-      dispatch(LogoutAction()); // needs to be added later
+    } else if (!userProfile && !loading && !token) {
+      dispatch(LogoutAction());
     }
   }, [token, userProfile, loading, dispatch]);
-
-  /*
-    Navigate is un-auth access protected routes via url
-    */
 
   if (!userProfile && loading && !token) {
     return <Navigate to={{ pathname: "/login" }} />;
   }
 
-  return <>{props.children}</>;
+  // if (loading) {
+  //   return <div>Loading...</div>; // Optionally show a loading indicator while checking the auth status
+  // }
+
+  return <>{children}</>;
 };
 
 export default AuthProtected;
