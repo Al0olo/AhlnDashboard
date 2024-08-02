@@ -11,17 +11,70 @@ export const getLoggedInUser = () => {
   return null;
 };
 
+// BOX
 // Fetches boxes for a given user
 export const getBoxes = () => {
   return api.get(url.GET_BOXES);
 };
+// Get One Box
+export const getOneBox = (data: any) => {
+  return api.get(url.GET_BOXES);
+};
+// Add Box
 export const addBox = (data: any) => {
   return api.get(url.ADD_BOX, data);
 };
+// Update Exsiting Box
+export const updateBox = (data: any) => {
+  return api.get(url.UPDATE_BOX, data);
+};
+// Delete Box
+export const deleteBox = (data: any) => {
+  return api.delete(`${url.DELETE_BOX}/${data}`);
+};
 
-// Fetches boxes for a given user
+// TABLET
+// Get Tablets
 export const getTablets = () => {
   return api.get(url.GET_TABLETS);
+};
+// Get One Tablet
+export const getOneTablet = (data: any) => {
+  return api.get(url.GET_TABLETS);
+};
+// Add Tablet
+export const addTablet = (data: any) => {
+  return api.get(url.ADD_TABLET, data);
+};
+// Update Exsiting Tablet
+export const updateTablet = (data: any) => {
+  return api.get(url.UPDATE_TABLET, data);
+};
+// Delete Tablet
+export const deleteTablet = (data: any) => {
+  return api.delete(`${url.DELETE_TABLET}/${data}`);
+};
+
+// ADDRESS
+// Get Addresses
+export const getAddresses = () => {
+  return api.get(url.GET_ADDRESS);
+};
+// Get One Address
+export const getOneAddress = (data: any) => {
+  return api.get(url.GET_ADDRESS);
+};
+// Add Address
+export const addAddress = (data: any) => {
+  return api.get(url.ADD_ADDRESS, data);
+};
+// Update Exsiting Address
+export const updateAddress = (data: any) => {
+  return api.get(url.UPDATE_ADDRESS, data);
+};
+// Delete Address
+export const deleteAddress = (data: any) => {
+  return api.delete(`${url.DELETE_ADDRESS}/${data}`);
 };
 
 //is user is logged in
@@ -37,8 +90,7 @@ export const postFakeRegister = (data: any) =>
 export const postFakeLogout = () => api.create(url.POST_FAKE_LOGOUT, {});
 
 // Login Method
-export const postLogin = (data: any) =>
-  api.create(url.POST_FAKE_LOGIN, data);
+export const postLogin = (data: any) => api.create(url.POST_FAKE_LOGIN, data);
 
 // postForgetPwd
 export const postFakeForgetPwd = (data: any) =>
@@ -128,22 +180,18 @@ export const trashMail = (forId: any) =>
 
 // get Models
 export const getModels = () => {
-  return api.get(url.GET_MODELS)
+  return api.get(url.GET_MODELS);
 };
 
 // delete Model
 export const deleteModels = (model: any) => {
-
   return api.delete(url.DELETE_MODEL + model);
-}
+};
 // add Models
-export const addNewModel = (model: any) =>
-  api.create(url.ADD_NEW_MODEL, model);
+export const addNewModel = (model: any) => api.create(url.ADD_NEW_MODEL, model);
 // update Models
-export const updateModel = (Model: any) =>
-  api.update(url.UPDATE_MODEL, Model);
+export const updateModel = (Model: any) => api.update(url.UPDATE_MODEL, Model);
 //Models-End
-
 
 //Product-Start
 

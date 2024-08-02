@@ -17,6 +17,10 @@ import { boxSlices } from "./Box/boxes/reducer";
 
 //Tablets
 import { tabletSlices } from "./Box/tablet/reducer";
+
+//Address
+import { addressSlices } from "./Box/Address/reducer";
+
 //Calendar
 import CalendarReducer from "./calendar/reducer";
 //Chat
@@ -83,6 +87,7 @@ const rootReducer = combineReducers({
   Logout: authSlices,
   Boxes: boxSlices,
   Tablets: tabletSlices,
+  Address: addressSlices,
   Account: registerSlices,
   ForgetPassword: forgotPasswordSlices,
   VerifyPasswordOtp: verifySlices,

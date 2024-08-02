@@ -13,10 +13,24 @@ export const SOCIAL_LOGIN = "/social-login";
 
 //BOX
 export const GET_BOXES = "/box/get-all";
+export const GET_ONE_BOX = "/box/get-one";
 export const ADD_BOX = "/box/new";
+export const UPDATE_BOX = "/box/update";
+export const DELETE_BOX = "/box/delete";
 
 // TABLETS
 export const GET_TABLETS = "/tablet/get-all";
+export const GET_ONE_TABLET = "/tablet/get-one";
+export const ADD_TABLET = "/tablet/new";
+export const UPDATE_TABLET = "/tablet/update";
+export const DELETE_TABLET = "/tablet/delete";
+
+// ADDRESS
+export const GET_ADDRESS = "/address/get-all";
+export const GET_ONE_ADDRESS = "/address/get-one";
+export const ADD_ADDRESS = "/address/new";
+export const UPDATE_ADDRESS = "/address/update";
+export const DELETE_ADDRESS = "/address/delete";
 
 //PROFILE
 export const POST_EDIT_JWT_PROFILE = "/post-jwt-profile";
