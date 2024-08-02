@@ -24,7 +24,7 @@ import DeleteModal from "../../../Components/Common/DeleteModal";
 
 import BreadCrumb from "../../../Components/Common/BreadCrumb";
 import TableContainer from "../../../Components/Common/TableContainer";
-import { Rating, Published, Price, Camera } from "./EcommerceModelCol";
+import { Rating, Published, Price, GetValid } from "./EcommerceModelCol";
 //Import data
 import { modelsData } from "../../../common/data";
 
@@ -182,7 +182,7 @@ const EcommerceModels = (props: any) => {
         accessorKey: "has_outside_camera",
         enableColumnFilter: false,
         cell: (cell: any) => {
-          return <Camera {...cell} />;
+          return <GetValid {...cell} />;
         },
       },
       {
@@ -190,7 +190,15 @@ const EcommerceModels = (props: any) => {
         accessorKey: "has_inside_camera",
         enableColumnFilter: false,
         cell: (cell: any) => {
-          return <Camera {...cell} />;
+          return <GetValid {...cell} />;
+        },
+      },
+      {
+        header: "Has Table",
+        accessorKey: "has_tablet",
+        enableColumnFilter: false,
+        cell: (cell: any) => {
+          return <GetValid {...cell} />;
         },
       },
       {
@@ -204,6 +212,7 @@ const EcommerceModels = (props: any) => {
       {
         header: "Action",
         cell: (cell: any) => {
+          
           return (
             <UncontrolledDropdown>
               <DropdownToggle
@@ -219,7 +228,7 @@ const EcommerceModels = (props: any) => {
                   View
                 </DropdownItem>
 
-                <DropdownItem href="apps-ecommerce-add-model">
+                <DropdownItem href={`apps-ecommerce-edit-model/${cell.row.original.id}`} >
                   <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>{" "}
                   Edit
                 </DropdownItem>

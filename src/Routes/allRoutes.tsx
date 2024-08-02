@@ -22,12 +22,13 @@ import TicketsDetails from "../pages/SupportTickets/TicketsDetails";
 import EcommerceAddModel from "../pages/Ecommerce/EcommerceModels/EcommerceAddModel";
 import EcommerceModelDetail from "../pages/Ecommerce/EcommerceModels/EcommerceModelDetail";
 import EcommerceModels from "../pages/Ecommerce/EcommerceModels/index";
+import EcommerceEditModel from "../pages/Ecommerce/EcommerceModels/EcommerceEditModel";
 
 //Products
 import EcommerceAddProduct from "../pages/Ecommerce/EcommerceProducts/EcommerceAddProduct";
 import EcommerceProductDetail from "../pages/Ecommerce/EcommerceProducts/EcommerceProductDetail";
 import EcommerceProducts from "../pages/Ecommerce/EcommerceProducts/index";
-//Orders
+// import EcommerceCustomers from "../pages/Ecommerce/EcommerceCustomers/index";
 import EcommerceCart from "../pages/Ecommerce/EcommerceCart";
 import EcommerceCheckout from "../pages/Ecommerce/EcommerceCheckout";
 import EcommerceCustomers from "../pages/Ecommerce/EcommerceCustomers/index";
@@ -184,6 +185,7 @@ import UILink from "../pages/BaseUi/UiLink/Index";
 import FunnelCharts from "../pages/Charts/ApexCharts/FunnelCharts/Index";
 import RangeArea from "../pages/Charts/ApexCharts/RangeAreaCharts/Index";
 import ToDoList from "../pages/ToDo";
+import EcommerceEditProduct from "pages/Ecommerce/EcommerceModels/EcommerceEditModel";
 
 const authProtectedRoutes = [
   { path: "/dashboard-analytics", component: <DashboardAnalytics /> },
@@ -201,6 +203,17 @@ const authProtectedRoutes = [
     component: <EcommerceModelDetail />,
   },
   { path: "/apps-ecommerce-add-model", component: <EcommerceAddModel /> },
+{ path: "/apps-ecommerce-models", component: <EcommerceModels /> },
+{
+  path: "/apps-ecommerce-model-details/:_id",
+  component: <EcommerceModelDetail />,
+},
+{
+  path: "/apps-ecommerce-model-details",
+  component: <EcommerceModelDetail />,
+},
+{ path: "/apps-ecommerce-add-model", component: <EcommerceAddModel /> },
+{ path: "/apps-ecommerce-edit-model/:id", component: <EcommerceEditProduct/> },
 
   //Products
 
@@ -215,13 +228,24 @@ const authProtectedRoutes = [
   },
   { path: "/apps-ecommerce-add-product", component: <EcommerceAddProduct /> },
   //Orders
+{ path: "/apps-ecommerce-products", component: <EcommerceProducts /> },
+{
+  path: "/apps-ecommerce-product-details/:_id",
+  component: <EcommerceProductDetail />,
+},
+{
+  path: "/apps-ecommerce-product-details",
+  component: <EcommerceProductDetail />,
+},
+{ path: "/apps-ecommerce-add-product", component: <EcommerceAddModel /> },
+//Orders
 
   { path: "/apps-ecommerce-orders", component: <EcommerceOrders /> },
   {
     path: "/apps-ecommerce-order-details",
     component: <EcommerceOrderDetail />,
   },
-  { path: "/apps-ecommerce-customers", component: <EcommerceCustomers /> },
+  // { path: "/apps-ecommerce-customers", component: <EcommerceCustomers /> },
   { path: "/apps-ecommerce-cart", component: <EcommerceCart /> },
   { path: "/apps-ecommerce-checkout", component: <EcommerceCheckout /> },
   { path: "/apps-ecommerce-sellers", component: <EcommerceSellers /> },
