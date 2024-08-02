@@ -2,19 +2,19 @@ import React from "react";
 import { Container, Row } from "reactstrap";
 import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import Widgets from "./Widgets";
-import BoxesData from "./BoxesData";
+import AddressesData from "./AddressesData";
 
 const BoxView = () => {
-  document.title = "Boxes List | Ahln - React Admin & Dashboard";
+  document.title = "Addresses List | Ahln - React Admin & Dashboard";
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <BreadCrumb title="Boxes List" pageTitle="Boxes" />
+          <BreadCrumb title="Addresses List" pageTitle="Addresses" />
           <Row>
             <Widgets />
           </Row>
-          <BoxesData />
+          <AddressesData />
         </Container>
       </div>
     </React.Fragment>

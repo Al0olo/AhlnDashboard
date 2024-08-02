@@ -20,7 +20,6 @@ import {
 //redux
 import { useSelector, useDispatch } from "react-redux";
 import TableContainer from "../../../../Components/Common/TableContainer";
-import { TabletAction } from "../../../../slices/thunks";
 
 // import {
 //   TabletsId,
@@ -46,6 +45,13 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../../Components/Common/Loader";
 import { createSelector } from "reselect";
+import {
+  GetOneTabletAction,
+  AddTabletAction,
+  DeleteTabletAction,
+  GetTabletsAction,
+  UpdateTabletAction,
+} from "slices/Box/tablet/thunk";
 
 const TabletsData = () => {
   const dispatch: any = useDispatch();
@@ -73,10 +79,10 @@ const TabletsData = () => {
   const toggle = useCallback(() => {
     if (modal) {
       setModal(false);
-      setTablet("");
+      setTablet(tablet);
     } else {
       setModal(true);
-      setTablet("");
+      setTablet(tablet);
     }
   }, [modal]);
 
@@ -91,7 +97,9 @@ const TabletsData = () => {
       // The values correspond to the initial values for those fields.
       // The || "" is used to prevent uncaught errors if the tablet object is undefined.
       id: (tablet && tablet.id) || "",
-      // tabletId: (tablet && tablet.tabletId) || "",
+      serial_number: (tablet && tablet.serial_number) || "",
+      android_id: (tablet && tablet.android_id) || "",
+
       // title: (tablet && tablet.title) || "",
       // client: (tablet && tablet.client) || "",
       // assigned: (tablet && tablet.assigned) || "",
@@ -114,8 +122,8 @@ const TabletsData = () => {
         const updateTablets = {
           id: tablet ? tablet.id : 0,
           // tabletId: values.tabletId,
-          // title: values.title,
-          // client: values.client,
+          serial_number: values.serial_number,
+          android_id: values.android_id,
           // assigned: values.assigned,
           // createDate: values.createDate,
           // dueDate: values.dueDate,
@@ -123,15 +131,15 @@ const TabletsData = () => {
           // priority: values.priority,
         };
         // update tablet
-        // dispatch(updateTablet(updateTablets));
+        dispatch(UpdateTabletAction(updateTablets));
         validation.resetForm();
       } else {
         const newTablet = {
-          id: (Math.floor(Math.random() * (30 - 20)) + 20).toString(),
-          tabletId:
-            "#VLZ4" + (Math.floor(Math.random() * (30 - 20)) + 20).toString(),
-          // title: values["title"],
-          // client: values["client"],
+          // id: (Math.floor(Math.random() * (30 - 20)) + 20).toString(),
+          // tabletId:
+          // "#VLZ4" + (Math.floor(Math.random() * (30 - 20)) + 20).toString(),
+          serial_number: values["serial_number"],
+          android_id: values["android_id"],
           // assigned: values["assigned"],
           // createDate: values["createDate"],
           // dueDate: values["dueDate"],
@@ -139,7 +147,7 @@ const TabletsData = () => {
           // priority: values["priority"],
         };
         // save new tablet
-        // dispatch(onAddNewTablet(newTablet));
+        dispatch(AddTabletAction(newTablet));
         validation.resetForm();
       }
       toggle();
@@ -154,7 +162,11 @@ const TabletsData = () => {
 
   const handleDeleteTablet = () => {
     if (tablet) {
-      //   dispatch(deleteTablet(tablet.id));
+      dispatch(DeleteTabletAction(tablet.id)).then((res: any) => {
+        if (res.type === "tablet/delete/fulfilled") {
+          dispatch(GetTabletsAction());
+        }
+      });
       setDeleteModal(false);
     }
   };
@@ -182,17 +194,7 @@ const TabletsData = () => {
   // Get Data
 
   useEffect(() => {
-    dispatch(TabletAction()).then((res: { payload: any; type: any }) => {
-      if (res.type === "tablet/get-all/fulfilled" && res.payload) {
-        toast("Tablets Retrived successful", {
-          position: "top-right",
-          hideProgressBar: false,
-          className: "bg-success text-white",
-          progress: undefined,
-          toastId: "",
-        });
-      }
-    });
+    dispatch(GetTabletsAction());
   }, [dispatch]);
 
   // Checked All
@@ -263,8 +265,23 @@ const TabletsData = () => {
         enableSorting: false,
       },
       {
-        header: "Serial",
-        accessorKey: "serial_number",
+        header: "Tablet Id",
+        accessorKey: "id",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Box Id",
+        accessorKey: "box_id",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Box Label",
+        accessorKey: "box_label",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Previous Tablet ID",
+        accessorKey: "previous_tablet_id",
         enableColumnFilter: false,
       },
       {
@@ -395,7 +412,7 @@ const TabletsData = () => {
         </Col>
       </Row>
 
-      {/* <Modal
+      <Modal
         isOpen={modal}
         toggle={toggle}
         centered
@@ -418,12 +435,12 @@ const TabletsData = () => {
             <Row className="g-3">
               <Col lg={12}>
                 <div>
-                  <Label htmlFor="tasksTitle-field" className="form-label">
-                    Title
+                  <Label htmlFor="serial_number" className="form-label">
+                    Serial Number
                   </Label>
                   <Input
-                    name="title"
-                    id="tasksTitle-field"
+                    name="serial_number"
+                    id="serial_number"
                     className="form-control"
                     placeholder="Enter Title"
                     type="text"
@@ -432,187 +449,53 @@ const TabletsData = () => {
                     }}
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.title || ""}
+                    value={validation.values.serial_number || ""}
                     invalid={
-                      validation.touched.title && validation.errors.title
+                      validation.touched.serial_number &&
+                      validation.errors.serial_number
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.title && validation.errors.title ? (
+                  {validation.touched.serial_number &&
+                  validation.errors.serial_number ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.title}
+                      {validation.errors.serial_number}
                     </FormFeedback>
                   ) : null}
                 </div>
               </Col>
-              <Col lg={6}>
+              <Col lg={12}>
                 <div>
-                  <Label htmlFor="client_nameName-field" className="form-label">
-                    Client
+                  <Label htmlFor="android_id" className="form-label">
+                    Android ID
                   </Label>
                   <Input
-                    name="client"
+                    name="serial_number"
+                    id="serial_number"
+                    className="form-control"
+                    placeholder="Enter Title"
                     type="text"
-                    id="client_nameName-field"
-                    placeholder="Enter Client Name"
+                    validate={{
+                      required: { value: true },
+                    }}
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.client || ""}
+                    value={validation.values.serial_number || ""}
                     invalid={
-                      validation.touched.client && validation.errors.client
+                      validation.touched.serial_number &&
+                      validation.errors.serial_number
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.client && validation.errors.client ? (
+                  {validation.touched.serial_number &&
+                  validation.errors.serial_number ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.client}
+                      {validation.errors.serial_number}
                     </FormFeedback>
                   ) : null}
                 </div>
-              </Col>
-              <Col lg={6}>
-                <div>
-                  <Label htmlFor="assignedtoName-field" className="form-label">
-                    Assigned To
-                  </Label>
-                  <Input
-                    name="assigned"
-                    type="text"
-                    id="assignedtoName-field"
-                    placeholder="Enter Assigned Name"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.assigned || ""}
-                    invalid={
-                      validation.touched.assigned && validation.errors.assigned
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.assigned && validation.errors.assigned ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.assigned}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-              </Col>
-              <Col lg={6}>
-                <Label htmlFor="date-field" className="form-label">
-                  Create Date
-                </Label>
-                <Flatpickr
-                  name="createDate"
-                  id="date-field"
-                  className="form-control"
-                  placeholder="Select a date"
-                  options={{
-                    altInput: true,
-                    altFormat: "d M, Y",
-                    dateFormat: "d M, Y",
-                  }}
-                  onChange={(createDate: any) =>
-                    validation.setFieldValue(
-                      "createDate",
-                      moment(createDate[0]).format("DD MMMM ,YYYY")
-                    )
-                  }
-                  value={validation.values.createDate || ""}
-                />
-                {validation.errors.createDate &&
-                validation.touched.createDate ? (
-                  <FormFeedback type="invalid" className="d-block">
-                    {validation.errors.createDate}
-                  </FormFeedback>
-                ) : null}
-              </Col>
-              <Col lg={6}>
-                <Label htmlFor="duedate-field" className="form-label">
-                  Due Date
-                </Label>
-                <Flatpickr
-                  name="dueDate"
-                  id="date-field"
-                  className="form-control"
-                  placeholder="Select a date"
-                  options={{
-                    altInput: true,
-                    altFormat: "d M, Y",
-                    dateFormat: "d M, Y",
-                  }}
-                  onChange={(dueDate: any) =>
-                    validation.setFieldValue(
-                      "dueDate",
-                      moment(dueDate[0]).format("DD MMMM ,YYYY")
-                    )
-                  }
-                  value={validation.values.dueDate || ""}
-                />
-                {validation.errors.dueDate && validation.touched.dueDate ? (
-                  <FormFeedback type="invalid" className="d-block">
-                    {validation.errors.dueDate}
-                  </FormFeedback>
-                ) : null}
-              </Col>
-              <Col lg={6}>
-                <Label htmlFor="tablet-status" className="form-label">
-                  Status
-                </Label>
-                <Input
-                  name="status"
-                  type="select"
-                  className="form-select"
-                  id="status-field"
-                  onChange={validation.handleChange}
-                  onBlur={validation.handleBlur}
-                  value={validation.values.status || ""}
-                  invalid={
-                    validation.touched.status && validation.errors.status
-                      ? true
-                      : false
-                  }
-                >
-                  <option value="">Status</option>
-                  <option value="New">New</option>
-                  <option value="Inprogress">Inprogress</option>
-                  <option value="Closed">Closed</option>
-                  <option value="Open">Open</option>
-                </Input>
-                {validation.touched.status && validation.errors.status ? (
-                  <FormFeedback type="invalid">
-                    {validation.errors.status}
-                  </FormFeedback>
-                ) : null}
-              </Col>
-              <Col lg={6}>
-                <Label htmlFor="priority-field" className="form-label">
-                  Priority
-                </Label>
-                <Input
-                  name="priority"
-                  type="select"
-                  className="form-select"
-                  id="priority-field"
-                  onChange={validation.handleChange}
-                  onBlur={validation.handleBlur}
-                  value={validation.values.priority || ""}
-                  invalid={
-                    validation.touched.priority && validation.errors.priority
-                      ? true
-                      : false
-                  }
-                >
-                  <option value="">Priority</option>
-                  <option value="High">High</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Low">Low</option>
-                </Input>
-                {validation.touched.priority && validation.errors.priority ? (
-                  <FormFeedback type="invalid">
-                    {validation.errors.priority}
-                  </FormFeedback>
-                ) : null}
               </Col>
             </Row>
           </ModalBody>
@@ -627,7 +510,7 @@ const TabletsData = () => {
             </div>
           </div>
         </Form>
-      </Modal> */}
+      </Modal>
     </React.Fragment>
   );
 };

@@ -16,6 +16,9 @@ export * from "./Box/boxes/thunk";
 //Tablets
 export * from "./Box/tablet/thunk";
 
+//Address
+export * from "./Box/Address/thunk";
+
 //Calendar
 export * from "./calendar/thunk";
 //Chat
