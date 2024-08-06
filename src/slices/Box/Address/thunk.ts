@@ -25,7 +25,6 @@ export const GetOneAddressAction = createAsyncThunk(
   async (address: any, thunkApi) => {
     try {
       const response = await getOneAddress(address);
-      toast.success("Address Retrieved Successfully", { autoClose: 3000 });
       return response.data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.response?.data || error.message);
@@ -67,7 +66,6 @@ export const DeleteAddressAction = createAsyncThunk(
   "address/delete",
   async (address: string, thunkApi) => {
     try {
-      console.log("address", address);
 
       const response = await deleteAddress(address);
       const data = await response;

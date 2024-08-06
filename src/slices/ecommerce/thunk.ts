@@ -4,7 +4,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 //Include Both Helper File with needed methods
 import {
-  
   getModels as getModelsApi,
   getModel as getModelApi,
   deleteModels as deleteModelsApi,
@@ -26,17 +25,14 @@ import {
 } from "../../helpers/fakebackend_helper";
 
 //Models
-export const getModels = createAsyncThunk(
-  "ecommerce/getModels",
-  async () => {
-    try {
-      let response = await getModelsApi();
-      return response.data;
-    } catch (error) {
-      return error;
-    }
+export const getModels = createAsyncThunk("ecommerce/getModels", async () => {
+  try {
+    let response = await getModelsApi();
+    return response.data;
+  } catch (error) {
+    return error;
   }
-);
+});
 export const getModel = createAsyncThunk(
   "ecommerce/getModel",
   async (id:any) => {
@@ -52,7 +48,6 @@ export const deleteModels = createAsyncThunk(
   "ecommerce/deleteModels",
   async (model: any) => {
     try {
-      
       const response = deleteModelsApi(model);
       toast.success("Model Delete Successfully", { autoClose: 3000 });
       return { model, ...response };
@@ -161,6 +156,7 @@ export const getOrders = createAsyncThunk("ecommerce/getOrders", async () => {
 export const getSellers = createAsyncThunk("ecommerce/getSellers", async () => {
   try {
     const response = getSellersApi();
+
     return response;
   } catch (error) {
     return error;
@@ -172,16 +168,12 @@ export const getCustomers = createAsyncThunk(
   async () => {
     try {
       let response = await getCustomersApi();
-      console.log(response);
-
-      return response;
+      return response.data;
     } catch (error: any) {
       return error.message;
     }
   }
 );
-
-
 
 export const updateOrder = createAsyncThunk(
   "ecommerce/updateOrder",
@@ -210,7 +202,6 @@ export const deleteOrder = createAsyncThunk(
     }
   }
 );
-
 
 export const addNewOrder = createAsyncThunk(
   "ecommerce/addNewOrder",

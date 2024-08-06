@@ -77,6 +77,37 @@ export const deleteAddress = (data: any) => {
   return api.delete(`${url.DELETE_ADDRESS}/${data}`);
 };
 
+// DELIVERY PACKAGE
+// Get Delivery Packages
+export const getDeliveryPackages = () => {
+  return api.get(url.GET_DELIVERY_ALL);
+};
+// Get One Delivery Package
+export const getOneDeliveryPackage = (data: any) => {
+  return api.get(`${url.DELETE_ADDRESS}/${data}`);
+};
+
+// Fetches boxes for a given user
+export const getShippingCompanies = () => {
+  return api.get(url.GET_SHIPPING_COMPANIES);
+};
+// Get One Box
+export const getOneShippingCompany = (data: any) => {
+  return api.get(url.GET_ONE_SHIPPING_COMPANY);
+};
+// Add Box
+export const addShippingCompany = (data: any) => {
+  return api.get(url.ADD_SHIPPING_COMPANY, data);
+};
+// Update Exsiting Box
+export const updateShippingCompany = (data: any) => {
+  return api.get(url.UPDATE_SHIPPING_COMPANY, data);
+};
+// Delete Box
+export const deleteShippingCompany = (data: any) => {
+  return api.delete(`${url.DELETE_SHIPPING_COMPANY}/${data}`);
+};
+
 //is user is logged in
 export const isUserAuthenticated = () => {
   return getLoggedInUser() !== null;

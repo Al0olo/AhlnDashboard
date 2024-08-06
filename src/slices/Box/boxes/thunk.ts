@@ -25,7 +25,6 @@ export const GetOneBoxAction = createAsyncThunk(
   async (box: any, thunkApi) => {
     try {
       const response = await getOneBox(box);
-      toast.success("Box Retrieved Successfully", { autoClose: 3000 });
       return response.data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.response?.data || error.message);
@@ -65,8 +64,6 @@ export const DeleteBoxAction = createAsyncThunk(
   "box/delete",
   async (box: string, thunkApi) => {
     try {
-      console.log("box", box);
-
       const response = await deleteBox(box);
       const data = await response;
       toast.success("Box Deleted Successfully", { autoClose: 3000 });
