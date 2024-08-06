@@ -48,16 +48,13 @@ const EcommerceSlice = createSlice({
     });
  builder.addCase(updateModel.fulfilled, (state: any, action: any) => {
       state.models = state.models.map((model: any) =>
-        model.id === action.payload.id
-          ? { ...model, ...action.payload }
-          : model
+        model.id === action.payload.id ? { ...model, ...action.payload } : model
       );
       
     });
     builder.addCase(deleteModels.fulfilled, (state: any, action: any) => {
       state.models = (state.models || []).filter(
-        (model: any) =>
-          model.id.toString() !== action.payload.model.toString()
+        (model: any) => model.id.toString() !== action.payload.model.toString()
       );
     });
     //End Models
@@ -149,14 +146,24 @@ const EcommerceSlice = createSlice({
       state.error = action.payload.error || null;
     });
 
-    builder.addCase(getCustomers.fulfilled, (state: any, action: any) => {
-      state.customers = action.payload;
-      state.isCustomerCreated = false;
-      state.isCustomerSuccess = true;
+    builder.addCase(getCustomers.pending, (state) => {
+      state.loading = true;
+      state.error = false;
     });
 
-    builder.addCase(getCustomers.rejected, (state: any, action: any) => {
-      state.error = action.payload.error || null;
+    builder.addCase(getCustomers.fulfilled, (state: any, action: any) => {
+      state.data = action?.payload;
+      state.success = true;
+      state.loading = false;
+      state.isCustomerCreated = false;
+      state.isCustomerSuccess = true;
+      console.log(state.data);
+    });
+
+    builder.addCase(getCustomers.rejected, (state, { payload }: any) => {
+      state.loading = false;
+      state.success = false;
+      state.error = payload;
       state.isCustomerCreated = false;
       state.isCustomerSuccess = false;
     });

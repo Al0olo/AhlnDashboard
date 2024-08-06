@@ -52,13 +52,14 @@ const EcommerceCustomers = () => {
   const ecomCustomerProperties = createSelector(
     (state: any) => state.Ecommerce,
     (ecom) => ({
-      customers: ecom.customers,
+      customers: ecom.data,
       isCustomerSuccess: ecom.isCustomerSuccess,
       error: ecom.error,
+      loader: ecom.loading,
     })
   );
   // Inside your component
-  const { customers, isCustomerSuccess, error } = useSelector(
+  const { customers, isCustomerSuccess, error, loader } = useSelector(
     ecomCustomerProperties
   );
 
@@ -84,8 +85,8 @@ const EcommerceCustomers = () => {
     {
       options: [
         { label: "Status", value: "Status" },
-        { label: "Active", value: "Active" },
-        { label: "Block", value: "Block" },
+        { label: "Active", value: "true" },
+        { label: "Block", value: "false" },
       ],
     },
   ];
@@ -181,15 +182,13 @@ const EcommerceCustomers = () => {
     [toggle]
   );
   useEffect(() => {
-    if (customers && !customers.length) {
-      dispatch(onGetCustomers());
-    }
-  }, [dispatch, customers]);
+    dispatch(onGetCustomers());
+  }, [dispatch]);
 
   // useEffect(() => {
   //   dispatch(onGetCustomers());
   // }, [dispatch]);
-  //   if (customers && !customers.length) { 
+  //   if (customers && !customers.length) {
   //     dispatch(onGetCustomers());
   //   }
   // }, [dispatch]);
@@ -289,13 +288,18 @@ const EcommerceCustomers = () => {
           );
         },
         id: "#",
-        accessorKey: "id",
+        accessorKey: "",
         enableColumnFilter: false,
         enableSorting: false,
       },
       {
+        header: "ID",
+        accessorKey: "id",
+        enableColumnFilter: false,
+      },
+      {
         header: "Customer Name",
-        accessorKey: "customer",
+        accessorKey: "user_name",
         enableColumnFilter: false,
       },
       {
@@ -305,34 +309,28 @@ const EcommerceCustomers = () => {
       },
       {
         header: "Phone",
-        accessorKey: "phone",
+        accessorKey: "phone_number",
         enableColumnFilter: false,
       },
       {
-        header: "Boxes",
-        accessorKey: "phone",
+        header: "Role ID",
+        accessorKey: "role_id",
         enableColumnFilter: false,
-      },
-      {
-        header: "Joining Date",
-        accessorKey: "date",
-        enableColumnFilter: false,
-        cell: (cell: any) => <>{handleValidDate(cell.getValue())}</>,
       },
       {
         header: "Status",
-        accessorKey: "status",
+        accessorKey: "is_active",
         enableColumnFilter: false,
         cell: (cell: any) => {
           switch (cell.getValue()) {
-            case "Active":
+            case "true":
               return (
                 <span className="badge text-uppercase bg-success-subtle text-success">
                   {" "}
                   {cell.getValue()}{" "}
                 </span>
               );
-            case "Block":
+            case "false":
               return (
                 <span className="badge text-uppercase bg-danger-subtle text-danger">
                   {" "}
@@ -362,7 +360,6 @@ const EcommerceCustomers = () => {
                     const customerData = cellProps.row.original;
                     handleCustomerClick(customerData);
                   }}
-                  
                 >
                   <i className="ri-pencil-fill fs-16"></i>
                 </Link>
@@ -375,7 +372,6 @@ const EcommerceCustomers = () => {
                     const customerData = cellProps.row.original;
                     onClickDelete(customerData);
                   }}
-                  
                 >
                   <i className="ri-delete-bin-5-fill fs-16"></i>
                 </Link>
@@ -488,7 +484,6 @@ const EcommerceCustomers = () => {
                         return false;
                       }}
                     >
-
                       <ModalBody>
                         <input type="hidden" id="id-field" />
 
