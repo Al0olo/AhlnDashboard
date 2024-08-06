@@ -22,10 +22,9 @@ import { useSelector, useDispatch } from "react-redux";
 import TableContainer from "../../../../Components/Common/TableContainer";
 import { GetDeliveryPackagesAction } from "../../../../slices/thunks";
 
-
 import * as moment from "moment";
 
-import {  ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../../Components/Common/Loader";
 import { createSelector } from "reselect";
@@ -42,10 +41,7 @@ const DeliveryData = () => {
   }));
 
   // Inside your component
-  const { deliveryList,  error, loader } = useSelector(
-    selectLayoutProperties
-  );
-
+  const { deliveryList, error, loader } = useSelector(selectLayoutProperties);
 
   useEffect(() => {
     dispatch(GetDeliveryPackagesAction());
@@ -69,16 +65,16 @@ const DeliveryData = () => {
         accessorKey: "customer_id",
         enableColumnFilter: false,
       },
-      {
-        header: "Vendor ID",
-        accessorKey: "vendor_id",
-        enableColumnFilter: false,
-      },
-      {
-        header: "Delivery ID",
-        accessorKey: "delivery_id",
-        enableColumnFilter: false,
-      },
+      // {
+      //   header: "Vendor ID",
+      //   accessorKey: "vendor_id",
+      //   enableColumnFilter: false,
+      // },
+      // {
+      //   header: "Delivery ID",
+      //   accessorKey: "delivery_id",
+      //   enableColumnFilter: false,
+      // },
       {
         header: "Tracking Number",
         accessorKey: "tracking_number",
@@ -106,23 +102,8 @@ const DeliveryData = () => {
         enableColumnFilter: false,
       },
       {
-        header: "Box Locker ID",
-        accessorKey: "box_locker_id",
-        enableColumnFilter: false,
-      },
-      {
         header: "Shipment Status",
         accessorKey: "shipment_status",
-        enableColumnFilter: false,
-      },
-      {
-        header: "Delivered Status",
-        accessorKey: "is_delivered",
-        enableColumnFilter: false,
-      },
-      {
-        header: "Box Locker String",
-        accessorKey: "box_locker_string",
         enableColumnFilter: false,
       },
       {
@@ -136,11 +117,6 @@ const DeliveryData = () => {
         enableColumnFilter: false,
       },
       {
-        header: "Delivery PIN",
-        accessorKey: "delivery_pin",
-        enableColumnFilter: false,
-      },
-      {
         header: "Description",
         accessorKey: "description",
         enableColumnFilter: false,
@@ -148,11 +124,6 @@ const DeliveryData = () => {
       {
         header: "Other Shipping Company",
         accessorKey: "other_shipping_company",
-        enableColumnFilter: false,
-      },
-      {
-        header: "OTP",
-        accessorKey: "otp",
         enableColumnFilter: false,
       },
       {
