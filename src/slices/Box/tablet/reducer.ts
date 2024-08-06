@@ -1,13 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { TabletAction } from "./thunk";
+import {
+  AddTabletAction,
+  DeleteTabletAction,
+  GetOneTabletAction,
+  GetTabletsAction,
+  UpdateTabletAction,
+} from "./thunk";
 
 export const initialState: any = {
   tabletError: null,
   message: null,
-  loading: false,
+  loading: true,
   data: null,
   success: false,
   error: false,
+  tablets: [],
 };
 
 const tabletReducer = createSlice({
@@ -15,16 +22,83 @@ const tabletReducer = createSlice({
   initialState: initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(TabletAction.pending, (state) => {
+    builder.addCase(GetTabletsAction.pending, (state) => {
       state.loading = true;
       state.error = false;
     });
-    builder.addCase(TabletAction.fulfilled, (state, action: any) => {
+    builder.addCase(GetTabletsAction.fulfilled, (state, action: any) => {
       state.data = action?.payload;
       state.success = true;
       state.loading = false;
     });
-    builder.addCase(TabletAction.rejected, (state, { payload }: any) => {
+    builder.addCase(GetTabletsAction.rejected, (state, { payload }: any) => {
+      state.loading = false;
+      state.success = false;
+      state.error = payload;
+    });
+
+    builder.addCase(AddTabletAction.pending, (state) => {
+      state.loading = true;
+      state.error = false;
+    });
+    builder.addCase(AddTabletAction.fulfilled, (state, action: any) => {
+      state.tablets.push(action.payload);
+      state.success = true;
+      state.loading = false;
+    });
+    builder.addCase(AddTabletAction.rejected, (state, { payload }: any) => {
+      state.loading = false;
+      state.success = false;
+      state.error = payload;
+    });
+
+    builder.addCase(DeleteTabletAction.pending, (state) => {
+      state.loading = true;
+      state.error = false;
+    });
+    builder.addCase(DeleteTabletAction.fulfilled, (state, action: any) => {
+      const deletedTabletId = action.payload.id;
+      state.tablets = state.tablets.filter(
+        (tablet: any) => tablet.id !== deletedTabletId
+      );
+      state.success = true;
+      state.loading = false;
+    });
+    builder.addCase(DeleteTabletAction.rejected, (state, { payload }: any) => {
+      state.loading = false;
+      state.success = false;
+      state.error = payload;
+    });
+
+    builder.addCase(GetOneTabletAction.pending, (state) => {
+      state.loading = true;
+      state.error = false;
+    });
+    builder.addCase(GetOneTabletAction.fulfilled, (state, action: any) => {
+      state.tablet = action?.payload;
+      state.success = true;
+      state.loading = false;
+    });
+    builder.addCase(GetOneTabletAction.rejected, (state, { payload }: any) => {
+      state.loading = false;
+      state.success = false;
+      state.error = payload;
+    });
+
+    builder.addCase(UpdateTabletAction.pending, (state) => {
+      state.loading = true;
+      state.error = false;
+    });
+    builder.addCase(UpdateTabletAction.fulfilled, (state, action: any) => {
+      const updatedTablet = action?.payload;
+      const index = state.tablets.findIndex(
+        (tablet: any) => tablet.id === updatedTablet.id
+      );
+      state.tablets[index] = updatedTablet;
+      state.success = true;
+      state.loading = false;
+    });
+    builder.addCase(UpdateTabletAction.rejected, (state, { payload }: any) => {
       state.loading = false;
       state.success = false;
       state.error = payload;

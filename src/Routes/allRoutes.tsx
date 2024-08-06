@@ -181,6 +181,7 @@ import UserProfile from "../pages/Authentication/user-profile";
 
 import BoxView from "pages/Boxes/Box/BoxView";
 import TabletView from "pages/Boxes/Tablets/TabletView";
+import AddressView from "pages/Boxes/Address/AddressView";
 import UILink from "../pages/BaseUi/UiLink/Index";
 import FunnelCharts from "../pages/Charts/ApexCharts/FunnelCharts/Index";
 import RangeArea from "../pages/Charts/ApexCharts/RangeAreaCharts/Index";
@@ -271,6 +272,7 @@ const authProtectedRoutes = [
   //Boxes
   { path: "/boxes", component: <BoxView /> },
   { path: "/tablets", component: <TabletView /> },
+  { path: "/addresses", component: <AddressView /> },
 
   //charts
   { path: "/charts-apex-line", component: <LineCharts /> },
@@ -430,4 +432,3 @@ const publicRoutes: any = [
 ];
 
 export { authProtectedRoutes, publicRoutes };
-

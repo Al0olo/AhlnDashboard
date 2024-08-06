@@ -20,7 +20,12 @@ import {
 //redux
 import { useSelector, useDispatch } from "react-redux";
 import TableContainer from "../../../../Components/Common/TableContainer";
-import { GetBoxAction, AddBoxAction } from "../../../../slices/thunks";
+import {
+  GetBoxesAction,
+  AddBoxAction,
+  DeleteBoxAction,
+  UpdateBoxAction,
+} from "../../../../slices/thunks";
 
 // import {
 //   BoxsId,
@@ -55,10 +60,13 @@ const BoxesData = () => {
     boxsList: state.data,
     isBoxSuccess: state.isBoxSuccess,
     error: state.error,
+    loader: state.loading,
   }));
 
   // Inside your component
-  const { boxsList, isBoxSuccess, error } = useSelector(selectLayoutProperties);
+  const { boxsList, isBoxSuccess, error, loader } = useSelector(
+    selectLayoutProperties
+  );
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [box, setBox] = useState<any>([]);
@@ -71,57 +79,12 @@ const BoxesData = () => {
   const toggle = useCallback(() => {
     if (modal) {
       setModal(false);
-      setBox("");
+      setBox(box);
     } else {
       setModal(true);
-      setBox("");
+      setBox(box);
     }
-  }, [modal]);
-
-  const onSubmit = (values: any, action: any) => {
-    handleSubmit(values);
-    action.resetForm();
-  };
-
-  const handleSubmit = (values: {
-    [x: string]: any;
-    serial_number: any;
-    box_label: any;
-    has_empty_lockers: any;
-    box_model_id: any;
-  }) => {
-    console.log("FIREEEEEEE");
-    // if (isEdit) {
-    //   const updateBoxes = {
-    //     // id: box ? box.id : 0,
-    //     // boxId: values.boxId,
-    //     serial_number: values.serial_number,
-    //     box_label: values.box_label,
-    //     has_empty_lockers: values.has_empty_lockers,
-    //     // createDate: values.createDate,
-    //     // current_tablet_id: values.current_tablet_id,
-    //     // previous_tablet_id: values.previous_tablet_id,
-    //     box_model_id: values.box_model_id,
-    //     // address_id: values.address_id,
-    //   };
-    //   // update box
-    //   // dispatch(updateBox(updateBoxes));
-    //   validation.resetForm();
-    // } else {
-    const newBox = {
-      serial_number: values["serial_number"],
-      box_label: values["box_label"],
-      has_empty_lockers: values["has_empty_lockers"],
-      box_model_id: values["box_model_id"],
-    };
-    console.log("RRRRRRRRRRRRRRR");
-
-    // save new box
-    dispatch(AddBoxAction(newBox));
-    validation.resetForm();
-    // }
-    toggle();
-  };
+  }, [modal, box]);
 
   // validation
   const validation: any = useFormik({
@@ -129,8 +92,6 @@ const BoxesData = () => {
     enableReinitialize: true,
 
     initialValues: {
-      // id: (box && box.id) || "",
-      // boxId: (box && box.boxId) || "",
       serial_number: (box && box.serial_number) || "",
       box_label: (box && box.box_label) || "",
       has_empty_lockers: (box && box.has_empty_lockers) || "",
@@ -145,7 +106,35 @@ const BoxesData = () => {
       current_tablet_id: Yup.number().required("Please Enter Tablet Id"),
       box_model_id: Yup.string().required("Please Enter Box Generation Id"),
     }),
-    onSubmit,
+    onSubmit: (values) => {
+      if (isEdit) {
+        const updateBoxes = {
+          serial_number: values.serial_number,
+          box_label: values.box_label,
+          has_empty_lockers: values.has_empty_lockers,
+          current_tablet_id: values.current_tablet_id,
+          previous_tablet_id: values.previous_tablet_id,
+          box_model_id: values.box_model_id,
+          address_id: values.address_id,
+        };
+        // update box
+        dispatch(UpdateBoxAction(updateBoxes));
+        validation.resetForm();
+      } else {
+        const newBox = {
+          serial_number: values["serial_number"],
+          box_label: values["box_label"],
+          has_empty_lockers: values["has_empty_lockers"],
+          box_model_id: values["box_model_id"],
+        };
+        console.log("RRRRRRRRRRRRRRR");
+
+        // save new box
+        dispatch(AddBoxAction(newBox));
+        validation.resetForm();
+      }
+      toggle();
+    },
   });
 
   // Delete Data
@@ -155,8 +144,10 @@ const BoxesData = () => {
   };
 
   const handleDeleteBox = () => {
+    console.log("box", box);
+
     if (box) {
-      //   dispatch(deleteBox(box.id));
+      dispatch(DeleteBoxAction(box.id));
       setDeleteModal(false);
     }
   };
@@ -166,15 +157,11 @@ const BoxesData = () => {
     const box = arg;
 
     setBox({
-      // id: box.id,
-      // boxId: box.id,
       serial_number: box.serial_number,
       box_label: box.box_label,
       has_empty_lockers: box.has_empty_lockers,
       box_model_id: box.box_model_id,
-      // dueDate: box.dueDate,
-      // status: box.status,
-      // priority: box.priority,
+      address_id: box.address_id,
     });
 
     setIsEdit(true);
@@ -184,17 +171,7 @@ const BoxesData = () => {
   // Get Data
 
   useEffect(() => {
-    dispatch(GetBoxAction()).then((res: { payload: any; type: any }) => {
-      if (res.type === "box/get-all/fulfilled" && res.payload) {
-        toast("Boxes Retrived successful", {
-          position: "top-right",
-          hideProgressBar: false,
-          className: "bg-success text-white",
-          progress: undefined,
-          toastId: "",
-        });
-      }
-    });
+    dispatch(GetBoxesAction());
   }, [dispatch]);
 
   // Checked All
@@ -222,7 +199,7 @@ const BoxesData = () => {
   const deleteMultiple = () => {
     const checkall: any = document.getElementById("checkBoxAll");
     selectedCheckBoxDelete.forEach((element: any) => {
-      //   dispatch(deleteBox(element.value));
+      dispatch(DeleteBoxAction(element.id));
       setTimeout(() => {
         toast.clearWaitingQueue();
       }, 3000);
@@ -233,7 +210,7 @@ const BoxesData = () => {
 
   const deleteCheckbox = () => {
     const ele = document.querySelectorAll(".boxCheckBox:checked");
-    ele.length > 0
+    ele?.length > 0
       ? setIsMultiDeleteButton(true)
       : setIsMultiDeleteButton(false);
     setSelectedCheckBoxDelete(ele);
@@ -389,7 +366,9 @@ const BoxesData = () => {
               </div>
             </CardHeader>
             <CardBody className="pt-0">
-              {boxsList && boxsList.length ? (
+              {loader ? (
+                <Loader error={error} />
+              ) : (
                 <TableContainer
                   columns={columns}
                   data={boxsList}
@@ -399,9 +378,6 @@ const BoxesData = () => {
                   tableClass="align-middle table-nowrap mb-0"
                   SearchPlaceholder="Search for box details or something..."
                 />
-              ) : (
-                <Loader error={error} />
-                // <></>
               )}
               <ToastContainer closeButton={false} limit={1} />
             </CardBody>
@@ -420,7 +396,14 @@ const BoxesData = () => {
         <ModalHeader toggle={toggle} className="p-3 bg-info-subtle">
           {!!isEdit ? "Edit Box" : "Add Box"}
         </ModalHeader>
-        <Form className="tablelist-form" onSubmit={validation.handleSubmit}>
+        <Form
+          className="tablelist-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            validation.submitForm();
+            return false;
+          }}
+        >
           <ModalBody>
             <Row className="g-3">
               <Col lg={12}>

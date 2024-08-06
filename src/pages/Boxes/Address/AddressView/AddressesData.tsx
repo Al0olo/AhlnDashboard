@@ -20,10 +20,16 @@ import {
 //redux
 import { useSelector, useDispatch } from "react-redux";
 import TableContainer from "../../../../Components/Common/TableContainer";
-import { GetBoxAction, AddBoxAction } from "../../../../slices/thunks";
+import {
+  DeleteAddressAction,
+  GetAddressesAction,
+  GetOneAddressAction,
+  UpdateAddressAction,
+  AddAddressAction,
+} from "../../../../slices/thunks";
 
 // import {
-//   BoxsId,
+//   AddresssId,
 //   Title,
 //   Client,
 //   AssignedTo,
@@ -47,23 +53,26 @@ import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../../Components/Common/Loader";
 import { createSelector } from "reselect";
 
-const BoxesData = () => {
+const AddressesData = () => {
   const dispatch: any = useDispatch();
-  const selectLayoutState = (state: any) => state.Boxes;
+  const selectLayoutState = (state: any) => state.Address;
 
   const selectLayoutProperties = createSelector(selectLayoutState, (state) => ({
-    boxsList: state.data,
-    isBoxSuccess: state.isBoxSuccess,
+    addressList: state.data,
+    isAddressSuccess: state.isAddressSuccess,
     error: state.error,
+    loader: state.loading,
   }));
 
   // Inside your component
-  const { boxsList, isBoxSuccess, error } = useSelector(selectLayoutProperties);
+  const { addressList, isAddressSuccess, error, loader } = useSelector(
+    selectLayoutProperties
+  );
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [box, setBox] = useState<any>([]);
+  const [address, setAddress] = useState<any>([]);
 
-  // Delete Boxes
+  // Delete Addresses
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
@@ -71,12 +80,12 @@ const BoxesData = () => {
   const toggle = useCallback(() => {
     if (modal) {
       setModal(false);
-      setBox("");
+      setAddress(address);
     } else {
       setModal(true);
-      setBox("");
+      setAddress(address);
     }
-  }, [modal]);
+  }, [modal, address]);
 
   // validation
   const validation: any = useFormik({
@@ -87,16 +96,16 @@ const BoxesData = () => {
       // Initial values are used to set up the initial form values.
       // The keys of the object correspond to the keys of the values object we defined in validationSchema.
       // The values correspond to the initial values for those fields.
-      // The || "" is used to prevent uncaught errors if the box object is undefined.
-      id: (box && box.id) || "",
-      // boxId: (box && box.boxId) || "",
-      // title: (box && box.title) || "",
-      // client: (box && box.client) || "",
-      // assigned: (box && box.assigned) || "",
-      // createDate: (box && box.createDate) || "",
-      // dueDate: (box && box.dueDate) || "",
-      // status: (box && box.status) || "",
-      // priority: (box && box.priority) || "",
+      // The || "" is used to prevent uncaught errors if the address object is undefined.
+      id: (address && address.id) || "",
+      // addressId: (address && address.addressId) || "",
+      // title: (address && address.title) || "",
+      // client: (address && address.client) || "",
+      // assigned: (address && address.assigned) || "",
+      // createDate: (address && address.createDate) || "",
+      // dueDate: (address && address.dueDate) || "",
+      // status: (address && address.status) || "",
+      // priority: (address && address.priority) || "",
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Please Enter Title"),
@@ -109,9 +118,9 @@ const BoxesData = () => {
     }),
     onSubmit: (values) => {
       if (isEdit) {
-        const updateBoxes = {
-          id: box ? box.id : 0,
-          // boxId: values.boxId,
+        const updateAddresses = {
+          id: address ? address.id : 0,
+          // addressId: values.addressId,
           // title: values.title,
           // client: values.client,
           // assigned: values.assigned,
@@ -120,13 +129,13 @@ const BoxesData = () => {
           // status: values.status,
           // priority: values.priority,
         };
-        // update box
-        // dispatch(updateBox(updateBoxes));
+        // update address
+        // dispatch(updateAddress(updateAddresses));
         validation.resetForm();
       } else {
-        const newBox = {
+        const newAddress = {
           // id: (Math.floor(Math.random() * (30 - 20)) + 20).toString(),
-          // boxId:
+          // addressId:
           //   "#VLZ4" + (Math.floor(Math.random() * (30 - 20)) + 20).toString(),
           // title: values["title"],
           // client: values["client"],
@@ -136,8 +145,8 @@ const BoxesData = () => {
           // status: values["status"],
           // priority: values["priority"],
         };
-        // save new box
-        dispatch(AddBoxAction(newBox));
+        // save new address
+        dispatch(AddAddressAction(newAddress));
         validation.resetForm();
       }
       toggle();
@@ -145,32 +154,32 @@ const BoxesData = () => {
   });
 
   // Delete Data
-  const onClickDelete = (box: any) => {
-    setBox(box);
+  const onClickDelete = (address: any) => {
+    setAddress(address);
     setDeleteModal(true);
   };
 
-  const handleDeleteBox = () => {
-    if (box) {
-      //   dispatch(deleteBox(box.id));
+  const handleDeleteAddress = () => {
+    if (address) {
+      //   dispatch(deleteAddress(address.id));
       setDeleteModal(false);
     }
   };
 
   // Update Data
-  const handleBoxesClick = (arg: any) => {
-    const box = arg;
+  const handleAddressesClick = (arg: any) => {
+    const address = arg;
 
-    setBox({
-      id: box.id,
-      // boxId: box.id,
-      // title: box.serial_number,
-      // client: box.client,
-      // assigned: box.assigned,
-      // createDate: box.createDate,
-      // dueDate: box.dueDate,
-      // status: box.status,
-      // priority: box.priority,
+    setAddress({
+      id: address.id,
+      // addressId: address.id,
+      // title: address.serial_number,
+      // client: address.client,
+      // assigned: address.assigned,
+      // createDate: address.createDate,
+      // dueDate: address.dueDate,
+      // status: address.status,
+      // priority: address.priority,
     });
 
     setIsEdit(true);
@@ -180,23 +189,13 @@ const BoxesData = () => {
   // Get Data
 
   useEffect(() => {
-    dispatch(GetBoxAction()).then((res: { payload: any; type: any }) => {
-      if (res.type === "box/get-all/fulfilled" && res.payload) {
-        toast("Boxes Retrived successful", {
-          position: "top-right",
-          hideProgressBar: false,
-          className: "bg-success text-white",
-          progress: undefined,
-          toastId: "",
-        });
-      }
-    });
+    dispatch(GetAddressesAction());
   }, [dispatch]);
 
   // Checked All
   const checkedAll = useCallback(() => {
-    const checkall: any = document.getElementById("checkBoxAll");
-    const ele = document.querySelectorAll(".boxCheckBox");
+    const checkall: any = document.getElementById("checkAddressAll");
+    const ele = document.querySelectorAll(".addressCheckAddress");
 
     if (checkall.checked) {
       ele.forEach((ele: any) => {
@@ -207,18 +206,19 @@ const BoxesData = () => {
         ele.checked = false;
       });
     }
-    deleteCheckbox();
+    deleteCheckaddress();
   }, []);
 
   // Delete Multiple
-  const [selectedCheckBoxDelete, setSelectedCheckBoxDelete] = useState<any>([]);
+  const [selectedCheckAddressDelete, setSelectedCheckAddressDelete] =
+    useState<any>([]);
   const [isMultiDeleteButton, setIsMultiDeleteButton] =
     useState<boolean>(false);
 
   const deleteMultiple = () => {
-    const checkall: any = document.getElementById("checkBoxAll");
-    selectedCheckBoxDelete.forEach((element: any) => {
-      //   dispatch(deleteBox(element.value));
+    const checkall: any = document.getElementById("checkAddressAll");
+    selectedCheckAddressDelete.forEach((element: any) => {
+      //   dispatch(deleteAddress(element.value));
       setTimeout(() => {
         toast.clearWaitingQueue();
       }, 3000);
@@ -227,12 +227,12 @@ const BoxesData = () => {
     checkall.checked = false;
   };
 
-  const deleteCheckbox = () => {
-    const ele = document.querySelectorAll(".boxCheckBox:checked");
+  const deleteCheckaddress = () => {
+    const ele = document.querySelectorAll(".addressCheckAddress:checked");
     ele.length > 0
       ? setIsMultiDeleteButton(true)
       : setIsMultiDeleteButton(false);
-    setSelectedCheckBoxDelete(ele);
+    setSelectedCheckAddressDelete(ele);
   };
 
   const columns = useMemo(
@@ -240,33 +240,43 @@ const BoxesData = () => {
       {
         header: (
           <input
-            type="checkbox"
-            id="checkBoxAll"
+            type="checkaddress"
+            id="checkAddressAll"
             className="form-check-input"
             onClick={() => checkedAll()}
           />
         ),
         cell: (cell: any) => (
           <input
-            type="checkbox"
-            className="boxCheckBox form-check-input"
+            type="checkaddress"
+            className="addressCheckAddress form-check-input"
             value={cell.getValue()}
-            onChange={() => deleteCheckbox()}
+            onChange={() => deleteCheckaddress()}
           />
         ),
         id: "#",
-        accessorKey: "id",
+        accessorKey: "",
         enableColumnFilter: false,
         enableSorting: false,
       },
       {
-        header: "Serial",
-        accessorKey: "serial_number",
+        header: "ID",
+        accessorKey: "id",
         enableColumnFilter: false,
       },
       {
-        header: "Title",
-        accessorKey: "box_label",
+        header: "Box ID",
+        accessorKey: "box_id",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Country",
+        accessorKey: "country",
+        enableColumnFilter: false,
+      },
+      {
+        header: "City",
+        accessorKey: "city",
         enableColumnFilter: false,
       },
       {
@@ -276,13 +286,38 @@ const BoxesData = () => {
         cell: (cell: any) => moment(cell.getValue()).format("DD MMMM, YYYY"),
       },
       {
-        header: "Box Model",
-        accessorKey: "box_model_id",
+        header: "District",
+        accessorKey: "district",
         enableColumnFilter: false,
       },
       {
-        header: "Tablet ID",
-        accessorKey: "current_tablet_id",
+        header: "Street",
+        accessorKey: "street",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Building Type",
+        accessorKey: "building_type",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Building Number",
+        accessorKey: "building_number",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Floor",
+        accessorKey: "floor",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Apartment Number",
+        accessorKey: "apartment_number",
+        enableColumnFilter: false,
+      },
+      {
+        header: "User ID",
+        accessorKey: "user_id",
         enableColumnFilter: false,
       },
       {
@@ -294,7 +329,7 @@ const BoxesData = () => {
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-end">
               <li>
-                <DropdownItem href="/apps-boxs-details">
+                <DropdownItem href="/apps-addresss-details">
                   <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
                   View
                 </DropdownItem>
@@ -305,8 +340,8 @@ const BoxesData = () => {
                   href="#showModal"
                   data-bs-toggle="modal"
                   onClick={() => {
-                    const BoxData = cell.row.original;
-                    handleBoxesClick(BoxData);
+                    const AddressData = cell.row.original;
+                    handleAddressesClick(AddressData);
                   }}
                 >
                   <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>{" "}
@@ -319,8 +354,8 @@ const BoxesData = () => {
                   data-bs-toggle="modal"
                   href="#deleteOrder"
                   onClick={() => {
-                    const boxData = cell.row.original;
-                    onClickDelete(boxData);
+                    const addressData = cell.row.original;
+                    onClickDelete(addressData);
                   }}
                 >
                   <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
@@ -335,13 +370,12 @@ const BoxesData = () => {
     [checkedAll]
   );
 
-
   return (
     <React.Fragment>
       <Row>
         <DeleteModal
           show={deleteModal}
-          onDeleteClick={handleDeleteBox}
+          onDeleteClick={handleDeleteAddress}
           onCloseClick={() => setDeleteModal(false)}
         />
         <DeleteModal
@@ -356,7 +390,7 @@ const BoxesData = () => {
           <Card>
             <CardHeader className="border-0">
               <div className="d-flex align-items-center">
-                <h5 className="card-title mb-0 flex-grow-1">Boxes</h5>
+                <h5 className="card-title mb-0 flex-grow-1">Addresses</h5>
                 <div className="flex-shrink-0">
                   <div className="d-flex flex-wrap gap-2">
                     <button
@@ -366,7 +400,8 @@ const BoxesData = () => {
                         toggle();
                       }}
                     >
-                      <i className="ri-add-line align-bottom"></i> Create Box
+                      <i className="ri-add-line align-bottom"></i> Create
+                      Address
                     </button>{" "}
                     {isMultiDeleteButton && (
                       <button
@@ -381,19 +416,18 @@ const BoxesData = () => {
               </div>
             </CardHeader>
             <CardBody className="pt-0">
-              {boxsList && boxsList.length ? (
+              {loader ? (
+                <Loader error={error} />
+              ) : (
                 <TableContainer
                   columns={columns}
-                  data={boxsList}
+                  data={addressList}
                   isGlobalFilter={true}
                   customPageSize={8}
                   divClass="table-responsive table-card mb-3"
                   tableClass="align-middle table-nowrap mb-0"
-                  SearchPlaceholder="Search for box details or something..."
+                  SearchPlaceholder="Search for address details or something..."
                 />
-              ) : (
-                <Loader error={error} />
-                // <></>
               )}
               <ToastContainer closeButton={false} limit={1} />
             </CardBody>
@@ -401,7 +435,7 @@ const BoxesData = () => {
         </Col>
       </Row>
 
-      {/* <Modal
+      <Modal
         isOpen={modal}
         toggle={toggle}
         centered
@@ -410,7 +444,7 @@ const BoxesData = () => {
         modalClassName="zoomIn"
       >
         <ModalHeader toggle={toggle} className="p-3 bg-info-subtle">
-          {!!isEdit ? "Edit Box" : "Add Box"}
+          {!!isEdit ? "Edit Address" : "Add Address"}
         </ModalHeader>
         <Form
           className="tablelist-form"
@@ -562,7 +596,7 @@ const BoxesData = () => {
                 ) : null}
               </Col>
               <Col lg={6}>
-                <Label htmlFor="box-status" className="form-label">
+                <Label htmlFor="address-status" className="form-label">
                   Status
                 </Label>
                 <Input
@@ -628,14 +662,14 @@ const BoxesData = () => {
                 Close
               </button>
               <button type="submit" className="btn btn-success" id="add-btn">
-                {!!isEdit ? "Update" : "Add Box"}
+                {!!isEdit ? "Update" : "Add Address"}
               </button>
             </div>
           </div>
         </Form>
-      </Modal> */}
+      </Modal>
     </React.Fragment>
   );
 };
 
-export default BoxesData;
+export default AddressesData;

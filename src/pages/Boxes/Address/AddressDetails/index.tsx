@@ -6,7 +6,7 @@ import TicketDescription from "./TicketDescription";
 import TicketDetails from "./TicketDetails";
 
 const BoxesDetails = () => {
-  document.title = "Boxes Details | Ahln - React Admin & Dashboard";
+  document.title = "Address Details | Ahln - React Admin & Dashboard";
   return (
     <React.Fragment>
       <div className="page-content">
