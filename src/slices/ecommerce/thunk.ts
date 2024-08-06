@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import {
   
   getModels as getModelsApi,
+  getModel as getModelApi,
   deleteModels as deleteModelsApi,
   addNewModel as addNewModelApi,
   updateModel as updateModelApi,
@@ -30,6 +31,17 @@ export const getModels = createAsyncThunk(
   async () => {
     try {
       let response = await getModelsApi();
+      return response.data;
+    } catch (error) {
+      return error;
+    }
+  }
+);
+export const getModel = createAsyncThunk(
+  "ecommerce/getModel",
+  async (id:any) => {
+    try {
+      let response = await getModelApi(id);
       return response.data;
     } catch (error) {
       return error;
@@ -69,10 +81,9 @@ export const updateModel = createAsyncThunk(
   "ecommerce/updateModel",
   async (model: any) => {
     try {
-      const response = updateModelApi(model);
-      const data = await response;
+      const response:any = await updateModelApi(model);
       toast.success("Model Updateded Successfully", { autoClose: 3000 });
-      return data;
+      return response.data;
     } catch (error) {
       toast.error("Model Updateded Failed", { autoClose: 3000 });
       return error;

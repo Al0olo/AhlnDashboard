@@ -190,7 +190,13 @@ export const deleteModels = (model: any) => {
 // add Models
 export const addNewModel = (model: any) => api.create(url.ADD_NEW_MODEL, model);
 // update Models
-export const updateModel = (Model: any) => api.update(url.UPDATE_MODEL, Model);
+export const updateModel = (model: any) =>{
+  api.update(url.UPDATE_MODEL+model.id, model);
+}
+//GET Single Model
+export const getModel = (id:any) =>{
+  return api.get(url.GET_MODEL_ID+id);
+}
 //Models-End
 
 //Product-Start

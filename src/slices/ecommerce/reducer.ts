@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   getModels,
+  getModel,
   addNewModel,
   updateModel,
   deleteModels,
@@ -20,11 +21,13 @@ import {
 } from "./thunk";
 export const initialState: any = {
   models: [],
+  model: {},
   products: [],
   orders: [],
   sellers: [],
   customers: [],
   error: {},
+  modelLoading:false
 };
 
 const EcommerceSlice = createSlice({
@@ -36,13 +39,20 @@ const EcommerceSlice = createSlice({
     builder.addCase(getModels.fulfilled, (state: any, action: any) => {
       state.models = action.payload;
     });
-    
-    builder.addCase(updateModel.fulfilled, (state: any, action: any) => {
+    builder.addCase(getModel.pending, (state: any, action: any) => {
+      state.modelLoading = true
+    });
+    builder.addCase(getModel.fulfilled, (state: any, action: any) => {
+      state.modelLoading=false;
+      state.model = action.payload;
+    });
+ builder.addCase(updateModel.fulfilled, (state: any, action: any) => {
       state.models = state.models.map((model: any) =>
         model.id === action.payload.id
           ? { ...model, ...action.payload }
           : model
       );
+      
     });
     builder.addCase(deleteModels.fulfilled, (state: any, action: any) => {
       state.models = (state.models || []).filter(

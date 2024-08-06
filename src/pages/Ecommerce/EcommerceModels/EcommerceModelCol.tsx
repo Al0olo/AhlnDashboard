@@ -33,13 +33,13 @@ const Rating = (cell: any) => {
     </React.Fragment>
   );
 };
-const Camera = (cell: any) => {
+const GetValid = (cell: any) => {
   let exist = cell.getValue();
   return (
     <React.Fragment>
       <span>
         <span className="badge bg-light text-body fs-12 fw-medium">
-          {exist ?<i className="mdi mdi-check text-success me-1"></i> 
+          {exist ==true?<i className="mdi mdi-check text-success me-1"></i> 
            : <i className="mdi mdi-cancel text-danger me-1"></i>
            }
         </span>
@@ -62,4 +62,4 @@ const Price = (cell: any) => {
   return <React.Fragment>{"$ " + cell.value + ".00"}</React.Fragment>;
 };
 
-export { Rating, Published, Price, Camera };
+export { Rating, Published, Price, GetValid };
