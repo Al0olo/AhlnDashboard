@@ -78,7 +78,8 @@ export const TRASH_MAIL = "/trash/mail";
 export const GET_MODELS = "box-generation/get-all";
 export const DELETE_MODEL = "/box-generation/delete/";
 export const ADD_NEW_MODEL = "/box-generation/new";
-export const UPDATE_MODEL = "/box-generation/update";
+export const UPDATE_MODEL = "/box-generation/update/";
+export const GET_MODEL_ID = "/box-generation/get-one/";
 // Product
 export const GET_PRODUCTS = "/product";
 export const DELETE_PRODUCT = "/delete/product";

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BreadCrumb from "../../../Components/Common/BreadCrumb";
 import {
   Card,
@@ -20,10 +20,13 @@ import {
 
 // Redux
 import { useDispatch } from "react-redux";
-import { addNewModel as onAddNewModel } from "../../../slices/thunks";
+import {
+  updateModel as onUpdateModel,
+  getModel as onGetModel,
+} from "../../../slices/thunks";
 
 import Dropzone from "react-dropzone";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 //formik
 import { useFormik } from "formik";
@@ -36,14 +39,109 @@ import "filepond/dist/filepond.min.css";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import { createSelector } from "reselect";
+import { useSelector } from "react-redux";
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
-const EcommerceAddProduct = (props: any) => {
-  document.title = "Create Model | Dashboard";
+const EcommerceEditProduct = (props: any) => {
   const history = useNavigate();
   const dispatch: any = useDispatch();
+  let id = useParams().id;
+  const [model_data, setModel] = useState<any>({
+    color: null,
+    has_inside_camera: true,
+    has_outside_camera: true,
+    has_tablet: true,
+    height: null,
+    model_image: null,
+    model_name: null,
+    number_of_doors: null,
+    width: null,
+  });
+  
+  const selectModelLoading = createSelector(
+    (state: any) => state.Ecommerce,
+    (state) => ({
+      modelLoading: state.modelLoading,
+    })
+  );
+  const modelLoading = useSelector(selectModelLoading);
+  const selectModelData = createSelector(
+    (state: any) => state.Ecommerce,
+    (state) => ({
+      model: state.model,
+    })
+  );
+  const modelData = useSelector(selectModelData);
+  
+  useEffect(() => {
+    dispatch(onGetModel(id));
+  }, []);
+useEffect(()=>{
+    if(modelData.model){
+      setModel({
+        color: modelData.model.color,
+        has_inside_camera: modelData.model.has_inside_camera,
+        has_outside_camera: modelData.model.has_outside_camera,
+        has_tablet: modelData.model.has_tablet,
+        height: modelData.model.height,
+        model_image: modelData.model.model_image,
+        model_name: modelData.model.model_name,
+        number_of_doors: modelData.model.number_of_doors,
+        width: modelData.model.width,
+      });
+      
+    }
+},[modelData.model])
+ 
+  const validation: any = useFormik({
+    enableReinitialize: true,
+
+    initialValues: {
+      model_name: model_data.model_name,
+      number_of_doors: model_data.number_of_doors,
+      width: model_data.width,
+      height: model_data.height,
+      model_image: model_data.model_image,
+      has_outside_camera: model_data.has_outside_camera,
+      has_inside_camera: model_data.has_inside_camera,
+      has_tablet: model_data.has_tablet,
+    },
+    validationSchema: Yup.object({
+      model_name: Yup.string().required("Please Enter a model Title"),
+      number_of_doors: Yup.string().required(
+        "Please Enter a model number of door"
+      ),
+      width: Yup.string().required("Please Enter a model  width"),
+      height: Yup.string().required("Please Enter a model height"),
+      model_image: Yup.string().required("Please Enter model image Link"),
+    }),
+    onSubmit: (values) => {
+      const model = {
+        id: id,
+        model_name: values.model_name?values.model_name:model_data.model.model_name,
+        number_of_doors: values.number_of_doors?values.number_of_doors:model_data.model.number_of_doors,
+        width: values.width?values.width:model_data.model.width,
+        height: values.height?values.height:model_data.model.height,
+        model_image: values.model_image?values.model_image:model_data.model.model_image,
+        has_outside_camera: values.has_outside_camera
+          ? values.has_outside_camera
+          : false,
+        has_inside_camera: values.has_inside_camera
+          ? values.has_inside_camera
+          : false,
+        has_tablet: values.has_tablet ? values.has_tablet : false,
+      };
+      // save new product
+      dispatch(onUpdateModel(model));
+      history("/apps-ecommerce-models");
+      validation.resetForm();
+    },
+  });
+
+  document.title = "Edit Model | Dashboard";
 
   const [customActiveTab, setcustomActiveTab] = useState<any>("1");
   const toggleCustom = (tab: any) => {
@@ -94,54 +192,11 @@ const EcommerceAddProduct = (props: any) => {
     reader.readAsDataURL(file);
   };
 
-  const validation: any = useFormik({
-    enableReinitialize: true,
-
-    initialValues: {
-      model_name: "",
-      number_of_doors: "",
-      width: "",
-      height: "",
-      model_image: "",
-      has_outside_camera: "",
-      has_inside_camera: "",
-      has_tablet: "",
-    },
-    validationSchema: Yup.object({
-      model_name: Yup.string().required("Please Enter a model Title"),
-      number_of_doors: Yup.string().required(
-        "Please Enter a model number of door"
-      ),
-      width: Yup.string().required("Please Enter a model  width"),
-      height: Yup.string().required("Please Enter a model height"),
-      model_image: Yup.string().required("Please Enter model image Link"),
-    }),
-    onSubmit: (values) => {
-      const newModel = {
-        // id: (Math.floor(Math.random() * (30 - 20)) + 20).toString(),
-        model_name: values.model_name,
-        number_of_doors: values.number_of_doors,
-        width: values.width,
-        height: values.height,
-        model_image: values.model_image,
-        has_outside_camera: values.has_outside_camera
-          ? values.has_outside_camera
-          : false,
-        has_inside_camera: values.has_inside_camera
-          ? values.has_inside_camera
-          : false,
-        has_tablet: values.has_tablet ? values.has_tablet : false,
-      };
-      // save new product
-      dispatch(onAddNewModel(newModel));
-      history("/apps-ecommerce-models");
-      validation.resetForm();
-    },
-  });
+ 
   return (
     <div className="page-content">
       <Container fluid>
-        <BreadCrumb title="Create Model" pageTitle="Ecommerce" />
+        <BreadCrumb title="Edit Model" pageTitle="Ecommerce" />
         <Form
           encType="multipart/form-data"
           onSubmit={(e) => {
@@ -159,13 +214,14 @@ const EcommerceAddProduct = (props: any) => {
                     <Label className="form-label" htmlFor="model-title-input">
                       Model Title
                     </Label>
+                    
                     <Input
                       type="text"
                       className="form-control"
                       id="model-title-input"
                       placeholder="Enter model title"
                       name="model_name"
-                      value={validation.values.model_name || ""}
+                      value={validation.values.model_name }
                       onBlur={validation.handleBlur}
                       onChange={validation.handleChange}
                       invalid={
@@ -198,7 +254,7 @@ const EcommerceAddProduct = (props: any) => {
                       id="model-title-input"
                       placeholder="Enter model image link"
                       name="model_image"
-                      value={validation.values.model_image || ""}
+                      value={validation.values.model_image}
                       onBlur={validation.handleBlur}
                       onChange={validation.handleChange}
                       invalid={
@@ -234,7 +290,7 @@ const EcommerceAddProduct = (props: any) => {
                           id="model-width-input"
                           placeholder="Enter height"
                           name="width"
-                          value={validation.values.width || ""}
+                          value={validation.values.width }
                           onBlur={validation.handleBlur}
                           onChange={validation.handleChange}
                           invalid={
@@ -265,7 +321,7 @@ const EcommerceAddProduct = (props: any) => {
                           id="model-height-input"
                           placeholder="Enter height"
                           name="height"
-                          value={validation.values.height || ""}
+                          value={validation.values.height }
                           onBlur={validation.handleBlur}
                           onChange={validation.handleChange}
                           invalid={
@@ -307,7 +363,7 @@ const EcommerceAddProduct = (props: any) => {
                         id="model-no_of_doors-input"
                         placeholder="Enter number of doors"
                         name="number_of_doors"
-                        value={validation.values.number_of_doors || ""}
+                        value={validation.values.number_of_doors }
                         onBlur={validation.handleBlur}
                         onChange={validation.handleChange}
                         invalid={
@@ -329,7 +385,8 @@ const EcommerceAddProduct = (props: any) => {
               </Card>
               <Card>
                 <CardHeader>
-                  <h5 className="card-title mb-0">Has Outside Camera</h5>
+                  <h5 className="card-title mb-0">Has Outside Camera
+                  </h5>
                 </CardHeader>
                 <CardBody>
                   <div className="mb-3">
@@ -337,6 +394,7 @@ const EcommerceAddProduct = (props: any) => {
                       className="form-check form-switch form-switch-lg"
                       dir="ltr"
                     >
+                      
                       <Input
                         type="checkbox"
                         value="true"
@@ -351,6 +409,7 @@ const EcommerceAddProduct = (props: any) => {
                             ? true
                             : false
                         }
+                        defaultChecked={model_data.has_outside_camera}
                       />
                     </div>
 
@@ -388,7 +447,9 @@ const EcommerceAddProduct = (props: any) => {
                             ? true
                             : false
                         }
-                      />
+                        
+                        defaultChecked={model_data.has_inside_camera}
+                        />
                     </div>
 
                     {validation.errors.has_inside_camera &&
@@ -410,6 +471,7 @@ const EcommerceAddProduct = (props: any) => {
                       className="form-check form-switch form-switch-lg"
                       dir="ltr"
                     >
+                      
                       <Input
                         type="checkbox"
                         value="true"
@@ -424,6 +486,7 @@ const EcommerceAddProduct = (props: any) => {
                             ? true
                             : false
                         }
+                        defaultChecked={model_data.has_tablet}
                       />
                     </div>
 
@@ -444,4 +507,4 @@ const EcommerceAddProduct = (props: any) => {
   );
 };
 
-export default EcommerceAddProduct;
+export default EcommerceEditProduct;

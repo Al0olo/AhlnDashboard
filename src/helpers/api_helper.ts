@@ -99,7 +99,7 @@ class APIClient {
   };
 
   update = (url: string, data: any) => {
-    return AxiosInstance.patch(url, data);
+    return AxiosInstance.put(url, data);
   };
 
   put = (url: string, data: any) => {
