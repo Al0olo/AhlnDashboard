@@ -92,24 +92,12 @@ const ShippingCompaniesData = () => {
     enableReinitialize: true,
 
     initialValues: {
-      serial_number: (shippingCompany && shippingCompany.serial_number) || "",
-      shippingCompany_label:
-        (shippingCompany && shippingCompany.shippingCompany_label) || "",
-      has_empty_lockers:
-        (shippingCompany && shippingCompany.has_empty_lockers) || "",
-      current_tablet_id:
-        (shippingCompany && shippingCompany.current_tablet_id) || "",
-      previous_tablet_id:
-        (shippingCompany && shippingCompany.previous_tablet_id) || "",
-      shippingCompany_model_id:
-        (shippingCompany && shippingCompany.shippingCompany_model_id) || "",
-      address_id: (shippingCompany && shippingCompany.address_id) || "",
+      title: (shippingCompany && shippingCompany.title) || "",
+      logo: (shippingCompany && shippingCompany.logo) || "",
     },
     validationSchema: Yup.object({
-      serial_number: Yup.string().required("Please Enter Serial Number"),
-      shippingCompany_label: Yup.string().required(
-        "Please Enter ShippingCompany Label"
-      ),
+      title: Yup.string().required("Please Enter Serial Number"),
+      logo: Yup.string().required("Please Enter ShippingCompany Label"),
       current_tablet_id: Yup.number().required("Please Enter Tablet Id"),
       shippingCompany_model_id: Yup.string().required(
         "Please Enter ShippingCompany Generation Id"
@@ -118,23 +106,16 @@ const ShippingCompaniesData = () => {
     onSubmit: (values) => {
       if (isEdit) {
         const updateShippingCompanies = {
-          serial_number: values.serial_number,
-          shippingCompany_label: values.shippingCompany_label,
-          has_empty_lockers: values.has_empty_lockers,
-          current_tablet_id: values.current_tablet_id,
-          previous_tablet_id: values.previous_tablet_id,
-          shippingCompany_model_id: values.shippingCompany_model_id,
-          address_id: values.address_id,
+          title: values.title,
+          logo: values.logo,
         };
         // update shippingCompany
         dispatch(UpdateShippingCompanyAction(updateShippingCompanies));
         validation.resetForm();
       } else {
         const newShippingCompany = {
-          serial_number: values["serial_number"],
-          shippingCompany_label: values["shippingCompany_label"],
-          has_empty_lockers: values["has_empty_lockers"],
-          shippingCompany_model_id: values["shippingCompany_model_id"],
+          title: values["title"],
+          logo: values["logo"],
         };
         console.log("RRRRRRRRRRRRRRR");
 
@@ -166,8 +147,8 @@ const ShippingCompaniesData = () => {
     const shippingCompany = arg;
 
     setShippingCompany({
-      serial_number: shippingCompany.serial_number,
-      shippingCompany_label: shippingCompany.shippingCompany_label,
+      title: shippingCompany.title,
+      logo: shippingCompany.logo,
       has_empty_lockers: shippingCompany.has_empty_lockers,
       shippingCompany_model_id: shippingCompany.shippingCompany_model_id,
       address_id: shippingCompany.address_id,
@@ -422,32 +403,30 @@ const ShippingCompaniesData = () => {
             <Row className="g-3">
               <Col lg={12}>
                 <div>
-                  <Label htmlFor="tasksTitle-field" className="form-label">
-                    Serial Number
+                  <Label htmlFor="title-field" className="form-label">
+                    Title
                   </Label>
                   <Input
-                    name="serial_number"
-                    id="serial-field"
+                    name="title"
+                    id="title-field"
                     className="form-control"
-                    placeholder="Enter Serial Number"
+                    placeholder="Enter Title"
                     type="text"
                     validate={{
                       required: { value: true },
                     }}
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.serial_number || ""}
+                    value={validation.values.title || ""}
                     invalid={
-                      validation.touched.serial_number &&
-                      validation.errors.serial_number
+                      validation.touched.title && validation.errors.title
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.serial_number &&
-                  validation.errors.serial_number ? (
+                  {validation.touched.title && validation.errors.title ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.serial_number}
+                      {validation.errors.title}
                     </FormFeedback>
                   ) : null}
                 </div>
@@ -455,115 +434,25 @@ const ShippingCompaniesData = () => {
               <Col lg={12}>
                 <div>
                   <Label htmlFor="client_nameName-field" className="form-label">
-                    ShippingCompany Label
+                    Shipping Company Logo
                   </Label>
                   <Input
-                    name="shippingCompany_label"
+                    name="logo"
                     type="text"
-                    id="shippingCompany_label-field"
+                    id="logo-field"
                     placeholder="Enter ShippingCompany Label"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.shippingCompany_label || ""}
+                    value={validation.values.logo || ""}
                     invalid={
-                      validation.touched.shippingCompany_label &&
-                      validation.errors.shippingCompany_label
+                      validation.touched.logo && validation.errors.logo
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.shippingCompany_label &&
-                  validation.errors.shippingCompany_label ? (
+                  {validation.touched.logo && validation.errors.logo ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.shippingCompany_label}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-              </Col>
-              {/* <Col lg={6}>
-                <div>
-                  <Label htmlFor="assignedtoName-field" className="form-label">
-                    Assigned To
-                  </Label>
-                  <Input
-                    name="assigned"
-                    type="text"
-                    id="assignedtoName-field"
-                    placeholder="Enter Assigned Name"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.assigned || ""}
-                    invalid={
-                      validation.touched.assigned && validation.errors.assigned
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.assigned && validation.errors.assigned ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.assigned}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-              </Col> */}
-
-              <Col lg={12}>
-                <Label htmlFor="shippingCompany-status" className="form-label">
-                  Has Empty Lockers
-                </Label>
-                <Input
-                  name="status"
-                  type="select"
-                  className="form-select"
-                  id="lockers-field"
-                  onChange={validation.handleChange}
-                  onBlur={validation.handleBlur}
-                  value={validation.values.has_empty_lockers || ""}
-                  invalid={
-                    validation.touched.has_empty_lockers &&
-                    validation.errors.has_empty_lockers
-                      ? true
-                      : false
-                  }
-                >
-                  <option value="true">True</option>
-                  <option value="false">False</option>
-                </Input>
-                {validation.touched.has_empty_lockers &&
-                validation.errors.has_empty_lockers ? (
-                  <FormFeedback type="invalid">
-                    {validation.errors.has_empty_lockers}
-                  </FormFeedback>
-                ) : null}
-              </Col>
-              <Col lg={12}>
-                <div>
-                  <Label htmlFor="tasksTitle-field" className="form-label">
-                    ShippingCompany Generation ID
-                  </Label>
-                  <Input
-                    name="shippingCompany_model_id"
-                    id="serial-field"
-                    className="form-control"
-                    placeholder="Enter ShippingCompany Generation Model"
-                    type="text"
-                    validate={{
-                      required: { value: true },
-                    }}
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.shippingCompany_model_id || ""}
-                    invalid={
-                      validation.touched.shippingCompany_model_id &&
-                      validation.errors.shippingCompany_model_id
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.shippingCompany_model_id &&
-                  validation.errors.shippingCompany_model_id ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.shippingCompany_model_id}
+                      {validation.errors.logo}
                     </FormFeedback>
                   ) : null}
                 </div>
