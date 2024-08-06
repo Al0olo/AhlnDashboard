@@ -182,6 +182,7 @@ import BoxView from "pages/Boxes/Box/BoxView";
 import TabletView from "pages/Boxes/Tablets/TabletView";
 import AddressView from "pages/Boxes/Address/AddressView";
 import DeliveryView from "pages/Delivery/DeliveryPackage/DeliveryPackageView";
+import ShippingCompaniesView from "pages/Delivery/ShippingCompany/ShippingCompaniesView";
 import UILink from "../pages/BaseUi/UiLink/Index";
 import FunnelCharts from "../pages/Charts/ApexCharts/FunnelCharts/Index";
 import RangeArea from "../pages/Charts/ApexCharts/RangeAreaCharts/Index";
@@ -250,7 +251,10 @@ const authProtectedRoutes = [
   { path: "/boxes", component: <BoxView /> },
   { path: "/tablets", component: <TabletView /> },
   { path: "/addresses", component: <AddressView /> },
+
+  // Delivery Packages
   { path: "/delivery-packages", component: <DeliveryView /> },
+  { path: "/shipping-companies", component: <ShippingCompaniesView /> },
 
   //charts
   { path: "/charts-apex-line", component: <LineCharts /> },
