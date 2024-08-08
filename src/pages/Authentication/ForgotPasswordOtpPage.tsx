@@ -124,7 +124,7 @@ const ForgetPasswordOtpPage = (props: any) => {
                   return false;
                 }}
               >
-                <div className="mb-2">
+                <div className="mb-2 mt-3">
                   <Label className="form-label lbl">Email<span className="text-danger">*</span></Label>
                   <Input
                     name="email"
