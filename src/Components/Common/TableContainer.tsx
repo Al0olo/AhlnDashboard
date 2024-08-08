@@ -19,6 +19,7 @@ import { rankItem } from '@tanstack/match-sorter-utils';
 
 import {
   ProductsGlobalFilter,
+  ModelGlobalFilter,
   CustomersGlobalFilter,
   OrderGlobalFilter,
   ContactsGlobalFilter,
@@ -90,6 +91,7 @@ interface TableContainerProps {
   data?: any;
   isGlobalFilter?: any;
   isProductsFilter?: any;
+  isModelFilter?: any;
   isCustomerFilter?: any;
   isOrderFilter?: any;
   isContactsFilter?: any;
@@ -119,6 +121,7 @@ const TableContainer = ({
   data,
   isGlobalFilter,
   isProductsFilter,
+  isModelFilter,
   isCustomerFilter,
   isOrderFilter,
   isContactsFilter,
@@ -192,7 +195,7 @@ const TableContainer = ({
           <form>
             <Row>
               <Col sm={5}>
-                <div className={(isProductsFilter || isContactsFilter || isCompaniesFilter || isNFTRankingFilter) ? "search-box me-2 mb-2 d-inline-block" : "search-box me-2 mb-2 d-inline-block col-12"}>
+                <div className={(isProductsFilter ||isModelFilter || isContactsFilter || isCompaniesFilter || isNFTRankingFilter) ? "search-box me-2 mb-2 d-inline-block" : "search-box me-2 mb-2 d-inline-block col-12"}>
                   <DebouncedInput
                     value={globalFilter ?? ''}
                     onChange={value => setGlobalFilter(String(value))}
@@ -201,6 +204,9 @@ const TableContainer = ({
                   <i className="bx bx-search-alt search-icon"></i>
                 </div>
               </Col>
+              {isModelFilter && (
+                <ModelGlobalFilter />
+              )}
               {isProductsFilter && (
                 <ProductsGlobalFilter />
               )}
@@ -296,7 +302,7 @@ const TableContainer = ({
 
       <Row className="align-items-center mt-2 g-3 text-center text-sm-start">
         <div className="col-sm">
-          <div className="text-muted">Showing<span className="fw-semibold ms-1">{getState().pagination.pageSize}</span> of <span className="fw-semibold">{data.length}</span> Results
+          <div className="text-muted">Showing<span className="fw-semibold ms-1">{data.length}</span> of <span className="fw-semibold">{getState().pagination.pageSize}</span> Results
           </div>
         </div>
         <div className="col-sm-auto">

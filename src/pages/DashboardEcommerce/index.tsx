@@ -26,8 +26,10 @@ const DashboardEcommerce = () => {
           <Row>
             <Col>
               <div className="h-100">
-                <Section rightClickBtn={toggleRightColumn} />
-                <Row>
+                {/* <Section rightClickBtn={toggleRightColumn} /> */}
+                <Row className="ahln-widget-container mt-3">
+                  <h6>Welcome Back Jack</h6>
+                  <h3>Sales Summary</h3>
                   <Widget />
                 </Row>
                 <Row>

@@ -145,7 +145,7 @@ const Layout = (props: any) => {
           layoutModeType={layoutModeType}
           onChangeLayoutMode={onChangeLayoutMode}
         />
-        <Sidebar layoutType={layoutType} />
+        <Sidebar layoutType={"horizontal"} />
         <div className="main-content">
           {props.children}
           <Footer />

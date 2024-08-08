@@ -61,10 +61,9 @@ export const addNewModel = createAsyncThunk(
   "ecommerce/addNewModel",
   async (model: any) => {
     try {
-      const response = addNewModelApi(model);
-      const data = await response;
+      const response = await addNewModelApi(model);
       toast.success("Model Added Successfully", { autoClose: 3000 });
-      return data;
+      return response.data;
     } catch (error) {
       toast.error("Model Added Failed", { autoClose: 3000 });
       return error;
@@ -76,9 +75,9 @@ export const updateModel = createAsyncThunk(
   "ecommerce/updateModel",
   async (model: any) => {
     try {
-      const response:any = await updateModelApi(model);
+      const response = await updateModelApi(model);
       toast.success("Model Updateded Successfully", { autoClose: 3000 });
-      return response.data;
+      return response;
     } catch (error) {
       toast.error("Model Updateded Failed", { autoClose: 3000 });
       return error;
