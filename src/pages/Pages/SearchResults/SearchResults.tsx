@@ -172,7 +172,7 @@ document.title="Search Results | Velzon - React Admin & Dashboard Template";
                                             <div className="border border-dashed"></div>
 
                                             <div className="py-3">
-                                                <h5 className="fs-13 mb-3 text-muted fst-italic">Showing results Images</h5>
+                                                <h5 className="fs-13 mb-3 text-muted fst-italic"> results Images</h5>
                                                 <Row>
                                                     <Col xl={4} lg={10}>
                                                         <Row className="g-2">

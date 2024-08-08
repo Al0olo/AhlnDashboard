@@ -109,9 +109,7 @@ const EcommerceAddProduct = (props: any) => {
     },
     validationSchema: Yup.object({
       model_name: Yup.string().required("Please Enter a model Title"),
-      number_of_doors: Yup.string().required(
-        "Please Enter a model number of door"
-      ),
+      number_of_doors: Yup.string().max(255, "Too long image link"),
       width: Yup.string().required("Please Enter a model  width"),
       height: Yup.string().required("Please Enter a model height"),
       model_image: Yup.string().required("Please Enter model image Link"),
@@ -198,6 +196,7 @@ const EcommerceAddProduct = (props: any) => {
                       id="model-title-input"
                       placeholder="Enter model image link"
                       name="model_image"
+                      maxLength={255}
                       value={validation.values.model_image || ""}
                       onBlur={validation.handleBlur}
                       onChange={validation.handleChange}
@@ -219,7 +218,8 @@ const EcommerceAddProduct = (props: any) => {
               </Card>
               {/* /model_image */}
 
-              <Row>
+             {/* Dimension */}
+             <Row>
                 <Col lg={6}>
                   <Card>
                     <CardHeader>
@@ -286,14 +286,16 @@ const EcommerceAddProduct = (props: any) => {
                   </Card>
                 </Col>
               </Row>
+             {/* /Dimension */}
               <div className="text-end mb-3 ">
                 <button type="submit" className="btn btn-success w-sm">
                   Save
                 </button>
               </div>
             </Col>
+{/* Features */}
 
-            <Col lg={4}>
+<Col lg={4}>
               <Card>
                 <CardHeader>
                   <h5 className="card-title mb-3 ">Number of doors</h5>
@@ -338,7 +340,7 @@ const EcommerceAddProduct = (props: any) => {
                       dir="ltr"
                     >
                       <Input
-                        type="checkbox"
+                        type="switch"
                         value="true"
                         name="has_outside_camera"
                         className="form-check-input"
@@ -375,7 +377,7 @@ const EcommerceAddProduct = (props: any) => {
                       dir="ltr"
                     >
                       <Input
-                        type="checkbox"
+                        type="switch"
                         value="true"
                         name="has_inside_camera"
                         className="form-check-input"
@@ -411,7 +413,7 @@ const EcommerceAddProduct = (props: any) => {
                       dir="ltr"
                     >
                       <Input
-                        type="checkbox"
+                        type="switch"
                         value="true"
                         name="has_tablet"
                         className="form-check-input"
@@ -437,6 +439,7 @@ const EcommerceAddProduct = (props: any) => {
                 </CardBody>
               </Card>
             </Col>
+{/* /Features */}
           </Row>
         </Form>
       </Container>

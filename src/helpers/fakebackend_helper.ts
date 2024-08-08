@@ -219,10 +219,12 @@ export const deleteModels = (model: any) => {
   return api.delete(url.DELETE_MODEL + model);
 };
 // add Models
-export const addNewModel = (model: any) => api.create(url.ADD_NEW_MODEL, model);
+export const addNewModel = (model: any) =>{
+  return api.create(url.ADD_NEW_MODEL, model);
+}
 // update Models
 export const updateModel = (model: any) =>{
-  api.update(url.UPDATE_MODEL+model.id, model);
+  return api.update(url.UPDATE_MODEL+model.id, model);
 }
 //GET Single Model
 export const getModel = (id:any) =>{
