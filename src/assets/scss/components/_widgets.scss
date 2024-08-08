@@ -35,6 +35,13 @@ a {
 
 }
 // Ahln-end 
+
+
+// Ahln-charts
+.ahln-charts-container{
+padding: 10px 1px 1px;
+}
+// ahln-charts-end
 .main-chart {
   .chart-border-left {
     border-left: 1.4px solid var(--#{$prefix}border-color);
