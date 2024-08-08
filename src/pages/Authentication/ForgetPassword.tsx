@@ -90,7 +90,7 @@ const ForgetPasswordPage = (props: any) => {
             </div>
             <div className="p-2 mt-4">
               <img src={logoLogin} alt="" />
-              <div className=" mt-2 auth-title" style={{marginLeft:"10px"}}>
+              <div className=" mt-2 auth-title auth-forget" >
                 <h5 className="auth-text-primary">Forgot Password?</h5>
                 <p className="text-muted" role="alert">
                   Enter your email and instructions will be sent to you!
@@ -115,7 +115,7 @@ const ForgetPasswordPage = (props: any) => {
                   }}
                 >
                   <div className="mb-4">
-                    <Label className="form-label">Email</Label>
+                    <Label className="form-label lbl">Email<span className="text-danger">*</span></Label>
                     <Input
                       name="email"
                       className="form-control"

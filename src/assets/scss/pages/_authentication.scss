@@ -1,8 +1,11 @@
 //
 // _authentication.scss
 //
-.auth-title{
+.auth-title {
   margin-left: 3px;
+  @media (max-width: 575.98px) {
+    margin-left: 15px;
+  }
 }
 .auth-text-bold {
   font-family: "SF Pro Display", "Almarai", "Spectral", "Roboto", sans-serif !important;
@@ -11,6 +14,17 @@
 }
 .auth-text-primary {
   color: #1189b1e8 !important;
+  @media (max-width: 575.98px) {
+    text-align: left !important;
+  }
+}
+.remeeber-div {
+  display: flex;
+  justify-content: space-between;
+}
+.remeber {
+  @media (max-width: 575.98px) {
+  }
 }
 .text-muted {
   color: #a3aed0 !important;
@@ -20,13 +34,16 @@
   line-height: 16px !important;
   letter-spacing: 0.02em !important;
   text-align: left !important;
+  @media (max-width: 575.98px) {
+    text-align: left !important;
+  }
 }
 .auth-form-check {
   input {
     width: 20px;
     height: 20px !important;
     padding: 1.63px;
-    border-radius: 2.09px 0px 0px 0px;
+    border-radius: 2.09px;
     // background-color: #118ab1;
     display: inline;
     margin-right: 10px;
@@ -39,7 +56,6 @@
   }
   label {
     display: inline-block;
-    
   }
 }
 .a-forget {
@@ -58,8 +74,10 @@
   background-position: top left;
   @media (max-width: 575.98px) {
     text-align: center !important;
-    label {
+    display: flex;
+    .lbl {
       display: none;
+      // text-align: left !important;
     }
   }
   label {
@@ -69,8 +87,8 @@
   }
   img {
     position: fixed;
-    top: 37px;
-    left: 75px;
+    top: -9px;
+    left: -9px;
     @media (max-width: 575.98px) {
       position: fixed;
       top: 5px;
@@ -79,10 +97,22 @@
     }
   }
   input[type="email"],
+  input[type="text"],
   input[type="password"] {
     height: 52.32px;
     border-radius: 8px;
     opacity: 0px;
+   
+  }
+}
+input[type="email"],
+input[type="password"],
+input[type="text"],
+.auth-btn-success,
+input[type="checkbox"] {
+  @media (max-width: 575.98px) {
+    position: relative;
+    left: 12px;
   }
 }
 .auth-login-ahln {
@@ -97,7 +127,7 @@
 .auth-btn-success {
   background-color: #1189b1e8 !important;
   color: white !important;
-  padding: 15px 0px !important;
+  padding: 10px 0px !important;
   font-size: 15px;
   font-weight: 600;
   letter-spacing: 0.5px;
@@ -151,15 +181,50 @@
     opacity: 0.9;
   }
 }
+.verify-form {
+  @media (max-width: 575.98px) {
+    bottom: 120px !important;
+    position: relative;
+  }
+}
+
 .auth-verify {
   position: relative !important;
   top: 73px !important;
+  @media (max-width: 575.98px) {
+    top: 5px !important;
+    text-align: center;
+  }
+}
+.auth-forget{
+  margin-left: 10px;
+  @media (max-width: 575.98px) {
+    margin-left: 26px;
+    width: 354px;
+  }
+ 
+}
+.otp{
+  @media (max-width: 575.98px) {
+ margin-left: 10px;
+ input{
+  width:100%
+ }
+  }
+  
+ 
 }
 input {
   font-size: 15px !important;
   padding: 5px 8px !important;
   font-weight: lighter !important;
   height: 40px !important;
+  border-radius: 2.09px;
+}
+@media (max-width: 575.98px) {
+  form {
+    text-align: center;
+  }
 }
 .shape {
   position: absolute;

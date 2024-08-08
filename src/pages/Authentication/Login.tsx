@@ -120,7 +120,7 @@ const Login = (props: any) => {
                   <div className="mb-3">
                     <Label
                       htmlFor="useremail"
-                      className="form-label auth-text-primary"
+                      className="form-label auth-text-primary lbl"
                     >
                       Email <span className="text-danger">*</span>
                     </Label>
@@ -149,7 +149,7 @@ const Login = (props: any) => {
                   <div className="mb-3">
                     <Label
                       htmlFor="userpassword"
-                      className="form-label auth-text-primary"
+                      className="form-label auth-text-primary lbl"
                     >
                       Password <span className="text-danger">*</span>
                     </Label>
@@ -174,27 +174,30 @@ const Login = (props: any) => {
                       </FormFeedback>
                     ) : null}
                   </div>
-                  <Row>
-                    <Col  md={6}>
-                    <div className="auth-form-check">
-                    <Input
-                      className="form-control"
-                      type="checkbox"
-                      value=""
-                      id="auth-remember-check"
-                    />
-                    <label htmlFor="">Remember me</label>
-                    
-                  </div>
-                  </Col>
-                  
-                  <Col md={6}>
-                  <div className="mt-3 text-center">
-                    <Link className="text-muted fs-13 a-forget" to="/forgot-password">
-                      Forgot password?
-                    </Link>
-                  </div>
-                  </Col>
+                  <Row >
+                    <Col md={12} className="remeeber-div">
+                    <Col md={4} className="remeber">
+                      <div className="auth-form-check w-100">
+                        <Input
+                          className="form-control"
+                          type="checkbox"
+                          value=""
+                          id="auth-remember-check"
+                        />
+                        <label htmlFor="">Remember me</label>
+                      </div>
+                    </Col>
+
+                    <Col md={4} className="remeber">
+                      <div className="mt-3 w-100">
+                        <Link
+                          className="text-muted fs-13 a-forget"
+                          to="/forgot-password"
+                        >
+                          Forgot password?
+                        </Link>
+                      </div>
+                    </Col></Col>
                   </Row>
                   <div className="">
                     <Button

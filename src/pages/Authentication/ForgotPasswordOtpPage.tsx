@@ -117,6 +117,7 @@ const ForgetPasswordOtpPage = (props: any) => {
 
               <img src={logoLogin} alt="" />
               <Form
+              className="verify-form"
                 onSubmit={(e) => {
                   e.preventDefault();
                   validation.handleSubmit();
@@ -124,7 +125,7 @@ const ForgetPasswordOtpPage = (props: any) => {
                 }}
               >
                 <div className="mb-2">
-                  <Label className="form-label">Email</Label>
+                  <Label className="form-label lbl">Email<span className="text-danger">*</span></Label>
                   <Input
                     name="email"
                     className="form-control"
@@ -146,8 +147,8 @@ const ForgetPasswordOtpPage = (props: any) => {
                   ) : null}
                 </div>
 
-                <div className="mb-2">
-                  <Label className="form-label">OTP</Label>
+                <div className="mb-2 ">
+                  <Label className="form-label lbl">OTP<span className="text-danger">*</span></Label>
                   <Input
                     name="otp"
                     className="form-control"
@@ -169,7 +170,7 @@ const ForgetPasswordOtpPage = (props: any) => {
                   ) : null}
                 </div>
                 <div className="mb-2">
-                  <Label htmlFor="userpassword" className="form-label">
+                  <Label htmlFor="userpassword" className="form-label lbl">
                     New Password <span className="text-danger">*</span>
                   </Label>
                   <Input
