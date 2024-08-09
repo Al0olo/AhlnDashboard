@@ -17,6 +17,25 @@
   letter-spacing: 0.03em;
   text-align: left;
   color: #2b3674 !important;
+  input[type="checkbox"] {
+    width: 20.7px !important;
+    height: 20.7px !important;
+    top: 171.67px !important;
+    left: 32.84px !important;
+    // gap: 0px;
+    border-radius: 6.17px ;
+    border: 2.27px 0px 0px 0px;
+    opacity: 0px;
+  }
+  
+  input[type="checkbox"]:enabled:checked {
+    background-color: #2b3674;
+  }
+  span{
+    position: relative;
+    top: 5px;
+    left: 5px;
+  }
 }
 .td-recent-orders {
   font-family: "SF Pro Display";
@@ -25,37 +44,56 @@
   line-height: 16.71px !important;
   text-align: left !important;
   color: #2b3674 !important;
+  input[type="checkbox"] {
+    width: 20.7px !important;
+    height: 20.7px !important;
+    top: 171.67px !important;
+    left: 32.84px !important;
+    // gap: 0px;
+    border-radius: 6.17px ;
+    border: 2.27px 0px 0px 0px;
+    opacity: 0px;
+  }
+  
+  input[type="checkbox"]:enabled:checked {
+    background-color: #2b3674;
+  }
+}
+.td-recent-orders a,.th-recent-orders a{
+  padding: 5px;
+}
+.id-order{
+  display: flex;
 }
 .dash-filter-picker {
   min-width: 210px !important;
 }
-.ahln-recent-chart{
+.ahln-recent-chart {
   width: 129%;
   @media (max-width: 575.98px) {
     width: 100%;
   }
 }
-.ahln-line-chart canvas{
+.ahln-line-chart canvas {
   width: 517px !important;
   @media (max-width: 575.98px) {
     width: 100% !important;
   }
 }
-.ahln-chart-height{
-  height: 370px;
+.ahln-chart-height {
+  height: 373px;
   @media (max-width: 575.98px) {
     width: 400px !important;
   }
 }
-.ahln-chart-line{
+.ahln-chart-line {
   font-family: "SF Pro Display" !important;
-font-size: 20px !important;
-font-weight: 600 !important;
-line-height: 27.05px !important;
-text-align: left !important;
-text-transform: capitalize !important;
-color: #2b3674 !important;
-
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  line-height: 27.05px !important;
+  text-align: left !important;
+  text-transform: capitalize !important;
+  color: #2b3674 !important;
 }
 // Flatpickr Calendar
 

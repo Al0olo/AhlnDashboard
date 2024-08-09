@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Card, CardBody, CardHeader, Col, Row } from "reactstrap";
+import { Card, CardBody, CardHeader, Col, Input, Row } from "reactstrap";
 import { recentOrders } from "../../common/data";
 import { LineChart } from "pages/Charts/ChartsJs/ChartsJs";
 import LineCharts from "./LineCharts";
@@ -27,7 +27,7 @@ const RecentOrders = () => {
                 <table className="table table-borderless table-centered align-middle table-nowrap mb-0">
                   <thead className="">
                     <tr>
-                      <th className="th-recent-orders" scope="col">Order ID</th>
+                      <th className="th-recent-orders id-order" scope="col"><Input type={`checkbox`}  /><span>Order ID</span></th>
                       <th className="th-recent-orders" scope="col">Customer</th>
                       <th className="th-recent-orders" scope="col">Product</th>
                       <th className="th-recent-orders" scope="col">Vendor</th>
@@ -38,7 +38,8 @@ const RecentOrders = () => {
                   <tbody>
                     {(recentOrders || []).map((item, key) => (
                       <tr key={key} className="text-muted">
-                        <td className="td-recent-orders">
+                        <td className="td-recent-orders id-order">
+                          <Input type={`checkbox`}  />
                           <Link
                             to="/apps-ecommerce-order-details"
                             className="fw-medium text-reset"
