@@ -20,13 +20,13 @@ import {
 } from "./LineCharts";
 
 const LineCharts = () => {
-  document.title = "Line Charts | Ahln - React Admin & Dashboard Template";
+  // document.title = "Line Charts | Ahln - React Admin & Dashboard Template";
   return (
     <React.Fragment>
-      <div className="page-content">
-        <Container fluid>
-          <BreadCrumb title="Line Charts" pageTitle="Apexcharts" />
-          <Row>
+      <div className="page-content mt-1 mb-2  p-0">
+        {/* <Container fluid className="p-0 "> */}
+          {/* <BreadCrumb title="Line Charts" pageTitle="Apexcharts" /> */}
+          <Row className="">
             <Col lg={6}>
               <Card>
                 <CardHeader>
@@ -34,7 +34,7 @@ const LineCharts = () => {
                 </CardHeader>
                 <CardBody>
                   <div>
-                    <YearlyTotalInvestmentChart dataColors='["--vz-primary"]' />
+                    <YearlyTotalInvestmentChart dataColors='["--vz-warning"]' />
                   </div>
                 </CardBody>
               </Card>
@@ -46,7 +46,7 @@ const LineCharts = () => {
                 </CardHeader>
                 <CardBody>
                   <div>
-                    <MonthlyRevenueChart dataColors='["--vz-primary"]' />
+                    <MonthlyRevenueChart dataColors='["--vz-success"]' />
                   </div>
                 </CardBody>
               </Card>
@@ -194,7 +194,7 @@ const LineCharts = () => {
               </Card>
             </Col>
           </Row> */}
-        </Container>
+        {/* </Container> */}
       </div>
     </React.Fragment>
   );

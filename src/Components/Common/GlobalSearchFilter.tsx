@@ -12,6 +12,23 @@ import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
 import Select from "react-select";
 
+const ModelGlobalFilter = () => {
+    return (
+        <React.Fragment>
+            <div className="col-sm-auto ms-auto">
+                <div>
+                    <Link
+                        to="/apps-ecommerce-add-model"
+                        className="btn btn-secondary"
+                    >
+                        <i className="ri-add-line align-bottom me-1"></i> Add
+                        Model
+                    </Link>
+                </div>
+            </div>
+        </React.Fragment>
+    );
+};
 const ProductsGlobalFilter = () => {
     return (
         <React.Fragment>
@@ -525,6 +542,7 @@ const LeadsGlobalFilter = ({ onClickDelete } :any) => {
 };
 
 export {
+    ModelGlobalFilter,
     ProductsGlobalFilter,
     CustomersGlobalFilter,
     OrderGlobalFilter,

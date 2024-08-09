@@ -219,12 +219,6 @@ const Navdata = () => {
               parentId: "apps",
             },
             {
-              id: 2,
-              label: "Model Details",
-              link: "/apps-ecommerce-model-details",
-              parentId: "apps",
-            },
-            {
               id: 3,
               label: "Create model",
               link: "/apps-ecommerce-add-model",
