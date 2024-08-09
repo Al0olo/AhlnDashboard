@@ -8,7 +8,7 @@ const Widgets = () => {
   return (
     <React.Fragment>
       {ecomWidgets.map((item, key) => (
-        <Col lg={2}>
+        <Col lg={3}>
           <Card className="card-animate rounded round-5">
             <Link to="#" className="">
               <CardBody md={12} className={"bg-" +item.bgcolor +
@@ -31,7 +31,7 @@ const Widgets = () => {
                     {/* {item.link} */}
                   </div>
                   <div className="flex-grow-1 overflow-hidden">
-                    <p className="text-capitalize fw-larage text-muted text-truncate mb-0">
+                    <p className="text-capitalize fw-larage text-muted text-truncate mb-0 " id="ahln-widget-dark">
                       {item.label}
                     </p>
                   </div>
@@ -51,7 +51,7 @@ const Widgets = () => {
                         {item.badge ? (
                           <i className={"fs-11 align-middle " + item.badge}></i>
                         ) : null}{" "}
-                        {item.percentage} % <span className="text-muted">from yesterday</span>
+                        {item.percentage} % <span className=" text-muted "id="ahln-muted">from yesterday</span>
                       </h5>
                     </div>
                   </div>

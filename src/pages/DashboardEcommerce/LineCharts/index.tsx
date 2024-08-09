@@ -20,7 +20,7 @@ import {
 } from "./LineCharts";
 
 const LineCharts = () => {
-  document.title = "Line Charts | Ahln - React Admin & Dashboard Template";
+  // document.title = "Line Charts | Ahln - React Admin & Dashboard Template";
   return (
     <React.Fragment>
       <div className="page-content mt-1 mb-2  p-0">
@@ -46,7 +46,7 @@ const LineCharts = () => {
                 </CardHeader>
                 <CardBody>
                   <div>
-                    <MonthlyRevenueChart dataColors='["--vz-primary"]' />
+                    <MonthlyRevenueChart dataColors='["--vz-success"]' />
                   </div>
                 </CardBody>
               </Card>
