@@ -90,13 +90,9 @@ const roleReducer = createSlice({
       state.error = false;
     });
     builder.addCase(UpdateRoleAction.fulfilled, (state, action: any) => {
-      const updatedRole = action?.payload;
-      const index = state.tablets.findIndex(
-        (role: any) => role.id === updatedRole.id
+      state.roles = state.roles.map((role: any) =>
+        role.id === action.payload.id ? { ...role, ...action.payload } : role
       );
-      state.roles[index] = updatedRole;
-      state.success = true;
-      state.loading = false;
     });
     builder.addCase(UpdateRoleAction.rejected, (state, { payload }: any) => {
       state.loading = false;

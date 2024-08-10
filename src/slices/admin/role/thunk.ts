@@ -9,7 +9,7 @@ import {
 import { toast } from "react-toastify";
 
 export const GetRolesAction = createAsyncThunk(
-  "role/get-all",
+  "role/get-allRole",
   async (_, thunkApi) => {
     try {
       const response = await getRoles();
@@ -22,7 +22,7 @@ export const GetRolesAction = createAsyncThunk(
 );
 
 export const GetOneRoleAction = createAsyncThunk(
-  "role/get-one",
+  "role/get-oneRole",
   async (role: any, thunkApi) => {
     try {
       const response = await getOneRole(role);
@@ -34,7 +34,7 @@ export const GetOneRoleAction = createAsyncThunk(
 );
 
 export const AddRoleAction = createAsyncThunk(
-  "role/new",
+  "role/newRole",
   async (role: any, thunkApi) => {
     try {
       const response = await addRole(role);
@@ -49,21 +49,22 @@ export const AddRoleAction = createAsyncThunk(
 );
 
 export const UpdateRoleAction = createAsyncThunk(
-  "role/update",
+  "role/updateRole",
   async (role: any, thunkApi) => {
     try {
-      const response = await updateRole(role);
+      const response = updateRole(role);
       const data = await response;
       toast.success("Role Updated Successfully", { autoClose: 3000 });
       return data;
     } catch (error: any) {
+      toast.error(error.response?.message, { autoClose: 3000 });
       return thunkApi.rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
 export const DeleteRoleAction = createAsyncThunk(
-  "role/delete",
+  "role/deleteRole",
   async (role: string, thunkApi) => {
     try {
       const response = await deleteRole(role);

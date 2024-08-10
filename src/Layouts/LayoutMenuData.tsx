@@ -29,6 +29,7 @@ const Navdata = () => {
   const [isSupportTickets, setIsSupportTickets] = useState<boolean>(false);
   const [isBox, setIsBox] = useState<boolean>(false);
   const [isDelivery, setIsDelivery] = useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   // const [isNFTMarketplace, setIsNFTMarketplace] = useState<boolean>(false);
   // const [isJobs, setIsJobs] = useState<boolean>(false);
   // const [isJobList, setIsJobList] = useState<boolean>(false);
@@ -378,6 +379,22 @@ const Navdata = () => {
               label: "Shipping Companies",
               link: "/shipping-companies",
             },
+          ],
+        },
+        {
+          id: "admin",
+          label: "Administration",
+          link: "/#",
+          isChildItem: true,
+          click: function (e: any) {
+            e.preventDefault();
+            setIsAdmin(!isAdmin);
+          },
+          parentId: "apps",
+          stateVariables: isAdmin,
+          childItems: [
+            // Routes needs to be adjusted
+            { id: 1, label: "Roles", link: "/role" },
           ],
         },
       ],

@@ -143,7 +143,6 @@ const EcommerceCustomers = () => {
         }
 
         validation.resetForm();
-        dispatch(onGetCustomers());
       } else {
         const newCustomer = {
           user_name: values.user_name,
@@ -153,8 +152,8 @@ const EcommerceCustomers = () => {
         };
         dispatch(onAddNewCustomer(newCustomer));
         validation.resetForm();
-        dispatch(onGetCustomers());
       }
+      dispatch(onGetCustomers());
       toggle();
     },
   });
@@ -334,6 +333,12 @@ const EcommerceCustomers = () => {
         enableColumnFilter: false,
       },
       {
+        header: "Updated At",
+        accessorKey: "updatedat",
+        enableColumnFilter: false,
+        cell: (cell: any) => moment(cell.getValue()).format("DD MMMM, YYYY"),
+      },
+      {
         header: "Status",
         accessorKey: "is_active",
         enableColumnFilter: false,
@@ -344,14 +349,15 @@ const EcommerceCustomers = () => {
               className="form-check form-switch form-switch-sm float-right"
             >
               <Input
-                type="checkbox"
+                type="switch"
+                value={cellProps.getValue() === true ? "Active" : "Block"}
                 className="form-check-input"
                 onChange={(e) => {
                   updateStatusUser(cellProps.row.original.id, e.target.checked);
                 }}
                 defaultChecked={cellProps.getValue() === true ? true : false}
               >
-                {cellProps.getValue() === true ? "Active" : "Block"}
+                {/* {cellProps.getValue() === true ? "Active" : "Block"} */}
               </Input>
             </div>
           );
@@ -585,7 +591,7 @@ const EcommerceCustomers = () => {
                               id="role_id-field"
                               onChange={validation.handleChange}
                               onBlur={validation.handleBlur}
-                              value={RoleList.title}
+                              value={validation.values.role_id}
                               invalid={
                                 validation.touched.role_id &&
                                 validation.errors.role_id
@@ -593,12 +599,13 @@ const EcommerceCustomers = () => {
                                   : false
                               }
                             >
-                              {/* <option value="">Select Role</option>
-                              {roleOptions.map((role) => (
-                                <option key={role.value} value={role.value}>
-                                  {role.label}
-                                </option>
-                              ))} */}
+                              <option value="">Select Role</option>
+                              {RoleList &&
+                                RoleList?.map((role: any) => (
+                                  <option key={role.id} value={role.id}>
+                                    {role.title}
+                                  </option>
+                                ))}
                             </Input>
                             {validation.touched.role_id &&
                             validation.errors.role_id ? (

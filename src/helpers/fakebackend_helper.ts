@@ -123,7 +123,7 @@ export const addRole = (data: any) => {
 };
 // Update Exsiting Role
 export const updateRole = (data: any) => {
-  return api.get(url.UPDATE_ROLE, data);
+  return api.get(url.UPDATE_ROLE + `/${data.id}`, data);
 };
 // Delete Role
 export const deleteRole = (data: any) => {
