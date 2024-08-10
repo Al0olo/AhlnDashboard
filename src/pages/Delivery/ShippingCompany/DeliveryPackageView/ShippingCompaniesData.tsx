@@ -21,14 +21,15 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import TableContainer from "../../../../Components/Common/TableContainer";
 import {
-  GetBoxesAction,
-  AddBoxAction,
-  DeleteBoxAction,
-  UpdateBoxAction,
+  GetShippingCompaniesAction,
+  AddShippingCompanyAction,
+  UpdateShippingCompanyAction,
+  DeleteShippingCompanyAction,
+  GetOneShippingCompanyAction,
 } from "../../../../slices/thunks";
 
 // import {
-//   BoxsId,
+//   ShippingCompanysId,
 //   Title,
 //   Client,
 //   AssignedTo,
@@ -51,29 +52,26 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../../Components/Common/Loader";
 import { createSelector } from "reselect";
-import { useNavigate } from "react-router-dom";
 
-const BoxesData = () => {
+const ShippingCompaniesData = () => {
   const dispatch: any = useDispatch();
-  const selectLayoutState = (state: any) => state.Boxes;
-  const history = useNavigate();
+  const selectLayoutState = (state: any) => state.ShippingCompanies;
 
   const selectLayoutProperties = createSelector(selectLayoutState, (state) => ({
-    boxsList: state.data,
-    isBoxSuccess: state.isBoxSuccess,
+    shippingCompanysList: state.data,
+    isShippingCompanySuccess: state.isShippingCompanySuccess,
     error: state.error,
     loader: state.loading,
   }));
 
   // Inside your component
-  const { boxsList, isBoxSuccess, error, loader } = useSelector(
-    selectLayoutProperties
-  );
+  const { shippingCompanysList, isShippingCompanySuccess, error, loader } =
+    useSelector(selectLayoutProperties);
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [box, setBox] = useState<any>([]);
+  const [shippingCompany, setShippingCompany] = useState<any>([]);
 
-  // Delete Boxes
+  // Delete ShippingCompanies
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
@@ -81,12 +79,12 @@ const BoxesData = () => {
   const toggle = useCallback(() => {
     if (modal) {
       setModal(false);
-      setBox(box);
+      setShippingCompany(shippingCompany);
     } else {
       setModal(true);
-      setBox(box);
+      setShippingCompany(shippingCompany);
     }
-  }, [modal, box]);
+  }, [modal, shippingCompany]);
 
   // validation
   const validation: any = useFormik({
@@ -94,87 +92,85 @@ const BoxesData = () => {
     enableReinitialize: true,
 
     initialValues: {
-      serial_number: "",
-      box_label: "",
-      has_empty_lockers: "",
-      current_tablet_id: "",
-      previous_tablet_id: "",
-      box_model_id: "",
-      address_id: "",
+      serial_number: (shippingCompany && shippingCompany.serial_number) || "",
+      shippingCompany_label:
+        (shippingCompany && shippingCompany.shippingCompany_label) || "",
+      has_empty_lockers:
+        (shippingCompany && shippingCompany.has_empty_lockers) || "",
+      current_tablet_id:
+        (shippingCompany && shippingCompany.current_tablet_id) || "",
+      previous_tablet_id:
+        (shippingCompany && shippingCompany.previous_tablet_id) || "",
+      shippingCompany_model_id:
+        (shippingCompany && shippingCompany.shippingCompany_model_id) || "",
+      address_id: (shippingCompany && shippingCompany.address_id) || "",
     },
     validationSchema: Yup.object({
       serial_number: Yup.string().required("Please Enter Serial Number"),
-      box_label: Yup.string().required("Please Enter Box Label"),
-      box_model_id: Yup.string().required("Please Enter Box Generation Id"),
-      has_empty_lockers: Yup.string().required(
-        "Please Enter Has Empty Lockers"
+      shippingCompany_label: Yup.string().required(
+        "Please Enter ShippingCompany Label"
+      ),
+      current_tablet_id: Yup.number().required("Please Enter Tablet Id"),
+      shippingCompany_model_id: Yup.string().required(
+        "Please Enter ShippingCompany Generation Id"
       ),
     }),
     onSubmit: (values) => {
       if (isEdit) {
-        const updateBoxes = {
+        const updateShippingCompanies = {
           serial_number: values.serial_number,
-          box_label: values.box_label,
+          shippingCompany_label: values.shippingCompany_label,
           has_empty_lockers: values.has_empty_lockers,
           current_tablet_id: values.current_tablet_id,
           previous_tablet_id: values.previous_tablet_id,
-          box_model_id: values.box_model_id,
+          shippingCompany_model_id: values.shippingCompany_model_id,
           address_id: values.address_id,
         };
-        // update box
-        dispatch(UpdateBoxAction(updateBoxes));
+        // update shippingCompany
+        dispatch(UpdateShippingCompanyAction(updateShippingCompanies));
         validation.resetForm();
       } else {
-        const newBox = {
-          serial_number: values.serial_number,
-          box_label: values.box_label,
-          has_empty_lockers: values.has_empty_lockers,
-          box_model_id: values.box_model_id,
-          current_tablet_id: values.current_tablet_id
-            ? values.current_tablet_id
-            : 6,
-          previous_tablet_id: values.current_tablet_id
-            ? values.previous_tablet_id
-            : 6,
-          address_id: values.address_id ? values.address_id : null,
+        const newShippingCompany = {
+          serial_number: values["serial_number"],
+          shippingCompany_label: values["shippingCompany_label"],
+          has_empty_lockers: values["has_empty_lockers"],
+          shippingCompany_model_id: values["shippingCompany_model_id"],
         };
+        console.log("RRRRRRRRRRRRRRR");
 
-        // save new box
-        dispatch(AddBoxAction(newBox));
+        // save new shippingCompany
+        dispatch(AddShippingCompanyAction(newShippingCompany));
         validation.resetForm();
-        toggle();
-        history("/boxes");
       }
+      toggle();
     },
   });
 
   // Delete Data
-  const onClickDelete = (box: any) => {
-    setBox(box);
+  const onClickDelete = (shippingCompany: any) => {
+    setShippingCompany(shippingCompany);
     setDeleteModal(true);
   };
 
-  const handleDeleteBox = () => {
-    console.log("box", box);
+  const handleDeleteShippingCompany = () => {
+    console.log("shippingCompany", shippingCompany);
 
-    if (box) {
-      dispatch(DeleteBoxAction(box.id));
+    if (shippingCompany) {
+      dispatch(DeleteShippingCompanyAction(shippingCompany.id));
       setDeleteModal(false);
     }
   };
 
   // Update Data
-  const handleBoxesClick = (arg: any) => {
-    const box = arg;
+  const handleShippingCompaniesClick = (arg: any) => {
+    const shippingCompany = arg;
 
-    setBox({
-      serial_number: box.serial_number,
-      box_label: box.box_label,
-      has_empty_lockers: box.has_empty_lockers,
-      current_tablet_id: box.current_tablet_id,
-      previous_tablet_id: box.previous_tablet_id,
-      box_model_id: box.box_model_id,
-      address_id: box.address_id,
+    setShippingCompany({
+      serial_number: shippingCompany.serial_number,
+      shippingCompany_label: shippingCompany.shippingCompany_label,
+      has_empty_lockers: shippingCompany.has_empty_lockers,
+      shippingCompany_model_id: shippingCompany.shippingCompany_model_id,
+      address_id: shippingCompany.address_id,
     });
 
     setIsEdit(true);
@@ -184,13 +180,15 @@ const BoxesData = () => {
   // Get Data
 
   useEffect(() => {
-    dispatch(GetBoxesAction());
+    dispatch(GetShippingCompaniesAction());
   }, [dispatch]);
 
   // Checked All
   const checkedAll = useCallback(() => {
-    const checkall: any = document.getElementById("checkBoxAll");
-    const ele = document.querySelectorAll(".boxCheckBox");
+    const checkall: any = document.getElementById("checkShippingCompanyAll");
+    const ele = document.querySelectorAll(
+      ".shippingCompanyCheckShippingCompany"
+    );
 
     if (checkall.checked) {
       ele.forEach((ele: any) => {
@@ -201,18 +199,21 @@ const BoxesData = () => {
         ele.checked = false;
       });
     }
-    deleteCheckbox();
+    deleteCheckshippingCompany();
   }, []);
 
   // Delete Multiple
-  const [selectedCheckBoxDelete, setSelectedCheckBoxDelete] = useState<any>([]);
+  const [
+    selectedCheckShippingCompanyDelete,
+    setSelectedCheckShippingCompanyDelete,
+  ] = useState<any>([]);
   const [isMultiDeleteButton, setIsMultiDeleteButton] =
     useState<boolean>(false);
 
   const deleteMultiple = () => {
-    const checkall: any = document.getElementById("checkBoxAll");
-    selectedCheckBoxDelete.forEach((element: any) => {
-      dispatch(DeleteBoxAction(element.id));
+    const checkall: any = document.getElementById("checkShippingCompanyAll");
+    selectedCheckShippingCompanyDelete.forEach((element: any) => {
+      dispatch(DeleteShippingCompanyAction(element.id));
       setTimeout(() => {
         toast.clearWaitingQueue();
       }, 3000);
@@ -221,12 +222,14 @@ const BoxesData = () => {
     checkall.checked = false;
   };
 
-  const deleteCheckbox = () => {
-    const ele = document.querySelectorAll(".boxCheckBox:checked");
+  const deleteCheckshippingCompany = () => {
+    const ele = document.querySelectorAll(
+      ".shippingCompanyCheckShippingCompany:checked"
+    );
     ele?.length > 0
       ? setIsMultiDeleteButton(true)
       : setIsMultiDeleteButton(false);
-    setSelectedCheckBoxDelete(ele);
+    setSelectedCheckShippingCompanyDelete(ele);
   };
 
   const columns = useMemo(
@@ -234,18 +237,18 @@ const BoxesData = () => {
       {
         header: (
           <input
-            type="checkbox"
-            id="checkBoxAll"
+            type="checkshippingCompany"
+            id="checkShippingCompanyAll"
             className="form-check-input"
             onClick={() => checkedAll()}
           />
         ),
         cell: (cell: any) => (
           <input
-            type="checkbox"
-            className="boxCheckBox form-check-input"
+            type="checkshippingCompany"
+            className="shippingCompanyCheckShippingCompany form-check-input"
             value={cell.getValue()}
-            onChange={() => deleteCheckbox()}
+            onChange={() => deleteCheckshippingCompany()}
           />
         ),
         id: "#",
@@ -259,13 +262,18 @@ const BoxesData = () => {
         enableColumnFilter: false,
       },
       {
-        header: "Serial",
-        accessorKey: "serial_number",
+        header: "Title",
+        accessorKey: "title",
         enableColumnFilter: false,
       },
       {
-        header: "Title",
-        accessorKey: "box_label",
+        header: "Tracking System",
+        accessorKey: "tracking_system",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Logo",
+        accessorKey: "logo",
         enableColumnFilter: false,
       },
       {
@@ -273,16 +281,6 @@ const BoxesData = () => {
         accessorKey: "createdat",
         enableColumnFilter: false,
         cell: (cell: any) => moment(cell.getValue()).format("DD MMMM, YYYY"),
-      },
-      {
-        header: "Box Model",
-        accessorKey: "box_model_id",
-        enableColumnFilter: false,
-      },
-      {
-        header: "Tablet ID",
-        accessorKey: "current_tablet_id",
-        enableColumnFilter: false,
       },
       {
         header: "Actions",
@@ -293,7 +291,7 @@ const BoxesData = () => {
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-end">
               <li>
-                <DropdownItem href="/apps-boxs-details">
+                <DropdownItem href="/apps-shippingCompanys-details">
                   <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
                   View
                 </DropdownItem>
@@ -304,8 +302,8 @@ const BoxesData = () => {
                   href="#showModal"
                   data-bs-toggle="modal"
                   onClick={() => {
-                    const BoxData = cell.row.original;
-                    handleBoxesClick(BoxData);
+                    const ShippingCompanyData = cell.row.original;
+                    handleShippingCompaniesClick(ShippingCompanyData);
                   }}
                 >
                   <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>{" "}
@@ -318,8 +316,8 @@ const BoxesData = () => {
                   data-bs-toggle="modal"
                   href="#deleteOrder"
                   onClick={() => {
-                    const boxData = cell.row.original;
-                    onClickDelete(boxData);
+                    const shippingCompanyData = cell.row.original;
+                    onClickDelete(shippingCompanyData);
                   }}
                 >
                   <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
@@ -339,7 +337,7 @@ const BoxesData = () => {
       <Row>
         <DeleteModal
           show={deleteModal}
-          onDeleteClick={handleDeleteBox}
+          onDeleteClick={handleDeleteShippingCompany}
           onCloseClick={() => setDeleteModal(false)}
         />
         <DeleteModal
@@ -354,18 +352,21 @@ const BoxesData = () => {
           <Card>
             <CardHeader className="border-0">
               <div className="d-flex align-items-center">
-                <h5 className="card-title mb-0 flex-grow-1">Boxes</h5>
+                <h5 className="card-title mb-0 flex-grow-1">
+                  Shipping Companies
+                </h5>
                 <div className="flex-shrink-0">
                   <div className="d-flex flex-wrap gap-2">
-                    <Form
+                    <button
                       className="btn btn-primary add-btn"
                       onClick={() => {
                         setIsEdit(false);
                         toggle();
                       }}
                     >
-                      <i className="ri-add-line align-bottom"></i> Create Box
-                    </Form>{" "}
+                      <i className="ri-add-line align-bottom"></i> Create
+                      Shipping Company
+                    </button>{" "}
                     {isMultiDeleteButton && (
                       <button
                         className="btn btn-soft-danger"
@@ -384,12 +385,12 @@ const BoxesData = () => {
               ) : (
                 <TableContainer
                   columns={columns}
-                  data={boxsList}
+                  data={shippingCompanysList}
                   isGlobalFilter={true}
                   customPageSize={8}
                   divClass="table-responsive table-card mb-3"
                   tableClass="align-middle table-nowrap mb-0"
-                  SearchPlaceholder="Search for box details or something..."
+                  SearchPlaceholder="Search for shippingCompany details or something..."
                 />
               )}
               <ToastContainer closeButton={false} limit={1} />
@@ -407,13 +408,13 @@ const BoxesData = () => {
         modalClassName="zoomIn"
       >
         <ModalHeader toggle={toggle} className="p-3 bg-info-subtle">
-          {!!isEdit ? "Edit Box" : "Add Box"}
+          {!!isEdit ? "Edit ShippingCompany" : "Add ShippingCompany"}
         </ModalHeader>
         <Form
-          encType="multipart/form-data"
+          className="tablelist-form"
           onSubmit={(e) => {
             e.preventDefault();
-            validation.handleSubmit();
+            validation.submitForm();
             return false;
           }}
         >
@@ -425,23 +426,26 @@ const BoxesData = () => {
                     Serial Number
                   </Label>
                   <Input
-                    type="text"
-                    className="form-control"
-                    id="serial-input"
-                    placeholder="Enter Serial Number"
                     name="serial_number"
-                    value={validation.values.serial_number || ""}
-                    onBlur={validation.handleBlur}
+                    id="serial-field"
+                    className="form-control"
+                    placeholder="Enter Serial Number"
+                    type="text"
+                    validate={{
+                      required: { value: true },
+                    }}
                     onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.serial_number || ""}
                     invalid={
-                      validation.errors.serial_number &&
-                      validation.touched.serial_number
+                      validation.touched.serial_number &&
+                      validation.errors.serial_number
                         ? true
                         : false
                     }
                   />
-                  {validation.errors.serial_number &&
-                  validation.touched.serial_number ? (
+                  {validation.touched.serial_number &&
+                  validation.errors.serial_number ? (
                     <FormFeedback type="invalid">
                       {validation.errors.serial_number}
                     </FormFeedback>
@@ -451,27 +455,27 @@ const BoxesData = () => {
               <Col lg={12}>
                 <div>
                   <Label htmlFor="client_nameName-field" className="form-label">
-                    Box Label
+                    ShippingCompany Label
                   </Label>
                   <Input
-                    name="box_label"
+                    name="shippingCompany_label"
                     type="text"
-                    id="box_label-field"
-                    placeholder="Enter Box Label"
+                    id="shippingCompany_label-field"
+                    placeholder="Enter ShippingCompany Label"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.box_label || ""}
+                    value={validation.values.shippingCompany_label || ""}
                     invalid={
-                      validation.touched.box_label &&
-                      validation.errors.box_label
+                      validation.touched.shippingCompany_label &&
+                      validation.errors.shippingCompany_label
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.box_label &&
-                  validation.errors.box_label ? (
+                  {validation.touched.shippingCompany_label &&
+                  validation.errors.shippingCompany_label ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.box_label}
+                      {validation.errors.shippingCompany_label}
                     </FormFeedback>
                   ) : null}
                 </div>
@@ -504,22 +508,27 @@ const BoxesData = () => {
               </Col> */}
 
               <Col lg={12}>
-                <Label htmlFor="has_empty_lockers">Has Empty Lockers ?</Label>
+                <Label htmlFor="shippingCompany-status" className="form-label">
+                  Has Empty Lockers
+                </Label>
                 <Input
-                  type="checkbox"
-                  value="true"
-                  name="has_empty_lockers"
-                  className="form-check-input"
-                  id="has_empty_lockers"
-                  onBlur={validation.handleBlur}
+                  name="status"
+                  type="select"
+                  className="form-select"
+                  id="lockers-field"
                   onChange={validation.handleChange}
+                  onBlur={validation.handleBlur}
+                  value={validation.values.has_empty_lockers || ""}
                   invalid={
                     validation.touched.has_empty_lockers &&
                     validation.errors.has_empty_lockers
                       ? true
                       : false
                   }
-                />
+                >
+                  <option value="true">True</option>
+                  <option value="false">False</option>
+                </Input>
                 {validation.touched.has_empty_lockers &&
                 validation.errors.has_empty_lockers ? (
                   <FormFeedback type="invalid">
@@ -530,31 +539,31 @@ const BoxesData = () => {
               <Col lg={12}>
                 <div>
                   <Label htmlFor="tasksTitle-field" className="form-label">
-                    Box Generation ID
+                    ShippingCompany Generation ID
                   </Label>
                   <Input
-                    name="box_model_id"
+                    name="shippingCompany_model_id"
                     id="serial-field"
                     className="form-control"
-                    placeholder="Enter Box Generation Model"
+                    placeholder="Enter ShippingCompany Generation Model"
                     type="text"
                     validate={{
                       required: { value: true },
                     }}
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.box_model_id || ""}
+                    value={validation.values.shippingCompany_model_id || ""}
                     invalid={
-                      validation.touched.box_model_id &&
-                      validation.errors.box_model_id
+                      validation.touched.shippingCompany_model_id &&
+                      validation.errors.shippingCompany_model_id
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.box_model_id &&
-                  validation.errors.box_model_id ? (
+                  {validation.touched.shippingCompany_model_id &&
+                  validation.errors.shippingCompany_model_id ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.box_model_id}
+                      {validation.errors.shippingCompany_model_id}
                     </FormFeedback>
                   ) : null}
                 </div>
@@ -567,7 +576,7 @@ const BoxesData = () => {
                 Close
               </button>
               <button type="submit" className="btn btn-success" id="add-btn">
-                {!!isEdit ? "Update" : "Add Box"}
+                {!!isEdit ? "Update" : "Add ShippingCompany"}
               </button>
             </div>
           </div>
@@ -577,4 +586,4 @@ const BoxesData = () => {
   );
 };
 
-export default BoxesData;
+export default ShippingCompaniesData;

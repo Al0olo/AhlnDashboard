@@ -206,17 +206,20 @@ const authProtectedRoutes = [
     component: <EcommerceModelDetail />,
   },
   { path: "/apps-ecommerce-add-model", component: <EcommerceAddModel /> },
-{ path: "/apps-ecommerce-models", component: <EcommerceModels /> },
-{
-  path: "/apps-ecommerce-model-details/:_id",
-  component: <EcommerceModelDetail />,
-},
-{
-  path: "/apps-ecommerce-model-details",
-  component: <EcommerceModelDetail />,
-},
-{ path: "/apps-ecommerce-add-model", component: <EcommerceAddModel /> },
-{ path: "/apps-ecommerce-edit-model/:id", component: <EcommerceEditProduct/> },
+  { path: "/apps-ecommerce-models", component: <EcommerceModels /> },
+  {
+    path: "/apps-ecommerce-model-details/:_id",
+    component: <EcommerceModelDetail />,
+  },
+  {
+    path: "/apps-ecommerce-model-details",
+    component: <EcommerceModelDetail />,
+  },
+  { path: "/apps-ecommerce-add-model", component: <EcommerceAddModel /> },
+  {
+    path: "/apps-ecommerce-edit-model/:id",
+    component: <EcommerceEditProduct />,
+  },
 
   //Products
 
@@ -231,24 +234,24 @@ const authProtectedRoutes = [
   },
   { path: "/apps-ecommerce-add-product", component: <EcommerceAddProduct /> },
   //Orders
-{ path: "/apps-ecommerce-products", component: <EcommerceProducts /> },
-{
-  path: "/apps-ecommerce-product-details/:_id",
-  component: <EcommerceProductDetail />,
-},
-{
-  path: "/apps-ecommerce-product-details",
-  component: <EcommerceProductDetail />,
-},
-{ path: "/apps-ecommerce-add-product", component: <EcommerceAddModel /> },
-//Orders
+  { path: "/apps-ecommerce-products", component: <EcommerceProducts /> },
+  {
+    path: "/apps-ecommerce-product-details/:_id",
+    component: <EcommerceProductDetail />,
+  },
+  {
+    path: "/apps-ecommerce-product-details",
+    component: <EcommerceProductDetail />,
+  },
+  { path: "/apps-ecommerce-add-product", component: <EcommerceAddModel /> },
+  //Orders
 
   { path: "/apps-ecommerce-orders", component: <EcommerceOrders /> },
   {
     path: "/apps-ecommerce-order-details",
     component: <EcommerceOrderDetail />,
   },
-  // { path: "/apps-ecommerce-customers", component: <EcommerceCustomers /> },
+  { path: "/apps-ecommerce-customers", component: <EcommerceCustomers /> },
   { path: "/apps-ecommerce-cart", component: <EcommerceCart /> },
   { path: "/apps-ecommerce-checkout", component: <EcommerceCheckout /> },
   { path: "/apps-ecommerce-sellers", component: <EcommerceSellers /> },

@@ -18,11 +18,11 @@ export const getBoxes = () => {
 };
 // Get One Box
 export const getOneBox = (data: any) => {
-  return api.get(url.GET_BOXES);
+  return api.get(url.GET_ONE_BOX, data);
 };
 // Add Box
 export const addBox = (data: any) => {
-  return api.get(url.ADD_BOX, data);
+  return api.create(url.ADD_BOX, data);
 };
 // Update Exsiting Box
 export const updateBox = (data: any) => {
@@ -84,28 +84,50 @@ export const getDeliveryPackages = () => {
 };
 // Get One Delivery Package
 export const getOneDeliveryPackage = (data: any) => {
-  return api.get(`${url.DELETE_ADDRESS}/${data}`);
+  return api.get(`${url.GET_ONE_DELIVERY}/${data}`);
 };
 
-// Fetches boxes for a given user
+// Fetches shippingcompanies for a given user
 export const getShippingCompanies = () => {
   return api.get(url.GET_SHIPPING_COMPANIES);
 };
-// Get One Box
+// Get One shippingcompani
 export const getOneShippingCompany = (data: any) => {
   return api.get(url.GET_ONE_SHIPPING_COMPANY);
 };
-// Add Box
+// Add shippingcompani
 export const addShippingCompany = (data: any) => {
   return api.get(url.ADD_SHIPPING_COMPANY, data);
 };
-// Update Exsiting Box
+// Update Exsiting shippingcompani
 export const updateShippingCompany = (data: any) => {
   return api.get(url.UPDATE_SHIPPING_COMPANY, data);
 };
-// Delete Box
+// Delete shippingcompani
 export const deleteShippingCompany = (data: any) => {
   return api.delete(`${url.DELETE_SHIPPING_COMPANY}/${data}`);
+};
+
+// ROLE
+// Fetches rolees for admin
+export const getRoles = () => {
+  return api.get(url.GET_ROLES);
+};
+// Get One Role
+export const getOneRole = (data: any) => {
+  return api.get(url.GET_ONE_ROLE);
+};
+// Add Role
+export const addRole = (data: any) => {
+  return api.create(url.ADD_ROLE, data);
+};
+// Update Exsiting Role
+export const updateRole = (data: any) => {
+  return api.get(url.UPDATE_ROLE, data);
+};
+// Delete Role
+export const deleteRole = (data: any) => {
+  return api.delete(`${url.DELETE_ROLE}/${data}`);
 };
 
 //is user is logged in
@@ -221,13 +243,14 @@ export const deleteModels = (model: any) => {
 // add Models
 export const addNewModel = (model: any) => api.create(url.ADD_NEW_MODEL, model);
 // update Models
-export const updateModel = (model: any) =>{
-  api.update(url.UPDATE_MODEL+model.id, model);
-}
+export const updateModel = (model: any) => {
+  api.update(url.UPDATE_MODEL + model.id, model);
+};
+
 //GET Single Model
-export const getModel = (id:any) =>{
-  return api.get(url.GET_MODEL_ID+id);
-}
+export const getModel = (id: any) => {
+  return api.get(url.GET_MODEL_ID + id);
+};
 //Models-End
 
 //Product-Start
@@ -269,11 +292,14 @@ export const addNewCustomer = (customer: any) =>
 
 // update Customers
 export const updateCustomer = (customer: any) =>
-  api.update(url.UPDATE_CUSTOMER, customer);
+  api.update(url.UPDATE_CUSTOMER + `/${customer.id}`, customer);
 
+// update user status
+export const updateUserStatusApi = (data: any) =>
+  api.update(url.UPDATE_USER_STATUS, data);
 // delete Customers
 export const deleteCustomer = (customer: any) =>
-  api.delete(url.DELETE_CUSTOMER, { headers: { customer } });
+  api.delete(url.DELETE_CUSTOMER + `/${customer}`);
 
 // get Sellers
 export const getSellers = () => api.get(url.GET_SELLERS);

@@ -60,7 +60,7 @@ const EcommerceEditProduct = (props: any) => {
     number_of_doors: null,
     width: null,
   });
-  
+
   const selectModelLoading = createSelector(
     (state: any) => state.Ecommerce,
     (state) => ({
@@ -75,12 +75,13 @@ const EcommerceEditProduct = (props: any) => {
     })
   );
   const modelData = useSelector(selectModelData);
-  
+
   useEffect(() => {
     dispatch(onGetModel(id));
   }, []);
-useEffect(()=>{
-    if(modelData.model){
+
+  useEffect(() => {
+    if (modelData.model) {
       setModel({
         color: modelData.model.color,
         has_inside_camera: modelData.model.has_inside_camera,
@@ -92,10 +93,9 @@ useEffect(()=>{
         number_of_doors: modelData.model.number_of_doors,
         width: modelData.model.width,
       });
-      
     }
-},[modelData.model])
- 
+  }, [modelData.model]);
+
   const validation: any = useFormik({
     enableReinitialize: true,
 
@@ -121,11 +121,17 @@ useEffect(()=>{
     onSubmit: (values) => {
       const model = {
         id: id,
-        model_name: values.model_name?values.model_name:model_data.model.model_name,
-        number_of_doors: values.number_of_doors?values.number_of_doors:model_data.model.number_of_doors,
-        width: values.width?values.width:model_data.model.width,
-        height: values.height?values.height:model_data.model.height,
-        model_image: values.model_image?values.model_image:model_data.model.model_image,
+        model_name: values.model_name
+          ? values.model_name
+          : model_data.model.model_name,
+        number_of_doors: values.number_of_doors
+          ? values.number_of_doors
+          : model_data.model.number_of_doors,
+        width: values.width ? values.width : model_data.model.width,
+        height: values.height ? values.height : model_data.model.height,
+        model_image: values.model_image
+          ? values.model_image
+          : model_data.model.model_image,
         has_outside_camera: values.has_outside_camera
           ? values.has_outside_camera
           : false,
@@ -192,7 +198,6 @@ useEffect(()=>{
     reader.readAsDataURL(file);
   };
 
- 
   return (
     <div className="page-content">
       <Container fluid>
@@ -214,14 +219,14 @@ useEffect(()=>{
                     <Label className="form-label" htmlFor="model-title-input">
                       Model Title
                     </Label>
-                    
+
                     <Input
                       type="text"
                       className="form-control"
                       id="model-title-input"
                       placeholder="Enter model title"
                       name="model_name"
-                      value={validation.values.model_name }
+                      value={validation.values.model_name}
                       onBlur={validation.handleBlur}
                       onChange={validation.handleChange}
                       invalid={
@@ -290,7 +295,7 @@ useEffect(()=>{
                           id="model-width-input"
                           placeholder="Enter height"
                           name="width"
-                          value={validation.values.width }
+                          value={validation.values.width}
                           onBlur={validation.handleBlur}
                           onChange={validation.handleChange}
                           invalid={
@@ -321,7 +326,7 @@ useEffect(()=>{
                           id="model-height-input"
                           placeholder="Enter height"
                           name="height"
-                          value={validation.values.height }
+                          value={validation.values.height}
                           onBlur={validation.handleBlur}
                           onChange={validation.handleChange}
                           invalid={
@@ -363,7 +368,7 @@ useEffect(()=>{
                         id="model-no_of_doors-input"
                         placeholder="Enter number of doors"
                         name="number_of_doors"
-                        value={validation.values.number_of_doors }
+                        value={validation.values.number_of_doors}
                         onBlur={validation.handleBlur}
                         onChange={validation.handleChange}
                         invalid={
@@ -385,8 +390,7 @@ useEffect(()=>{
               </Card>
               <Card>
                 <CardHeader>
-                  <h5 className="card-title mb-0">Has Outside Camera
-                  </h5>
+                  <h5 className="card-title mb-0">Has Outside Camera</h5>
                 </CardHeader>
                 <CardBody>
                   <div className="mb-3">
@@ -394,7 +398,6 @@ useEffect(()=>{
                       className="form-check form-switch form-switch-lg"
                       dir="ltr"
                     >
-                      
                       <Input
                         type="checkbox"
                         value="true"
@@ -447,9 +450,8 @@ useEffect(()=>{
                             ? true
                             : false
                         }
-                        
                         defaultChecked={model_data.has_inside_camera}
-                        />
+                      />
                     </div>
 
                     {validation.errors.has_inside_camera &&
@@ -471,7 +473,6 @@ useEffect(()=>{
                       className="form-check form-switch form-switch-lg"
                       dir="ltr"
                     >
-                      
                       <Input
                         type="checkbox"
                         value="true"

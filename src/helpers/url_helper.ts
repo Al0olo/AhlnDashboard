@@ -11,6 +11,13 @@ export const POST_FAKE_PASSWORD_RESET = "/auth/update-password";
 export const POST_FAKE_JWT_PASSWORD_FORGET = "/jwt-forget-pwd";
 export const SOCIAL_LOGIN = "/social-login";
 
+//ROLE
+export const GET_ROLES = "/role/get-all";
+export const GET_ONE_ROLE = "/role/get-one";
+export const ADD_ROLE = "/role/new";
+export const UPDATE_ROLE = "/role/update";
+export const DELETE_ROLE = "/role/delete";
+
 //BOX
 export const GET_BOXES = "/box/get-all";
 export const GET_ONE_BOX = "/box/get-one";
@@ -94,9 +101,10 @@ export const DELETE_ORDER = "/delete/order";
 
 // Customers
 export const GET_CUSTOMERS = "/users/get-all";
-export const ADD_NEW_CUSTOMER = "/apps/customer";
-export const UPDATE_CUSTOMER = "/apps/customer";
-export const DELETE_CUSTOMER = "/apps/customer";
+export const ADD_NEW_CUSTOMER = "/users/new";
+export const UPDATE_CUSTOMER = "/users/update";
+export const UPDATE_USER_STATUS = "/users/update-user-status";
+export const DELETE_CUSTOMER = "/users/delete";
 
 // Sellers
 export const GET_SELLERS = "/sellers";

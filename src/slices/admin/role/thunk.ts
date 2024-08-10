@@ -1,18 +1,19 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
-  getBoxes,
-  addBox,
-  deleteBox,
-  updateBox,
-  getOneBox,
+  addRole,
+  getOneRole,
+  getRoles,
+  deleteRole,
+  updateRole,
 } from "../../../helpers/fakebackend_helper";
 import { toast } from "react-toastify";
 
-export const GetBoxesAction = createAsyncThunk(
-  "box/get-all",
+export const GetRolesAction = createAsyncThunk(
+  "role/get-all",
   async (_, thunkApi) => {
     try {
-      const response = await getBoxes();
+      const response = await getRoles();
+
       return response.data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.response?.data || error.message);
@@ -20,11 +21,11 @@ export const GetBoxesAction = createAsyncThunk(
   }
 );
 
-export const GetOneBoxAction = createAsyncThunk(
-  "box/get-one",
-  async (box: any, thunkApi) => {
+export const GetOneRoleAction = createAsyncThunk(
+  "role/get-one",
+  async (role: any, thunkApi) => {
     try {
-      const response = await getOneBox(box);
+      const response = await getOneRole(role);
       return response.data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.response?.data || error.message);
@@ -32,13 +33,14 @@ export const GetOneBoxAction = createAsyncThunk(
   }
 );
 
-export const AddBoxAction = createAsyncThunk(
-  "box/new",
-  async (box: any, thunkApi) => {
+export const AddRoleAction = createAsyncThunk(
+  "role/new",
+  async (role: any, thunkApi) => {
     try {
-      const response = addBox(box);
+      const response = await addRole(role);
       const data = await response;
-      toast.success("Box Added Successfully", { autoClose: 3000 });
+
+      toast.success("Role Added Successfully", { autoClose: 3000 });
       return data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.response?.data || error.message);
@@ -46,13 +48,13 @@ export const AddBoxAction = createAsyncThunk(
   }
 );
 
-export const UpdateBoxAction = createAsyncThunk(
-  "box/update",
-  async (box: any, thunkApi) => {
+export const UpdateRoleAction = createAsyncThunk(
+  "role/update",
+  async (role: any, thunkApi) => {
     try {
-      const response = await updateBox(box);
+      const response = await updateRole(role);
       const data = await response;
-      toast.success("Box Updated Successfully", { autoClose: 3000 });
+      toast.success("Role Updated Successfully", { autoClose: 3000 });
       return data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.response?.data || error.message);
@@ -60,13 +62,13 @@ export const UpdateBoxAction = createAsyncThunk(
   }
 );
 
-export const DeleteBoxAction = createAsyncThunk(
-  "box/delete",
-  async (box: string, thunkApi) => {
+export const DeleteRoleAction = createAsyncThunk(
+  "role/delete",
+  async (role: string, thunkApi) => {
     try {
-      const response = await deleteBox(box);
+      const response = await deleteRole(role);
       const data = await response;
-      toast.success("Box Deleted Successfully", { autoClose: 3000 });
+      toast.success("Role Deleted Successfully", { autoClose: 3000 });
       return data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.response?.data || error.message);

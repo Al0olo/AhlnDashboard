@@ -10,6 +10,9 @@ export * from "./auth/profile/thunk";
 export * from "./auth/verify/thunk";
 export * from "./auth/verifyOtp/thunk";
 
+// Admin
+export * from "./admin/role/thunk";
+
 //Boxes
 export * from "./Box/boxes/thunk";
 

@@ -10,6 +10,9 @@ import { registerSlices } from "./auth/register/reducer";
 import { forgotPasswordSlices } from "./auth/forgetpwd/reducer";
 import { verifySlices } from "./auth/verifyOtp/reducer";
 
+// Admin
+import { roleSlices } from "./admin/role/reducer";
+
 import ProfileReducer from "./auth/profile/reducer";
 
 //Boxes
@@ -88,6 +91,7 @@ import JobReducer from "./jobs/reducer";
 import APIKeyReducer from "./apiKey/reducer";
 
 const rootReducer = combineReducers({
+  Role: roleSlices,
   Layout: LayoutReducer,
   Login: loginSlices,
   Logout: authSlices,
