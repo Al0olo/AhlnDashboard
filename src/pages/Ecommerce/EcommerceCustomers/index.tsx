@@ -661,35 +661,25 @@ const EcommerceCustomers = () => {
                   </ModalBody>
                   <ModalFooter>
                     <div className="hstack gap-2 justify-content-end">
-                      <button
-                        type="button"
-                        className="btn btn-light"
-                        onClick={() => {
-                          setModal(false);
-                        }}
-                      >
+                      
+
+                    <button type="submit" className="btn btn-success ahln-btn-module ">
                         {" "}
-                        Close{" "}
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-light"
-                        onClick={() => {
-                          setModal(false);
-                        }}
-                      >
-                        {" "}
-                        Close{" "}
+                        {!!isEdit ? "Update" : "Add Customer"}{" "}
                       </button>
 
-                      <button type="submit" className="btn btn-success">
+                      <button
+                        type="button"
+                        className="btn btn-light ahln-btn-muted text-center"
+                        onClick={() => {
+                          setModal(false);
+                        }}
+                      >
                         {" "}
-                        {!!isEdit ? "Update" : "Add Customer"}{" "}
+                        Close{" "}
                       </button>
-                      <button type="submit" className="btn btn-success">
-                        {" "}
-                        {!!isEdit ? "Update" : "Add Customer"}{" "}
-                      </button>
+                    
+                      
                     </div>
                   </ModalFooter>
                 </Form>
