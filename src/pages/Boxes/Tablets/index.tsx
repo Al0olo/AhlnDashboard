@@ -1,7 +1,6 @@
 import React from "react";
 import { Container, Row } from "reactstrap";
-import BreadCrumb from "../../../../Components/Common/BreadCrumb";
-import Widgets from "./Widgets";
+import BreadCrumb from "../../../Components/Common/BreadCrumb";
 import TabletsData from "./TabletsData";
 
 const TabletView = () => {
@@ -11,9 +10,6 @@ const TabletView = () => {
       <div className="page-content">
         <Container fluid>
           <BreadCrumb title="Tablets List" pageTitle="Tablets" />
-          {/* <Row>
-            <Widgets />
-          </Row> */}
           <TabletsData />
         </Container>
       </div>

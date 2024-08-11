@@ -19,31 +19,18 @@ import {
 } from "reactstrap";
 //redux
 import { useSelector, useDispatch } from "react-redux";
-import TableContainer from "../../../../Components/Common/TableContainer";
-
-// import {
-//   TabletsId,
-//   Title,
-//   Client,
-//   AssignedTo,
-//   CreateDate,
-//   DueDate,
-//   Status,
-//   Priority,
-// } from "./TicketCol";
-//Import Flatepicker
-import Flatpickr from "react-flatpickr";
+import TableContainer from "../../../Components/Common/TableContainer";
 import * as moment from "moment";
 
 // Formik
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
-import DeleteModal from "../../../../Components/Common/DeleteModal";
+import DeleteModal from "../../../Components/Common/DeleteModal";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Loader from "../../../../Components/Common/Loader";
+import Loader from "../../../Components/Common/Loader";
 import { createSelector } from "reselect";
 import {
   GetOneTabletAction,
@@ -61,93 +48,82 @@ const TabletsData = () => {
     tabletsList: state.data,
     isTabletSuccess: state.isTabletSuccess,
     error: state.error,
+    loader: state.loading,
   }));
 
   // Inside your component
-  const { tabletsList, isTabletSuccess, error } = useSelector(
+  const { tabletsList, isTabletSuccess, error, loader } = useSelector(
     selectLayoutProperties
   );
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [tablet, setTablet] = useState<any>([]);
-
-  // Delete Tablets
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
 
   const toggle = useCallback(() => {
-    if (modal) {
-      setModal(false);
-      setTablet(tablet);
-    } else {
-      setModal(true);
-      setTablet(tablet);
-    }
+    setModal((prevState) => !prevState);
   }, [modal]);
 
   // validation
   const validation: any = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
 
     initialValues: {
-      // Initial values are used to set up the initial form values.
-      // The keys of the object correspond to the keys of the values object we defined in validationSchema.
-      // The values correspond to the initial values for those fields.
-      // The || "" is used to prevent uncaught errors if the tablet object is undefined.
-      id: (tablet && tablet.id) || "",
-      serial_number: (tablet && tablet.serial_number) || "",
-      android_id: (tablet && tablet.android_id) || "",
-
-      // title: (tablet && tablet.title) || "",
-      // client: (tablet && tablet.client) || "",
-      // assigned: (tablet && tablet.assigned) || "",
-      // createDate: (tablet && tablet.createDate) || "",
-      // dueDate: (tablet && tablet.dueDate) || "",
-      // status: (tablet && tablet.status) || "",
-      // priority: (tablet && tablet.priority) || "",
+      id: tablet.id ? tablet.id : "",
+      serial_number: tablet.serial_number ? tablet.serial_number : "",
+      android_id: tablet.android_id ? tablet.android_id : "",
     },
     validationSchema: Yup.object({
-      title: Yup.string().required("Please Enter Title"),
-      client: Yup.string().required("Please Enter Client Name"),
-      assigned: Yup.string().required("Please Enter Assigned Name"),
-      createDate: Yup.string().required("Please Enter Date"),
-      dueDate: Yup.string().required("Please Enter Date"),
-      status: Yup.string().required("Please Enter Your Joining status"),
-      priority: Yup.string().required("Please Enter Your Priority"),
+      serial_number: Yup.string().required("Please Enter Tablet Serial Number"),
+      android_id: Yup.string().required("Please Enter Android Number"),
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       if (isEdit) {
         const updateTablets = {
-          id: tablet ? tablet.id : 0,
-          // tabletId: values.tabletId,
-          serial_number: values.serial_number,
-          android_id: values.android_id,
-          // assigned: values.assigned,
-          // createDate: values.createDate,
-          // dueDate: values.dueDate,
-          // status: values.status,
-          // priority: values.priority,
+          id: values.id,
+          serial_number: values.serial_number || undefined,
+          android_id: values.android_id || undefined,
         };
-        // update tablet
-        dispatch(UpdateTabletAction(updateTablets));
+        const updatedTabletObj = Object.keys(updateTablets)
+          .filter(
+            (key) =>
+              updateTablets[key as keyof typeof updateTablets] !== undefined
+          )
+          .reduce((obj: any, key) => {
+            obj[key] = updateTablets[key as keyof typeof updateTablets];
+            return obj;
+          }, {});
+
+        if (Object.values(updatedTabletObj).some((val) => val !== undefined)) {
+          const result = await dispatch(UpdateTabletAction(updatedTabletObj));
+          if (result && result.payload) {
+            setTablet(async (prevUserBoxs: any[]) => {
+              const updatedTablet = Array.isArray(prevUserBoxs)
+                ? [...prevUserBoxs]
+                : [];
+              const newUserBoxs = result.payload.data;
+              if (Array.isArray(newUserBoxs)) {
+                updatedTablet.push(...newUserBoxs);
+              }
+
+              return await dispatch(GetTabletsAction());
+            });
+          }
+        }
         validation.resetForm();
       } else {
         const newTablet = {
-          // id: (Math.floor(Math.random() * (30 - 20)) + 20).toString(),
-          // tabletId:
-          // "#VLZ4" + (Math.floor(Math.random() * (30 - 20)) + 20).toString(),
-          serial_number: values["serial_number"],
-          android_id: values["android_id"],
-          // assigned: values["assigned"],
-          // createDate: values["createDate"],
-          // dueDate: values["dueDate"],
-          // status: values["status"],
-          // priority: values["priority"],
+          serial_number: values.serial_number,
+          android_id: values.android_id,
         };
         // save new tablet
-        dispatch(AddTabletAction(newTablet));
+        const result = await dispatch(AddTabletAction(newTablet));
+        if (result && result.payload) {
+          toggle();
+          return await dispatch(GetTabletsAction());
+        }
         validation.resetForm();
       }
       toggle();
@@ -160,42 +136,45 @@ const TabletsData = () => {
     setDeleteModal(true);
   };
 
-  const handleDeleteTablet = () => {
+  const handleDeleteTablet = async () => {
     if (tablet) {
-      dispatch(DeleteTabletAction(tablet.id)).then((res: any) => {
-        if (res.type === "tablet/delete/fulfilled") {
-          dispatch(GetTabletsAction());
-        }
-      });
+      const result = await dispatch(DeleteTabletAction(tablet.id));
+      if (result && result.payload) {
+        await dispatch(GetTabletsAction());
+      }
       setDeleteModal(false);
     }
   };
 
   // Update Data
-  const handleTabletsClick = (arg: any) => {
-    const tablet = arg;
-
-    setTablet({
-      id: tablet.id,
-      // tabletId: tablet.id,
-      // title: tablet.serial_number,
-      // client: tablet.client,
-      // assigned: tablet.assigned,
-      // createDate: tablet.createDate,
-      // dueDate: tablet.dueDate,
-      // status: tablet.status,
-      // priority: tablet.priority,
-    });
-
-    setIsEdit(true);
-    setModal(true);
-  };
+  const handleTabletsClick = useCallback(
+    (arg: any) => {
+      setIsEdit(true);
+      setTablet({
+        id: arg.id,
+        serial_number: arg.serial_number,
+        android_id: arg.android_id,
+      });
+      toggle();
+    },
+    [toggle]
+  );
 
   // Get Data
 
   useEffect(() => {
     dispatch(GetTabletsAction());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (tablet) {
+      validation.setValues({
+        id: tablet.id || "",
+        serial_number: tablet.serial_number || "",
+        android_id: tablet.android_id || "",
+      });
+    }
+  }, [tablet]);
 
   // Checked All
   const checkedAll = useCallback(() => {
@@ -265,12 +244,22 @@ const TabletsData = () => {
         enableSorting: false,
       },
       {
-        header: "Tablet Id",
+        header: "Tablet ID",
         accessorKey: "id",
         enableColumnFilter: false,
       },
       {
-        header: "Box Id",
+        header: "Serial Number",
+        accessorKey: "serial_number",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Android ID",
+        accessorKey: "android_id",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Box ID",
         accessorKey: "box_id",
         enableColumnFilter: false,
       },
@@ -282,11 +271,6 @@ const TabletsData = () => {
       {
         header: "Previous Tablet ID",
         accessorKey: "previous_tablet_id",
-        enableColumnFilter: false,
-      },
-      {
-        header: "Title",
-        accessorKey: "android_id",
         enableColumnFilter: false,
       },
       {
@@ -392,7 +376,9 @@ const TabletsData = () => {
               </div>
             </CardHeader>
             <CardBody className="pt-0">
-              {tabletsList && tabletsList.length ? (
+              {loader ? (
+                <Loader error={error} />
+              ) : (
                 <TableContainer
                   columns={columns}
                   data={tabletsList}
@@ -402,9 +388,6 @@ const TabletsData = () => {
                   tableClass="align-middle table-nowrap mb-0"
                   SearchPlaceholder="Search for tablet details or something..."
                 />
-              ) : (
-                <Loader error={error} />
-                // <></>
               )}
               <ToastContainer closeButton={false} limit={1} />
             </CardBody>
@@ -442,7 +425,7 @@ const TabletsData = () => {
                     name="serial_number"
                     id="serial_number"
                     className="form-control"
-                    placeholder="Enter Title"
+                    placeholder="Enter Serial Number"
                     type="text"
                     validate={{
                       required: { value: true },
@@ -471,28 +454,28 @@ const TabletsData = () => {
                     Android ID
                   </Label>
                   <Input
-                    name="serial_number"
-                    id="serial_number"
+                    name="android_id"
+                    id="android_id"
                     className="form-control"
-                    placeholder="Enter Title"
+                    placeholder="Enter Android ID"
                     type="text"
                     validate={{
                       required: { value: true },
                     }}
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.serial_number || ""}
+                    value={validation.values.android_id || ""}
                     invalid={
-                      validation.touched.serial_number &&
-                      validation.errors.serial_number
+                      validation.touched.android_id &&
+                      validation.errors.android_id
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.serial_number &&
-                  validation.errors.serial_number ? (
+                  {validation.touched.android_id &&
+                  validation.errors.android_id ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.serial_number}
+                      {validation.errors.android_id}
                     </FormFeedback>
                   ) : null}
                 </div>

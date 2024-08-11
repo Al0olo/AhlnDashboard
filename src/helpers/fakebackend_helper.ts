@@ -44,11 +44,11 @@ export const getOneTablet = (data: any) => {
 };
 // Add Tablet
 export const addTablet = (data: any) => {
-  return api.get(url.ADD_TABLET, data);
+  return api.create(url.ADD_TABLET, data);
 };
 // Update Exsiting Tablet
 export const updateTablet = (data: any) => {
-  return api.get(url.UPDATE_TABLET, data);
+  return api.update(`${url.UPDATE_TABLET}/${data.id}`, data);
 };
 // Delete Tablet
 export const deleteTablet = (data: any) => {
@@ -66,11 +66,11 @@ export const getOneAddress = (data: any) => {
 };
 // Add Address
 export const addAddress = (data: any) => {
-  return api.get(url.ADD_ADDRESS, data);
+  return api.create(url.ADD_ADDRESS, data);
 };
 // Update Exsiting Address
 export const updateAddress = (data: any) => {
-  return api.get(url.UPDATE_ADDRESS, data);
+  return api.update(`${url.UPDATE_ADDRESS}/${data.id}`, data);
 };
 // Delete Address
 export const deleteAddress = (data: any) => {

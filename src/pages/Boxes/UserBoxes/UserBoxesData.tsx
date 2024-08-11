@@ -158,7 +158,7 @@ const UserBoxesData = () => {
         validation.resetForm();
       }
 
-      validation.resetForm(); // Reset form once at the end
+      validation.resetForm(); 
       toggle();
     },
   });
@@ -407,7 +407,7 @@ const UserBoxesData = () => {
           <Card>
             <CardHeader className="border-0">
               <div className="d-flex align-items-center">
-                <h5 className="card-user_id mb-0 flex-grow-1">UserBoxs</h5>
+                <h5 className="card-user_id mb-0 flex-grow-1">User Boxes</h5>
                 <div className="flex-shrink-0">
                   <div className="d-flex flex-wrap gap-2">
                     <button

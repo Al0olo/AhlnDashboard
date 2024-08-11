@@ -185,8 +185,8 @@ import ToDoList from "../pages/ToDo";
 import EcommerceEditProduct from "pages/Ecommerce/EcommerceModels/EcommerceEditModel";
 
 import BoxView from "pages/Boxes/Box/BoxView";
-import TabletView from "pages/Boxes/Tablets/TabletView";
-import AddressView from "pages/Boxes/Address/AddressView";
+import TabletView from "pages/Boxes/Tablets";
+import AddressView from "pages/Boxes/Address";
 import DeliveryView from "pages/Delivery/DeliveryPackage/DeliveryPackageView";
 import ShippingCompaniesView from "pages/Delivery/ShippingCompany/ShippingCompaniesView";
 import RolesView from "pages/Admin/Role";

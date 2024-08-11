@@ -129,7 +129,9 @@ const RelativeCustomerData = () => {
           <Card>
             <CardHeader className="border-0">
               <div className="d-flex align-items-center">
-                <h5 className="card-user_id mb-0 flex-grow-1">Box Images</h5>
+                <h5 className="card-user_id mb-0 flex-grow-1">
+                  Relative Customers
+                </h5>
               </div>
             </CardHeader>
             <CardBody className="pt-0">
@@ -143,7 +145,7 @@ const RelativeCustomerData = () => {
                   customPageSize={8}
                   divClass="table-responsive table-card mb-3"
                   tableClass="align-middle table-nowrap mb-0"
-                  SearchPlaceholder="Search for userBox details or something..."
+                  SearchPlaceholder="Search for relative customers details or something..."
                 />
               )}
               <ToastContainer closeButton={false} limit={1} />
