@@ -19,40 +19,25 @@ import {
 } from "reactstrap";
 //redux
 import { useSelector, useDispatch } from "react-redux";
-import TableContainer from "../../../../Components/Common/TableContainer";
+import TableContainer from "../../../Components/Common/TableContainer";
 import {
   AddRoleAction,
   GetRolesAction,
   DeleteRoleAction,
-  GetOneRoleAction,
+  // GetOneRoleAction,
   UpdateRoleAction,
-} from "../../../../slices/thunks";
-
-// import {
-//   rolesId,
-//   Title,
-//   Client,
-//   AssignedTo,
-//   CreateDate,
-//   DueDate,
-//   Status,
-//   Priority,
-// } from "./TicketCol";
-//Import Flatepicker
-import Flatpickr from "react-flatpickr";
-import * as moment from "moment";
+} from "../../../slices/thunks";
 
 // Formik
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
-import DeleteModal from "../../../../Components/Common/DeleteModal";
+import DeleteModal from "../../../Components/Common/DeleteModal";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Loader from "../../../../Components/Common/Loader";
+import Loader from "../../../Components/Common/Loader";
 import { createSelector } from "reselect";
-import { title } from "process";
 
 const RolesData = () => {
   const dispatch: any = useDispatch();
@@ -72,21 +57,17 @@ const RolesData = () => {
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [role, setRole] = useState<any>([]);
-
-  // Delete Roles
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
 
   const toggle = useCallback(() => {
     setModal((prevState) => !prevState);
-  }, [modal, role]);
+  }, []);
 
   // validation
   const validation: any = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
-
     initialValues: {
       id: role.id ? role.id : "",
       title: role.title ? role.title : "",
@@ -95,14 +76,13 @@ const RolesData = () => {
     validationSchema: Yup.object({
       title: Yup.string().required("Please Enter Role Title"),
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       if (isEdit) {
-        const updateRoles = {
-          id: validation.values.id,
+        const updateRoles: any = {
+          id: values.id,
           title: values.title || undefined,
           description: values.description || undefined,
         };
-        // Remove the keys which have undefined values from the updateRole object
         const updatedRoleObj = Object.keys(updateRoles)
           .filter(
             (key) => updateRoles[key as keyof typeof updateRoles] !== undefined
@@ -111,21 +91,39 @@ const RolesData = () => {
             obj[key] = updateRoles[key as keyof typeof updateRoles];
             return obj;
           }, {});
-        if (Object.values(updatedRoleObj).some((val) => val !== undefined)) {
-          dispatch(UpdateRoleAction(updatedRoleObj));
-        }
 
+        if (Object.values(updatedRoleObj).some((val) => val !== undefined)) {
+          const result = await dispatch(UpdateRoleAction(updatedRoleObj));
+          if (result && result.payload) {
+            setRole(async (prevRoles: any[]) => {
+              const updatedRoles = Array.isArray(prevRoles)
+                ? [...prevRoles]
+                : [];
+              const newRoles = result.payload.data;
+              if (Array.isArray(newRoles)) {
+                updatedRoles.push(...newRoles);
+              }
+
+              return await dispatch(GetRolesAction());
+            });
+          }
+        }
         validation.resetForm();
       } else {
-        const newrole = {
+        const newRole = {
           title: values.title,
           description: values.description,
         };
-        // save new role
-        dispatch(AddRoleAction(newrole));
+        const result = await dispatch(AddRoleAction(newRole));
+        if (result && result.payload) {
+          setRole((prevRoles: any[]) => [...prevRoles, result.payload]);
+          toggle();
+          return await dispatch(GetRolesAction());
+        }
         validation.resetForm();
       }
-      dispatch(GetRolesAction());
+
+      validation.resetForm(); // Reset form once at the end
       toggle();
     },
   });
@@ -136,14 +134,17 @@ const RolesData = () => {
     setDeleteModal(true);
   };
 
-  const handleDeleterole = () => {
+  const handleDeleterole = async () => {
     if (role) {
-      dispatch(DeleteRoleAction(role.id));
+      const result = await dispatch(DeleteRoleAction(role.id));
+      if (result && result.payload) {
+        await dispatch(GetRolesAction());
+      }
       setDeleteModal(false);
     }
   };
 
-  // Update Data
+  // update data
   const handleRolesClick = useCallback(
     (arg: any) => {
       setIsEdit(true);
@@ -154,7 +155,6 @@ const RolesData = () => {
       });
 
       toggle();
-      console.log("arg", role);
     },
     [toggle]
   );

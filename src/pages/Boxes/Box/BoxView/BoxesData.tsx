@@ -55,9 +55,9 @@ import { useNavigate } from "react-router-dom";
 
 const BoxesData = () => {
   const dispatch: any = useDispatch();
-  const selectLayoutState = (state: any) => state.Boxes;
   const history = useNavigate();
-
+  
+  const selectLayoutState = (state: any) => state.Boxes;
   const selectLayoutProperties = createSelector(selectLayoutState, (state) => ({
     boxsList: state.data,
     isBoxSuccess: state.isBoxSuccess,

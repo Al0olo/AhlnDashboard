@@ -11,9 +11,9 @@ const BoxView = () => {
       <div className="page-content">
         <Container fluid>
           <BreadCrumb title="Addresses List" pageTitle="Addresses" />
-          <Row>
+          {/* <Row>
             <Widgets />
-          </Row>
+          </Row> */}
           <AddressesData />
         </Container>
       </div>

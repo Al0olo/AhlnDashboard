@@ -11,9 +11,9 @@ const TabletView = () => {
       <div className="page-content">
         <Container fluid>
           <BreadCrumb title="Tablets List" pageTitle="Tablets" />
-          <Row>
+          {/* <Row>
             <Widgets />
-          </Row>
+          </Row> */}
           <TabletsData />
         </Container>
       </div>

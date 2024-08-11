@@ -38,7 +38,7 @@ export const AddRoleAction = createAsyncThunk(
   async (role: any, thunkApi) => {
     try {
       const response = await addRole(role);
-      const data = await response;
+      const data = response;
 
       toast.success("Role Added Successfully", { autoClose: 3000 });
       return data;
@@ -68,7 +68,7 @@ export const DeleteRoleAction = createAsyncThunk(
   async (role: string, thunkApi) => {
     try {
       const response = await deleteRole(role);
-      const data = await response;
+      const data = response;
       toast.success("Role Deleted Successfully", { autoClose: 3000 });
       return data;
     } catch (error: any) {

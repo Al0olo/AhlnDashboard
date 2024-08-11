@@ -39,6 +39,22 @@ export const ADD_ADDRESS = "/address/new";
 export const UPDATE_ADDRESS = "/address/update";
 export const DELETE_ADDRESS = "/address/delete";
 
+// USER BOX
+export const GET_USER_BOXES = "/user-box/get-all";
+export const GET_ONE_USER_BOX = "/user-box/get-one";
+export const ASSIGN_USER_BOX = "/user-box/assign-box-to-user";
+export const UPDATE_USER_BOX = "/user-box/update";
+export const UPDATE_USER_BOX_STATUS = "/user-box/update-box-status";
+export const DELETE_USER_BOX = "/user-box/delete";
+
+// BOX IMAGES
+export const GET_BOX_IMAGES = "/box-image/get-all-admin";
+
+// RELATIVE CUSTOMER
+export const GET_RELATIVE_CUSTOMER = "/relative-customer/get-all-admin";
+export const UPDATE_RELATIVE_CUSTOMER_STATUS =
+  "/relative-customer/update-status";
+
 // DELIVERY
 // DELIVERY PACKAGE
 export const GET_DELIVERY_ALL = "/delivery-package/get-all";

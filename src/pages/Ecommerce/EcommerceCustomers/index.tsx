@@ -60,6 +60,11 @@ const EcommerceCustomers = () => {
       loader: ecom.loading,
     })
   );
+  // Inside your component
+  const { customers, isCustomerSuccess, error, loader } = useSelector(
+    ecomCustomerProperties
+  );
+
   const selectLayoutState = (state: any) => state.Role;
 
   const roleLayoutProperties = createSelector(selectLayoutState, (state) => ({
@@ -68,12 +73,6 @@ const EcommerceCustomers = () => {
     error: state.error,
     loader: state.loading,
   }));
-
-  // Inside your component
-  const { customers, isCustomerSuccess, error, loader } = useSelector(
-    ecomCustomerProperties
-  );
-
   const { RoleList, isRoleSuccess } = useSelector(roleLayoutProperties);
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -356,9 +355,7 @@ const EcommerceCustomers = () => {
                   updateStatusUser(cellProps.row.original.id, e.target.checked);
                 }}
                 defaultChecked={cellProps.getValue() === true ? true : false}
-              >
-                {/* {cellProps.getValue() === true ? "Active" : "Block"} */}
-              </Input>
+              ></Input>
             </div>
           );
         },

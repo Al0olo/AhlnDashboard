@@ -24,6 +24,12 @@ import { tabletSlices } from "./Box/tablet/reducer";
 //Address
 import { addressSlices } from "./Box/Address/reducer";
 
+//User Boxes
+import { userBoxSlices } from "./Box/UserBoxes/reducer";
+
+// Box Images
+import { boxImgesSlices } from "./Box/BoxImages/reducer";
+
 // Delivery Packages
 import { deliverySlices } from "./delivery/deliveryPackage/reducer";
 
@@ -89,6 +95,7 @@ import JobReducer from "./jobs/reducer";
 
 // API Key
 import APIKeyReducer from "./apiKey/reducer";
+import { relativeCustomerSlices } from "./Box/RelativeCustomer/reducer";
 
 const rootReducer = combineReducers({
   Role: roleSlices,
@@ -96,8 +103,11 @@ const rootReducer = combineReducers({
   Login: loginSlices,
   Logout: authSlices,
   Boxes: boxSlices,
+  BoxImages: boxImgesSlices,
+  RelativeCustomer: relativeCustomerSlices,
   Tablets: tabletSlices,
   Address: addressSlices,
+  UserBox: userBoxSlices,
   Delivery: deliverySlices,
   ShippingCompanies: shippingCompaniesSlices,
   Account: registerSlices,

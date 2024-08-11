@@ -189,7 +189,10 @@ import TabletView from "pages/Boxes/Tablets/TabletView";
 import AddressView from "pages/Boxes/Address/AddressView";
 import DeliveryView from "pages/Delivery/DeliveryPackage/DeliveryPackageView";
 import ShippingCompaniesView from "pages/Delivery/ShippingCompany/ShippingCompaniesView";
-import RolesView from "pages/Admin/Role/RolesView";
+import RolesView from "pages/Admin/Role";
+import UserBoxesView from "pages/Boxes/UserBoxes";
+import BoxImagesView from "pages/Boxes/BoxImages";
+import RelativeCustomerView from "pages/Boxes/RelativeCustomer";
 
 const authProtectedRoutes = [
   { path: "/dashboard-analytics", component: <DashboardAnalytics /> },
@@ -253,6 +256,10 @@ const authProtectedRoutes = [
     component: <EcommerceOrderDetail />,
   },
   { path: "/apps-ecommerce-customers", component: <EcommerceCustomers /> },
+  {
+    path: "/apps-ecommerce-relative-customers",
+    component: <RelativeCustomerView />,
+  },
   { path: "/apps-ecommerce-cart", component: <EcommerceCart /> },
   { path: "/apps-ecommerce-checkout", component: <EcommerceCheckout /> },
   { path: "/apps-ecommerce-sellers", component: <EcommerceSellers /> },
@@ -279,6 +286,8 @@ const authProtectedRoutes = [
   { path: "/boxes", component: <BoxView /> },
   { path: "/tablets", component: <TabletView /> },
   { path: "/addresses", component: <AddressView /> },
+  { path: "/user-boxes", component: <UserBoxesView /> },
+  { path: "/boxes-images", component: <BoxImagesView /> },
 
   // Delivery Packages
   { path: "/delivery-packages", component: <DeliveryView /> },

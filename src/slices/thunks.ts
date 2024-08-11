@@ -16,6 +16,15 @@ export * from "./admin/role/thunk";
 //Boxes
 export * from "./Box/boxes/thunk";
 
+// Relative Customer
+export * from "./Box/RelativeCustomer/thunk";
+
+// User Boxes
+export * from "./Box/UserBoxes/thunk";
+
+// Box Images
+export * from "./Box/BoxImages/thunk";
+
 //Tablets
 export * from "./Box/tablet/thunk";
 

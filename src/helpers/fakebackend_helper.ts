@@ -77,6 +77,21 @@ export const deleteAddress = (data: any) => {
   return api.delete(`${url.DELETE_ADDRESS}/${data}`);
 };
 
+// Get All Box Images
+export const getBoxImages = () => {
+  return api.get(url.GET_BOX_IMAGES);
+};
+
+// Get All Relative Customer
+export const getRelativeCustomer = () => {
+  return api.get(url.GET_RELATIVE_CUSTOMER);
+};
+
+// Update Relative Customer Status
+export const updateRelativeCustomerStatusApi = (data: any) => {
+  return api.update(url.UPDATE_RELATIVE_CUSTOMER_STATUS, data);
+};
+
 // DELIVERY PACKAGE
 // Get Delivery Packages
 export const getDeliveryPackages = () => {
@@ -85,6 +100,37 @@ export const getDeliveryPackages = () => {
 // Get One Delivery Package
 export const getOneDeliveryPackage = (data: any) => {
   return api.get(`${url.GET_ONE_DELIVERY}/${data}`);
+};
+
+// USER_BOX
+// Fetches user boxes for admin
+export const getUserBoxes = () => {
+  return api.get(url.GET_USER_BOXES);
+};
+// Get One User Box
+export const getOneUserBox = (data: any) => {
+  return api.get(url.GET_ONE_USER_BOX);
+};
+// Assign User Box
+export const assignUserBox = (data: any) => {
+  return api.create(url.ASSIGN_USER_BOX, data);
+};
+// Update Exsiting User Box
+export const updateUserBox = (data: any) => {
+  return api.update(url.UPDATE_USER_BOX + `/${data.id}`, data);
+};
+// Update User Box Status
+export const updateUserBoxStatus = (data: any) => {
+  return api.update(url.UPDATE_USER_BOX_STATUS + `/${data.id}`, data);
+};
+
+export const updateUserBoxStatusApi = (data: any) => {
+  return api.update(url.UPDATE_USER_BOX + `/${data.id}`, data);
+};
+
+// Delete User Box
+export const deleteUserBox = (data: any) => {
+  return api.delete(`${url.DELETE_USER_BOX}/${data}`);
 };
 
 // Fetches shippingcompanies for a given user
@@ -123,7 +169,7 @@ export const addRole = (data: any) => {
 };
 // Update Exsiting Role
 export const updateRole = (data: any) => {
-  return api.get(url.UPDATE_ROLE + `/${data.id}`, data);
+  return api.update(url.UPDATE_ROLE + `/${data.id}`, data);
 };
 // Delete Role
 export const deleteRole = (data: any) => {
