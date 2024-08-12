@@ -509,7 +509,7 @@ const BoxesData = () => {
                   type="checkbox"
                   value="true"
                   name="has_empty_lockers"
-                  className="form-check-input"
+                  className="form-check-input mx-3"
                   id="has_empty_lockers"
                   onBlur={validation.handleBlur}
                   onChange={validation.handleChange}

@@ -55,6 +55,40 @@ export const deleteTablet = (data: any) => {
   return api.delete(`${url.DELETE_TABLET}/${data}`);
 };
 
+// BOX GENERATION
+// Get BoxGenerations
+export const getBoxGenerations = () => {
+  return api.get(url.GET_BOX_GENERATIONS);
+};
+// Get One BoxGeneration
+export const getOneBoxGeneration = (data: any) => {
+  return api.get(url.GET_BOX_GENERATIONS);
+};
+// Add BoxGeneration
+export const addBoxGeneration = (data: any) => {
+  return api.create(url.ADD_BOX_GENERATION, data);
+};
+// Update Exsiting BoxGeneration
+export const updateBoxGeneration = (data: any) => {
+  return api.update(`${url.UPDATE_BOX_GENERATION}/${data.id}`, data);
+};
+// Delete BoxGeneration
+export const deleteBoxGeneration = (data: any) => {
+  return api.delete(`${url.DELETE_BOX_GENERATION}/${data}`);
+};
+// update has outside camera
+export const updateHasOutSideCameraApi = (data: any) => {
+  return api.update(url.UPDATE_HAS_OUTSIDE_CAMERA + `/${data.id}`, data);
+};
+// update has inside camera
+export const updateHasInSideCameraApi = (data: any) => {
+  return api.update(url.UPDATE_HAS_INSIDE_CAMERA + `/${data.id}`, data);
+};
+// update has outside camera
+export const updateHasTabletApi = (data: any) => {
+  return api.update(url.UPDATE_HAS_TABLET + `/${data.id}`, data);
+};
+
 // ADDRESS
 // Get Addresses
 export const getAddresses = () => {

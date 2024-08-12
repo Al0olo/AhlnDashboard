@@ -196,6 +196,7 @@ import RelativeCustomerView from "pages/Boxes/RelativeCustomer";
 import ContactUsView from "pages/Admin/ContactUs";
 import AuditTrailView from "pages/Admin/AuditTrail";
 import SystemLogView from "pages/Admin/SystemLog";
+import BoxGenerationView from "pages/Boxes/BoxGeneration";
 
 const authProtectedRoutes = [
   { path: "/dashboard-analytics", component: <DashboardAnalytics /> },
@@ -287,6 +288,7 @@ const authProtectedRoutes = [
 
   //Boxes
   { path: "/boxes", component: <BoxView /> },
+  { path: "/box-generation", component: <BoxGenerationView /> },
   { path: "/tablets", component: <TabletView /> },
   { path: "/addresses", component: <AddressView /> },
   { path: "/user-boxes", component: <UserBoxesView /> },
