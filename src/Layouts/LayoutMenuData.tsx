@@ -354,7 +354,7 @@ const Navdata = () => {
           childItems: [
             // Routes needs to be adjusted
             { id: 1, label: "Boxes List", link: "/boxes" },
-            { id: 2, label: "Box Generation", link: "/apps-tickets-details" },
+            { id: 2, label: "Box Generation", link: "/box-generation" },
             { id: 3, label: "Tablets", link: "/tablets" },
             { id: 4, label: "Addresses", link: "/addresses" },
             { id: 5, label: "Boxes Locker", link: "/apps-tickets-details" },

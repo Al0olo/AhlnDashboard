@@ -99,12 +99,14 @@ import { relativeCustomerSlices } from "./Box/RelativeCustomer/reducer";
 import { contactUsSlices } from "./admin/constactUs/reducer";
 import { auditTrailSlices } from "./admin/auditTrail/reducer";
 import { systemLogSlices } from "./admin/systemLog/reducer";
+import { boxGenerationSlices } from "./Box/boxGeneration/reducer";
 
 const rootReducer = combineReducers({
   Role: roleSlices,
   ContactUs: contactUsSlices,
   AuditTrail: auditTrailSlices,
   SystemLog: systemLogSlices,
+  BoxGeneration: boxGenerationSlices,
   Layout: LayoutReducer,
   Login: loginSlices,
   Logout: authSlices,

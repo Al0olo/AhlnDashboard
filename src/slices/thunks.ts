@@ -19,6 +19,9 @@ export * from "./admin/systemLog/thunk";
 //Boxes
 export * from "./Box/boxes/thunk";
 
+// Box Generation
+export * from "./Box/boxGeneration/thunk";
+
 // Relative Customer
 export * from "./Box/RelativeCustomer/thunk";
 
