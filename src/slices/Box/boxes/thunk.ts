@@ -36,7 +36,7 @@ export const AddBoxAction = createAsyncThunk(
   "box/new",
   async (box: any, thunkApi) => {
     try {
-      const response = await addBox(box);
+      const response = addBox(box);
       const data = await response;
       toast.success("Box Added Successfully", { autoClose: 3000 });
       return data;

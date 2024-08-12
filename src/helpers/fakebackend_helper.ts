@@ -18,11 +18,11 @@ export const getBoxes = () => {
 };
 // Get One Box
 export const getOneBox = (data: any) => {
-  return api.get(url.GET_BOXES);
+  return api.get(url.GET_ONE_BOX, data);
 };
 // Add Box
 export const addBox = (data: any) => {
-  return api.get(url.ADD_BOX, data);
+  return api.create(url.ADD_BOX, data);
 };
 // Update Exsiting Box
 export const updateBox = (data: any) => {
@@ -44,11 +44,11 @@ export const getOneTablet = (data: any) => {
 };
 // Add Tablet
 export const addTablet = (data: any) => {
-  return api.get(url.ADD_TABLET, data);
+  return api.create(url.ADD_TABLET, data);
 };
 // Update Exsiting Tablet
 export const updateTablet = (data: any) => {
-  return api.get(url.UPDATE_TABLET, data);
+  return api.update(`${url.UPDATE_TABLET}/${data.id}`, data);
 };
 // Delete Tablet
 export const deleteTablet = (data: any) => {
@@ -66,15 +66,30 @@ export const getOneAddress = (data: any) => {
 };
 // Add Address
 export const addAddress = (data: any) => {
-  return api.get(url.ADD_ADDRESS, data);
+  return api.create(url.ADD_ADDRESS, data);
 };
 // Update Exsiting Address
 export const updateAddress = (data: any) => {
-  return api.get(url.UPDATE_ADDRESS, data);
+  return api.update(`${url.UPDATE_ADDRESS}/${data.id}`, data);
 };
 // Delete Address
 export const deleteAddress = (data: any) => {
   return api.delete(`${url.DELETE_ADDRESS}/${data}`);
+};
+
+// Get All Box Images
+export const getBoxImages = () => {
+  return api.get(url.GET_BOX_IMAGES);
+};
+
+// Get All Relative Customer
+export const getRelativeCustomer = () => {
+  return api.get(url.GET_RELATIVE_CUSTOMER);
+};
+
+// Update Relative Customer Status
+export const updateRelativeCustomerStatusApi = (data: any) => {
+  return api.update(url.UPDATE_RELATIVE_CUSTOMER_STATUS, data);
 };
 
 // DELIVERY PACKAGE
@@ -84,28 +99,131 @@ export const getDeliveryPackages = () => {
 };
 // Get One Delivery Package
 export const getOneDeliveryPackage = (data: any) => {
-  return api.get(`${url.DELETE_ADDRESS}/${data}`);
+  return api.get(`${url.GET_ONE_DELIVERY}/${data}`);
 };
 
-// Fetches boxes for a given user
+// USER_BOX
+// Fetches user boxes for admin
+export const getUserBoxes = () => {
+  return api.get(url.GET_USER_BOXES);
+};
+// Get One User Box
+export const getOneUserBox = (data: any) => {
+  return api.get(url.GET_ONE_USER_BOX);
+};
+// Assign User Box
+export const assignUserBox = (data: any) => {
+  return api.create(url.ASSIGN_USER_BOX, data);
+};
+// Update Exsiting User Box
+export const updateUserBox = (data: any) => {
+  return api.update(url.UPDATE_USER_BOX + `/${data.id}`, data);
+};
+// Update User Box Status
+export const updateUserBoxStatus = (data: any) => {
+  return api.update(url.UPDATE_USER_BOX_STATUS + `/${data.id}`, data);
+};
+
+export const updateUserBoxStatusApi = (data: any) => {
+  return api.update(url.UPDATE_USER_BOX + `/${data.id}`, data);
+};
+
+// Delete User Box
+export const deleteUserBox = (data: any) => {
+  return api.delete(`${url.DELETE_USER_BOX}/${data}`);
+};
+
+// Fetches shippingcompanies for a given user
 export const getShippingCompanies = () => {
   return api.get(url.GET_SHIPPING_COMPANIES);
 };
-// Get One Box
+// Get One shippingcompani
 export const getOneShippingCompany = (data: any) => {
   return api.get(url.GET_ONE_SHIPPING_COMPANY);
 };
-// Add Box
+// Add shippingcompani
 export const addShippingCompany = (data: any) => {
   return api.get(url.ADD_SHIPPING_COMPANY, data);
 };
-// Update Exsiting Box
+// Update Exsiting shippingcompani
 export const updateShippingCompany = (data: any) => {
   return api.get(url.UPDATE_SHIPPING_COMPANY, data);
 };
-// Delete Box
+// Delete shippingcompani
 export const deleteShippingCompany = (data: any) => {
   return api.delete(`${url.DELETE_SHIPPING_COMPANY}/${data}`);
+};
+
+// ADMINSTRATION
+
+// CONTACT US
+// Fetch All Contact Us
+export const getContactUsApi = () => {
+  return api.get(url.GET_CONTACT_US);
+};
+
+// Get One Contact Us
+export const getOneContactUsApi = (data: any) => {
+  return api.get(`${url.GET_ONE_CONTACT_US}/${data}`);
+};
+
+// Delete Contact Us
+export const deleteContactUsApi = (data: any) => {
+  return api.delete(`${url.DELETE_CONTACT_US}/${data}`);
+};
+
+// AUDIT TRAIL
+// Fetch All Audit Trails
+export const getAuditTrailApi = () => {
+  return api.get(url.GET_AUDIT_TRAIL);
+};
+
+// Get One Audit Trail
+export const getOneAuditTrailApi = (data: any) => {
+  return api.get(`${url.GET_ONE_AUDIT_TRAIL}/${data}`);
+};
+
+// Delete Audit Trail
+export const deleteAuditTrailApi = (data: any) => {
+  return api.delete(`${url.DELETE_AUDIT_TRAIL}/${data}`);
+};
+
+// SYSTEM LOG
+// Fetch All System Logs
+export const getSystemLogApi = () => {
+  return api.get(url.GET_SYSTEM_LOG);
+};
+
+// Get One System Log
+export const getOneSystemLogApi = (data: any) => {
+  return api.get(`${url.GET_ONE_SYSTEM_LOG}/${data}`);
+};
+
+// Delete System Log
+export const deleteSystemLogApi = (data: any) => {
+  return api.delete(`${url.DELETE_SYSTEM_LOG}/${data}`);
+};
+
+// ROLE
+// Fetches rolees for admin
+export const getRoles = () => {
+  return api.get(url.GET_ROLES);
+};
+// Get One Role
+export const getOneRole = (data: any) => {
+  return api.get(url.GET_ONE_ROLE);
+};
+// Add Role
+export const addRole = (data: any) => {
+  return api.create(url.ADD_ROLE, data);
+};
+// Update Exsiting Role
+export const updateRole = (data: any) => {
+  return api.update(url.UPDATE_ROLE + `/${data.id}`, data);
+};
+// Delete Role
+export const deleteRole = (data: any) => {
+  return api.delete(`${url.DELETE_ROLE}/${data}`);
 };
 
 //is user is logged in
@@ -221,13 +339,14 @@ export const deleteModels = (model: any) => {
 // add Models
 export const addNewModel = (model: any) => api.create(url.ADD_NEW_MODEL, model);
 // update Models
-export const updateModel = (model: any) =>{
-  api.update(url.UPDATE_MODEL+model.id, model);
-}
+export const updateModel = (model: any) => {
+  api.update(url.UPDATE_MODEL + model.id, model);
+};
+
 //GET Single Model
-export const getModel = (id:any) =>{
-  return api.get(url.GET_MODEL_ID+id);
-}
+export const getModel = (id: any) => {
+  return api.get(url.GET_MODEL_ID + id);
+};
 //Models-End
 
 //Product-Start
@@ -269,11 +388,14 @@ export const addNewCustomer = (customer: any) =>
 
 // update Customers
 export const updateCustomer = (customer: any) =>
-  api.update(url.UPDATE_CUSTOMER, customer);
+  api.update(url.UPDATE_CUSTOMER + `/${customer.id}`, customer);
 
+// update user status
+export const updateUserStatusApi = (data: any) =>
+  api.update(url.UPDATE_USER_STATUS, data);
 // delete Customers
 export const deleteCustomer = (customer: any) =>
-  api.delete(url.DELETE_CUSTOMER, { headers: { customer } });
+  api.delete(url.DELETE_CUSTOMER + `/${customer}`);
 
 // get Sellers
 export const getSellers = () => api.get(url.GET_SELLERS);

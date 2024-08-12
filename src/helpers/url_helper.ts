@@ -11,6 +11,29 @@ export const POST_FAKE_PASSWORD_RESET = "/auth/update-password";
 export const POST_FAKE_JWT_PASSWORD_FORGET = "/jwt-forget-pwd";
 export const SOCIAL_LOGIN = "/social-login";
 
+// ADMINSTRATION
+// CONTACT US
+export const GET_CONTACT_US = "/contact-us/get-all";
+export const GET_ONE_CONTACT_US = "/contact-us/get-one";
+export const DELETE_CONTACT_US = "/contact-us/delete";
+
+// AUDIT TRAIL
+export const GET_AUDIT_TRAIL = "/audit-trail/get-all";
+export const GET_ONE_AUDIT_TRAIL = "/audit-trail/get-one";
+export const DELETE_AUDIT_TRAIL = "/audit-trail/delete";
+
+// SYSTEM LOG
+export const GET_SYSTEM_LOG = "/system-log/get-all";
+export const GET_ONE_SYSTEM_LOG = "/system-log/get-one";
+export const DELETE_SYSTEM_LOG = "/system-log/delete";
+
+//ROLE
+export const GET_ROLES = "/role/get-all";
+export const GET_ONE_ROLE = "/role/get-one";
+export const ADD_ROLE = "/role/new";
+export const UPDATE_ROLE = "/role/update";
+export const DELETE_ROLE = "/role/delete";
+
 //BOX
 export const GET_BOXES = "/box/get-all";
 export const GET_ONE_BOX = "/box/get-one";
@@ -31,6 +54,22 @@ export const GET_ONE_ADDRESS = "/address/get-one";
 export const ADD_ADDRESS = "/address/new";
 export const UPDATE_ADDRESS = "/address/update";
 export const DELETE_ADDRESS = "/address/delete";
+
+// USER BOX
+export const GET_USER_BOXES = "/user-box/get-all";
+export const GET_ONE_USER_BOX = "/user-box/get-one";
+export const ASSIGN_USER_BOX = "/user-box/assign-box-to-user";
+export const UPDATE_USER_BOX = "/user-box/update";
+export const UPDATE_USER_BOX_STATUS = "/user-box/update-box-status";
+export const DELETE_USER_BOX = "/user-box/delete";
+
+// BOX IMAGES
+export const GET_BOX_IMAGES = "/box-image/get-all-admin";
+
+// RELATIVE CUSTOMER
+export const GET_RELATIVE_CUSTOMER = "/relative-customer/get-all-admin";
+export const UPDATE_RELATIVE_CUSTOMER_STATUS =
+  "/relative-customer/update-status";
 
 // DELIVERY
 // DELIVERY PACKAGE
@@ -94,9 +133,10 @@ export const DELETE_ORDER = "/delete/order";
 
 // Customers
 export const GET_CUSTOMERS = "/users/get-all";
-export const ADD_NEW_CUSTOMER = "/apps/customer";
-export const UPDATE_CUSTOMER = "/apps/customer";
-export const DELETE_CUSTOMER = "/apps/customer";
+export const ADD_NEW_CUSTOMER = "/users/new";
+export const UPDATE_CUSTOMER = "/users/update";
+export const UPDATE_USER_STATUS = "/users/update-user-status";
+export const DELETE_CUSTOMER = "/users/delete";
 
 // Sellers
 export const GET_SELLERS = "/sellers";

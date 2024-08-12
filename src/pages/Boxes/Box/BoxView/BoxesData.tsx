@@ -51,11 +51,13 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../../Components/Common/Loader";
 import { createSelector } from "reselect";
+import { useNavigate } from "react-router-dom";
 
 const BoxesData = () => {
   const dispatch: any = useDispatch();
-  const selectLayoutState = (state: any) => state.Boxes;
+  const history = useNavigate();
 
+  const selectLayoutState = (state: any) => state.Boxes;
   const selectLayoutProperties = createSelector(selectLayoutState, (state) => ({
     boxsList: state.data,
     isBoxSuccess: state.isBoxSuccess,
@@ -92,19 +94,21 @@ const BoxesData = () => {
     enableReinitialize: true,
 
     initialValues: {
-      serial_number: (box && box.serial_number) || "",
-      box_label: (box && box.box_label) || "",
-      has_empty_lockers: (box && box.has_empty_lockers) || "",
-      current_tablet_id: (box && box.current_tablet_id) || "",
-      previous_tablet_id: (box && box.previous_tablet_id) || "",
-      box_model_id: (box && box.box_model_id) || "",
-      address_id: (box && box.address_id) || "",
+      serial_number: "",
+      box_label: "",
+      has_empty_lockers: "",
+      current_tablet_id: "",
+      previous_tablet_id: "",
+      box_model_id: "",
+      address_id: "",
     },
     validationSchema: Yup.object({
       serial_number: Yup.string().required("Please Enter Serial Number"),
       box_label: Yup.string().required("Please Enter Box Label"),
-      current_tablet_id: Yup.number().required("Please Enter Tablet Id"),
       box_model_id: Yup.string().required("Please Enter Box Generation Id"),
+      has_empty_lockers: Yup.string().required(
+        "Please Enter Has Empty Lockers"
+      ),
     }),
     onSubmit: (values) => {
       if (isEdit) {
@@ -122,18 +126,25 @@ const BoxesData = () => {
         validation.resetForm();
       } else {
         const newBox = {
-          serial_number: values["serial_number"],
-          box_label: values["box_label"],
-          has_empty_lockers: values["has_empty_lockers"],
-          box_model_id: values["box_model_id"],
+          serial_number: values.serial_number,
+          box_label: values.box_label,
+          has_empty_lockers: values.has_empty_lockers,
+          box_model_id: values.box_model_id,
+          current_tablet_id: values.current_tablet_id
+            ? values.current_tablet_id
+            : 6,
+          previous_tablet_id: values.current_tablet_id
+            ? values.previous_tablet_id
+            : 6,
+          address_id: values.address_id ? values.address_id : null,
         };
-        console.log("RRRRRRRRRRRRRRR");
 
         // save new box
         dispatch(AddBoxAction(newBox));
         validation.resetForm();
+        toggle();
+        history("/boxes");
       }
-      toggle();
     },
   });
 
@@ -160,6 +171,8 @@ const BoxesData = () => {
       serial_number: box.serial_number,
       box_label: box.box_label,
       has_empty_lockers: box.has_empty_lockers,
+      current_tablet_id: box.current_tablet_id,
+      previous_tablet_id: box.previous_tablet_id,
       box_model_id: box.box_model_id,
       address_id: box.address_id,
     });
@@ -344,7 +357,7 @@ const BoxesData = () => {
                 <h5 className="card-title mb-0 flex-grow-1">Boxes</h5>
                 <div className="flex-shrink-0">
                   <div className="d-flex flex-wrap gap-2">
-                    <button
+                    <Form
                       className="btn btn-primary add-btn"
                       onClick={() => {
                         setIsEdit(false);
@@ -352,7 +365,7 @@ const BoxesData = () => {
                       }}
                     >
                       <i className="ri-add-line align-bottom"></i> Create Box
-                    </button>{" "}
+                    </Form>{" "}
                     {isMultiDeleteButton && (
                       <button
                         className="btn btn-soft-danger"
@@ -373,7 +386,7 @@ const BoxesData = () => {
                   columns={columns}
                   data={boxsList}
                   isGlobalFilter={true}
-                  customPageSize={8}
+                  customPageSize={10}
                   divClass="table-responsive table-card mb-3"
                   tableClass="align-middle table-nowrap mb-0"
                   SearchPlaceholder="Search for box details or something..."
@@ -397,10 +410,10 @@ const BoxesData = () => {
           {!!isEdit ? "Edit Box" : "Add Box"}
         </ModalHeader>
         <Form
-          className="tablelist-form"
+          encType="multipart/form-data"
           onSubmit={(e) => {
             e.preventDefault();
-            validation.submitForm();
+            validation.handleSubmit();
             return false;
           }}
         >
@@ -412,26 +425,23 @@ const BoxesData = () => {
                     Serial Number
                   </Label>
                   <Input
-                    name="serial_number"
-                    id="serial-field"
-                    className="form-control"
-                    placeholder="Enter Serial Number"
                     type="text"
-                    validate={{
-                      required: { value: true },
-                    }}
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
+                    className="form-control"
+                    id="serial-input"
+                    placeholder="Enter Serial Number"
+                    name="serial_number"
                     value={validation.values.serial_number || ""}
+                    onBlur={validation.handleBlur}
+                    onChange={validation.handleChange}
                     invalid={
-                      validation.touched.serial_number &&
-                      validation.errors.serial_number
+                      validation.errors.serial_number &&
+                      validation.touched.serial_number
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.serial_number &&
-                  validation.errors.serial_number ? (
+                  {validation.errors.serial_number &&
+                  validation.touched.serial_number ? (
                     <FormFeedback type="invalid">
                       {validation.errors.serial_number}
                     </FormFeedback>
@@ -494,27 +504,22 @@ const BoxesData = () => {
               </Col> */}
 
               <Col lg={12}>
-                <Label htmlFor="box-status" className="form-label">
-                  Has Empty Lockers
-                </Label>
+                <Label htmlFor="has_empty_lockers">Has Empty Lockers ?</Label>
                 <Input
-                  name="status"
-                  type="select"
-                  className="form-select"
-                  id="lockers-field"
-                  onChange={validation.handleChange}
+                  type="checkbox"
+                  value="true"
+                  name="has_empty_lockers"
+                  className="form-check-input"
+                  id="has_empty_lockers"
                   onBlur={validation.handleBlur}
-                  value={validation.values.has_empty_lockers || ""}
+                  onChange={validation.handleChange}
                   invalid={
                     validation.touched.has_empty_lockers &&
                     validation.errors.has_empty_lockers
                       ? true
                       : false
                   }
-                >
-                  <option value="true">True</option>
-                  <option value="false">False</option>
-                </Input>
+                />
                 {validation.touched.has_empty_lockers &&
                 validation.errors.has_empty_lockers ? (
                   <FormFeedback type="invalid">

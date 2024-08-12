@@ -18,7 +18,9 @@ import {
   updateCustomer,
   deleteCustomer,
   getSellers,
+  updateUserStatus,
 } from "./thunk";
+import { toast } from "react-toastify";
 export const initialState: any = {
   models: [],
   model: {},
@@ -27,7 +29,7 @@ export const initialState: any = {
   sellers: [],
   customers: [],
   error: {},
-  modelLoading:false
+  modelLoading: false,
 };
 
 const EcommerceSlice = createSlice({
@@ -40,17 +42,16 @@ const EcommerceSlice = createSlice({
       state.models = action.payload;
     });
     builder.addCase(getModel.pending, (state: any, action: any) => {
-      state.modelLoading = true
+      state.modelLoading = true;
     });
     builder.addCase(getModel.fulfilled, (state: any, action: any) => {
-      state.modelLoading=false;
+      state.modelLoading = false;
       state.model = action.payload;
     });
- builder.addCase(updateModel.fulfilled, (state: any, action: any) => {
+    builder.addCase(updateModel.fulfilled, (state: any, action: any) => {
       state.models = state.models.map((model: any) =>
         model.id === action.payload.id ? { ...model, ...action.payload } : model
       );
-      
     });
     builder.addCase(deleteModels.fulfilled, (state: any, action: any) => {
       state.models = (state.models || []).filter(
@@ -173,7 +174,7 @@ const EcommerceSlice = createSlice({
       state.isCustomerCreated = true;
     });
     builder.addCase(addNewCustomer.rejected, (state: any, action: any) => {
-      state.error = action.payload.error || null;
+      state.error = action.payload || null;
     });
 
     builder.addCase(updateCustomer.fulfilled, (state: any, action: any) => {
@@ -184,17 +185,25 @@ const EcommerceSlice = createSlice({
       );
     });
     builder.addCase(updateCustomer.rejected, (state: any, action: any) => {
-      state.error = action.payload.error || null;
+      state.error = action.payload || null;
+    });
+
+    builder.addCase(updateUserStatus.fulfilled, (state, action: any) => {
+      state.customers.push(action.payload);
+      state.success = true;
+      state.loading = false;
+    });
+    builder.addCase(updateUserStatus.rejected, (state: any, action: any) => {
+      state.error = action.payload || null;
     });
 
     builder.addCase(deleteCustomer.fulfilled, (state: any, action: any) => {
       state.customers = state.customers.filter(
-        (customer: any) =>
-          customer.id.toString() !== action.payload.customer.toString()
+        (customer: any) => customer.id !== action.payload.customer
       );
     });
     builder.addCase(deleteCustomer.rejected, (state: any, action: any) => {
-      state.error = action.payload.error || null;
+      state.error = action.payload || null;
     });
   },
 });
