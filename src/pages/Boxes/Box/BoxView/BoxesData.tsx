@@ -56,7 +56,7 @@ import { useNavigate } from "react-router-dom";
 const BoxesData = () => {
   const dispatch: any = useDispatch();
   const history = useNavigate();
-  
+
   const selectLayoutState = (state: any) => state.Boxes;
   const selectLayoutProperties = createSelector(selectLayoutState, (state) => ({
     boxsList: state.data,
@@ -386,7 +386,7 @@ const BoxesData = () => {
                   columns={columns}
                   data={boxsList}
                   isGlobalFilter={true}
-                  customPageSize={8}
+                  customPageSize={10}
                   divClass="table-responsive table-card mb-3"
                   tableClass="align-middle table-nowrap mb-0"
                   SearchPlaceholder="Search for box details or something..."

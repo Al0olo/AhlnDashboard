@@ -195,8 +195,8 @@ const Navdata = () => {
           childItems: [
             {
               id: 1,
-              label: "Mailbox",
-              link: "/apps-mailbox",
+              label: "Contact Us",
+              link: "/contact-us",
               parentId: "apps",
             },
           ],
@@ -231,36 +231,36 @@ const Navdata = () => {
               link: "/apps-ecommerce-add-model",
               parentId: "apps",
             },
-            {
-              id: 4,
-              label: "Products",
-              link: "/apps-ecommerce-products",
-              parentId: "apps",
-            },
-            {
-              id: 5,
-              label: "Product Details",
-              link: "/apps-ecommerce-product-details",
-              parentId: "apps",
-            },
-            {
-              id: 6,
-              label: "Create Product",
-              link: "/apps-ecommerce-add-product",
-              parentId: "apps",
-            },
-            {
-              id: 7,
-              label: "Orders",
-              link: "/apps-ecommerce-orders",
-              parentId: "apps",
-            },
-            {
-              id: 8,
-              label: "Order Details",
-              link: "/apps-ecommerce-order-details",
-              parentId: "apps",
-            },
+            // {
+            //   id: 4,
+            //   label: "Products",
+            //   link: "/apps-ecommerce-products",
+            //   parentId: "apps",
+            // },
+            // {
+            //   id: 5,
+            //   label: "Product Details",
+            //   link: "/apps-ecommerce-product-details",
+            //   parentId: "apps",
+            // },
+            // {
+            //   id: 6,
+            //   label: "Create Product",
+            //   link: "/apps-ecommerce-add-product",
+            //   parentId: "apps",
+            // },
+            // {
+            //   id: 7,
+            //   label: "Orders",
+            //   link: "/apps-ecommerce-orders",
+            //   parentId: "apps",
+            // },
+            // {
+            //   id: 8,
+            //   label: "Order Details",
+            //   link: "/apps-ecommerce-order-details",
+            //   parentId: "apps",
+            // },
             {
               id: 9,
               label: "Customers",
@@ -273,73 +273,73 @@ const Navdata = () => {
               link: "/apps-ecommerce-relative-customers",
               parentId: "apps",
             },
-            {
-              id: 11,
-              label: "Shopping Cart",
-              link: "/apps-ecommerce-cart",
-              parentId: "apps",
-            },
-            {
-              id: 12,
-              label: "Checkout",
-              link: "/apps-ecommerce-checkout",
-              parentId: "apps",
-            },
-            {
-              id: 13,
-              label: "Sellers",
-              link: "/apps-ecommerce-sellers",
-              parentId: "apps",
-            },
-            {
-              id: 14,
-              label: "Seller Details",
-              link: "/apps-ecommerce-seller-details",
-              parentId: "apps",
-            },
+            // {
+            //   id: 11,
+            //   label: "Shopping Cart",
+            //   link: "/apps-ecommerce-cart",
+            //   parentId: "apps",
+            // },
+            // {
+            //   id: 12,
+            //   label: "Checkout",
+            //   link: "/apps-ecommerce-checkout",
+            //   parentId: "apps",
+            // },
+            // {
+            //   id: 13,
+            //   label: "Sellers",
+            //   link: "/apps-ecommerce-sellers",
+            //   parentId: "apps",
+            // },
+            // {
+            //   id: 14,
+            //   label: "Seller Details",
+            //   link: "/apps-ecommerce-seller-details",
+            //   parentId: "apps",
+            // },
           ],
         },
 
-        {
-          id: "invoices",
-          label: "Invoices",
-          link: "/#",
-          isChildItem: true,
-          click: function (e: any) {
-            e.preventDefault();
-            setIsInvoices(!isInvoices);
-          },
-          parentId: "apps",
-          stateVariables: isInvoices,
-          childItems: [
-            { id: 1, label: "List View", link: "/apps-invoices-list" },
-            { id: 2, label: "Details", link: "/apps-invoices-details" },
-            { id: 3, label: "Create Invoice", link: "/apps-invoices-create" },
-          ],
-        },
-        {
-          id: "supportTickets",
-          label: "Support Tickets",
-          link: "/#",
-          isChildItem: true,
-          click: function (e: any) {
-            e.preventDefault();
-            setIsSupportTickets(!isSupportTickets);
-          },
-          parentId: "apps",
-          stateVariables: isSupportTickets,
-          childItems: [
-            { id: 1, label: "List View", link: "/apps-tickets-list" },
-            { id: 2, label: "Ticket Details", link: "/apps-tickets-details" },
-          ],
-        },
+        // {
+        //   id: "invoices",
+        //   label: "Invoices",
+        //   link: "/#",
+        //   isChildItem: true,
+        //   click: function (e: any) {
+        //     e.preventDefault();
+        //     setIsInvoices(!isInvoices);
+        //   },
+        //   parentId: "apps",
+        //   stateVariables: isInvoices,
+        //   childItems: [
+        //     { id: 1, label: "List View", link: "/apps-invoices-list" },
+        //     { id: 2, label: "Details", link: "/apps-invoices-details" },
+        //     { id: 3, label: "Create Invoice", link: "/apps-invoices-create" },
+        //   ],
+        // },
+        // {
+        //   id: "supportTickets",
+        //   label: "Support Tickets",
+        //   link: "/#",
+        //   isChildItem: true,
+        //   click: function (e: any) {
+        //     e.preventDefault();
+        //     setIsSupportTickets(!isSupportTickets);
+        //   },
+        //   parentId: "apps",
+        //   stateVariables: isSupportTickets,
+        //   childItems: [
+        //     { id: 1, label: "List View", link: "/apps-tickets-list" },
+        //     { id: 2, label: "Ticket Details", link: "/apps-tickets-details" },
+        //   ],
+        // },
 
-        {
-          id: "todo",
-          label: "To Do",
-          link: "/apps-todo",
-          parentId: "apps",
-        },
+        // {
+        //   id: "todo",
+        //   label: "To Do",
+        //   link: "/apps-todo",
+        //   parentId: "apps",
+        // },
         {
           id: "boxes",
           label: "Boxes",
@@ -401,6 +401,8 @@ const Navdata = () => {
           childItems: [
             // Routes needs to be adjusted
             { id: 1, label: "Roles", link: "/role" },
+            { id: 2, label: "Audit Trail", link: "/audit-trail" },
+            { id: 3, label: "System Log", link: "/system-log" },
           ],
         },
       ],

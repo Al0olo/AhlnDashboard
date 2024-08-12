@@ -11,6 +11,22 @@ export const POST_FAKE_PASSWORD_RESET = "/auth/update-password";
 export const POST_FAKE_JWT_PASSWORD_FORGET = "/jwt-forget-pwd";
 export const SOCIAL_LOGIN = "/social-login";
 
+// ADMINSTRATION
+// CONTACT US
+export const GET_CONTACT_US = "/contact-us/get-all";
+export const GET_ONE_CONTACT_US = "/contact-us/get-one";
+export const DELETE_CONTACT_US = "/contact-us/delete";
+
+// AUDIT TRAIL
+export const GET_AUDIT_TRAIL = "/audit-trail/get-all";
+export const GET_ONE_AUDIT_TRAIL = "/audit-trail/get-one";
+export const DELETE_AUDIT_TRAIL = "/audit-trail/delete";
+
+// SYSTEM LOG
+export const GET_SYSTEM_LOG = "/system-log/get-all";
+export const GET_ONE_SYSTEM_LOG = "/system-log/get-one";
+export const DELETE_SYSTEM_LOG = "/system-log/delete";
+
 //ROLE
 export const GET_ROLES = "/role/get-all";
 export const GET_ONE_ROLE = "/role/get-one";

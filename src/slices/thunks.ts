@@ -12,6 +12,9 @@ export * from "./auth/verifyOtp/thunk";
 
 // Admin
 export * from "./admin/role/thunk";
+export * from "./admin/constactUs/thunk";
+export * from "./admin/auditTrail/thunk";
+export * from "./admin/systemLog/thunk";
 
 //Boxes
 export * from "./Box/boxes/thunk";

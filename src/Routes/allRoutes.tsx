@@ -193,6 +193,9 @@ import RolesView from "pages/Admin/Role";
 import UserBoxesView from "pages/Boxes/UserBoxes";
 import BoxImagesView from "pages/Boxes/BoxImages";
 import RelativeCustomerView from "pages/Boxes/RelativeCustomer";
+import ContactUsView from "pages/Admin/ContactUs";
+import AuditTrailView from "pages/Admin/AuditTrail";
+import SystemLogView from "pages/Admin/SystemLog";
 
 const authProtectedRoutes = [
   { path: "/dashboard-analytics", component: <DashboardAnalytics /> },
@@ -295,6 +298,9 @@ const authProtectedRoutes = [
 
   // Admin
   { path: "/role", component: <RolesView /> },
+  { path: "/contact-us", component: <ContactUsView /> },
+  { path: "/audit-trail", component: <AuditTrailView /> },
+  { path: "/system-log", component: <SystemLogView /> },
 
   //charts
   { path: "/charts-apex-line", component: <LineCharts /> },

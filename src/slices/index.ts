@@ -96,9 +96,15 @@ import JobReducer from "./jobs/reducer";
 // API Key
 import APIKeyReducer from "./apiKey/reducer";
 import { relativeCustomerSlices } from "./Box/RelativeCustomer/reducer";
+import { contactUsSlices } from "./admin/constactUs/reducer";
+import { auditTrailSlices } from "./admin/auditTrail/reducer";
+import { systemLogSlices } from "./admin/systemLog/reducer";
 
 const rootReducer = combineReducers({
   Role: roleSlices,
+  ContactUs: contactUsSlices,
+  AuditTrail: auditTrailSlices,
+  SystemLog: systemLogSlices,
   Layout: LayoutReducer,
   Login: loginSlices,
   Logout: authSlices,

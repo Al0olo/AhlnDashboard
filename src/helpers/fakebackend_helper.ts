@@ -154,6 +154,56 @@ export const deleteShippingCompany = (data: any) => {
   return api.delete(`${url.DELETE_SHIPPING_COMPANY}/${data}`);
 };
 
+// ADMINSTRATION
+
+// CONTACT US
+// Fetch All Contact Us
+export const getContactUsApi = () => {
+  return api.get(url.GET_CONTACT_US);
+};
+
+// Get One Contact Us
+export const getOneContactUsApi = (data: any) => {
+  return api.get(`${url.GET_ONE_CONTACT_US}/${data}`);
+};
+
+// Delete Contact Us
+export const deleteContactUsApi = (data: any) => {
+  return api.delete(`${url.DELETE_CONTACT_US}/${data}`);
+};
+
+// AUDIT TRAIL
+// Fetch All Audit Trails
+export const getAuditTrailApi = () => {
+  return api.get(url.GET_AUDIT_TRAIL);
+};
+
+// Get One Audit Trail
+export const getOneAuditTrailApi = (data: any) => {
+  return api.get(`${url.GET_ONE_AUDIT_TRAIL}/${data}`);
+};
+
+// Delete Audit Trail
+export const deleteAuditTrailApi = (data: any) => {
+  return api.delete(`${url.DELETE_AUDIT_TRAIL}/${data}`);
+};
+
+// SYSTEM LOG
+// Fetch All System Logs
+export const getSystemLogApi = () => {
+  return api.get(url.GET_SYSTEM_LOG);
+};
+
+// Get One System Log
+export const getOneSystemLogApi = (data: any) => {
+  return api.get(`${url.GET_ONE_SYSTEM_LOG}/${data}`);
+};
+
+// Delete System Log
+export const deleteSystemLogApi = (data: any) => {
+  return api.delete(`${url.DELETE_SYSTEM_LOG}/${data}`);
+};
+
 // ROLE
 // Fetches rolees for admin
 export const getRoles = () => {

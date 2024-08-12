@@ -383,7 +383,7 @@ const TabletsData = () => {
                   columns={columns}
                   data={tabletsList}
                   isGlobalFilter={true}
-                  customPageSize={8}
+                  customPageSize={10}
                   divClass="table-responsive table-card mb-3"
                   tableClass="align-middle table-nowrap mb-0"
                   SearchPlaceholder="Search for tablet details or something..."

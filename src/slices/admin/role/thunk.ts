@@ -9,7 +9,7 @@ import {
 import { toast } from "react-toastify";
 
 export const GetRolesAction = createAsyncThunk(
-  "role/get-allRole",
+  "role/get-all",
   async (_, thunkApi) => {
     try {
       const response = await getRoles();
@@ -22,7 +22,7 @@ export const GetRolesAction = createAsyncThunk(
 );
 
 export const GetOneRoleAction = createAsyncThunk(
-  "role/get-oneRole",
+  "role/get-one",
   async (role: any, thunkApi) => {
     try {
       const response = await getOneRole(role);
@@ -34,7 +34,7 @@ export const GetOneRoleAction = createAsyncThunk(
 );
 
 export const AddRoleAction = createAsyncThunk(
-  "role/newRole",
+  "role/new",
   async (role: any, thunkApi) => {
     try {
       const response = await addRole(role);
@@ -49,7 +49,7 @@ export const AddRoleAction = createAsyncThunk(
 );
 
 export const UpdateRoleAction = createAsyncThunk(
-  "role/updateRole",
+  "role/update",
   async (role: any, thunkApi) => {
     try {
       const response = updateRole(role);
@@ -64,7 +64,7 @@ export const UpdateRoleAction = createAsyncThunk(
 );
 
 export const DeleteRoleAction = createAsyncThunk(
-  "role/deleteRole",
+  "role/delete",
   async (role: string, thunkApi) => {
     try {
       const response = await deleteRole(role);
