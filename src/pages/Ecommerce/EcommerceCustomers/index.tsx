@@ -46,6 +46,7 @@ import Loader from "../../../Components/Common/Loader";
 // Export Modal
 import ExportCSVModal from "../../../Components/Common/ExportCSVModal";
 import { createSelector } from "reselect";
+import noImg from "../../../assets/images/custormes/No_Image_Available.jpg";
 
 const EcommerceCustomers = () => {
   const dispatch: any = useDispatch();
@@ -186,34 +187,6 @@ const EcommerceCustomers = () => {
     dispatch(onGetCustomers());
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   dispatch(onGetCustomers());
-  // }, [dispatch]);
-  //   if (customers && !customers.length) {
-  //     dispatch(onGetCustomers());
-  //   }
-  // }, [dispatch]);
-
-  // useEffect(() => {
-  //   setCustomer(customers);
-  // }, [customers]);
-
-  // useEffect(() => {
-  //   if (!isEmpty(customers)) {
-  //     setCustomer(customers);
-  //     setIsEdit(false);
-  //   }
-  // }, [customers]);
-
-  // Node API
-  // Node API
-  // useEffect(() => {
-  //   if (isCustomerCreated) {
-  //     setCustomer(null);
-  //     dispatch(onGetCustomers());
-  //   }
-  // }, [dispatch, isCustomerCreated]);
-
   const handleValidDate = (date: any) => {
     const date1 = moment(new Date(date)).format("DD MMM Y");
     return date1;
@@ -341,8 +314,8 @@ const EcommerceCustomers = () => {
               </Input>
             </div>
           );
-        },
-      },
+        },
+      },
       {
         header: "Action",
         cell: (cellProps: any) => {
@@ -414,9 +387,12 @@ const EcommerceCustomers = () => {
                   <Row className="g-4 align-items-center">
                     <div className="col-sm">
                       <div className="row d-flex justify-content-start">
-                      
-                        <h5 className="card-title mb-0 ahln-module-title col-md-3 ">Customer List </h5>
-                        <Alert className="col-md-3 alert alert-success ahln-alert-success mt-1">+20 Customers</Alert>
+                        <h5 className="card-title mb-0 ahln-module-title col-md-3 ">
+                          Customer List{" "}
+                        </h5>
+                        <Alert className="col-md-3 alert alert-success ahln-alert-success mt-1">
+                          +20 Customers
+                        </Alert>
                       </div>
                     </div>
                     <div className="col-sm-auto">
@@ -431,7 +407,7 @@ const EcommerceCustomers = () => {
                         )}
                         <button
                           type="button"
-                          className="btn btn-secondary ahln-btn-muted"
+                          className="btn btn-secondary ahln-btn-muted me-3"
                           onClick={() => setIsExportCSV(true)}
                         >
                           <i className="ri-file-download-line align-bottom me-1"></i>{" "}
@@ -470,8 +446,17 @@ const EcommerceCustomers = () => {
                 <Loader error={error} />
               )}
 
-              <Modal id="showModal" isOpen={modal} toggle={toggle} centered>
-                <ModalHeader className="bg-light p-3" toggle={toggle}>
+              <Modal
+                id="showModal"
+                className="ahl-modal modal-lg"
+                isOpen={modal}
+                toggle={toggle}
+                centered
+              >
+                <ModalHeader
+                  className="bg-danger p-3 bg-img text-light"
+                  toggle={toggle}
+                >
                   {!!isEdit ? "Edit Customer" : "Add Customer"}
                 </ModalHeader>
                 <Form
@@ -484,188 +469,254 @@ const EcommerceCustomers = () => {
                 >
                   <ModalBody>
                     <input type="hidden" id="id-field" />
-
-                    <div
-                      className="mb-3"
-                      id="modal-id"
-                      style={{ display: "none" }}
-                    >
-                      <Label htmlFor="id-field1" className="form-label">
-                        ID
-                      </Label>
-                      <Input
-                        type="text"
-                        id="id-field1"
-                        className="form-control"
-                        placeholder="ID"
-                        readOnly
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <Label
-                        htmlFor="customername-field"
-                        className="form-label"
-                      >
-                        Customer Name
-                      </Label>
-                      <Input
-                        name="customer"
-                        id="customername-field"
-                        className="form-control"
-                        placeholder="Enter Name"
-                        type="text"
-                        validate={{
-                          required: { value: true },
-                        }}
-                        onChange={validation.handleChange}
-                        onBlur={validation.handleBlur}
-                        value={validation.values.customer || ""}
-                        invalid={
-                          validation.touched.customer &&
-                          validation.errors.customer
-                            ? true
-                            : false
-                        }
-                      />
-                      {validation.touched.customer &&
-                      validation.errors.customer ? (
-                        <FormFeedback type="invalid">
-                          {validation.errors.customer}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-
-                    <div className="mb-3">
-                      <Label htmlFor="email-field" className="form-label">
-                        Email
-                      </Label>
-                      <Input
-                        name="email"
-                        type="email"
-                        id="email-field"
-                        placeholder="Enter Email"
-                        onChange={validation.handleChange}
-                        onBlur={validation.handleBlur}
-                        value={validation.values.email || ""}
-                        invalid={
-                          validation.touched.email && validation.errors.email
-                            ? true
-                            : false
-                        }
-                      />
-                      {validation.touched.email && validation.errors.email ? (
-                        <FormFeedback type="invalid">
-                          {validation.errors.email}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-
-                    <div className="mb-3">
-                      <Label htmlFor="phone-field" className="form-label">
-                        Phone
-                      </Label>
-                      <Input
-                        name="phone"
-                        type="text"
-                        id="phone-field"
-                        placeholder="Enter Phone no."
-                        onChange={validation.handleChange}
-                        onBlur={validation.handleBlur}
-                        value={validation.values.phone || ""}
-                        invalid={
-                          validation.touched.phone && validation.errors.phone
-                            ? true
-                            : false
-                        }
-                      />
-                      {validation.touched.phone && validation.errors.phone ? (
-                        <FormFeedback type="invalid">
-                          {validation.errors.phone}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-
-                    <div className="mb-3">
-                      <Label htmlFor="date-field" className="form-label">
-                        Joining Date
-                      </Label>
-
-                      <Flatpickr
-                        name="date"
-                        id="date-field"
-                        className="form-control"
-                        placeholder="Select a date"
-                        options={{
-                          altInput: true,
-                          altFormat: "d M, Y",
-                          dateFormat: "d M, Y",
-                        }}
-                        onChange={(date: any) =>
-                          validation.setFieldValue(
-                            "date",
-                            moment(date[0]).format("DD MMMM ,YYYY")
-                          )
-                        }
-                        value={validation.values.date || ""}
-                      />
-                      {validation.errors.date && validation.touched.date ? (
-                        <FormFeedback type="invalid" className="d-block">
-                          {validation.errors.date}
-                        </FormFeedback>
-                      ) : null}
-                    </div>
-
-                    <div>
-                      <Label htmlFor="status-field" className="form-label">
-                        Status
-                      </Label>
-
-                      <Input
-                        name="status"
-                        type="select"
-                        className="form-select"
-                        id="status-field"
-                        onChange={validation.handleChange}
-                        onBlur={validation.handleBlur}
-                        value={validation.values.status || ""}
-                        invalid={
-                          validation.touched.status && validation.errors.status
-                            ? true
-                            : false
-                        }
-                      >
-                        {customermocalstatus.map((item, key) => (
-                          <React.Fragment key={key}>
-                            {item.options.map((item, key) => (
-                              <option value={item.value} key={key}>
-                                {item.label}
-                              </option>
-                            ))}
-                            {item.options.map((item, key) => (
-                              <option value={item.value} key={key}>
-                                {item.label}
-                              </option>
-                            ))}
-                          </React.Fragment>
-                        ))}
-                      </Input>
-                      {/* {validation.touched.status &&
-                          validation.errors.status ? (
-                          validation.errors.status ? (
+                    <Row>
+                      <Col lg={6}>
+                        <div
+                          className="mb-3"
+                          id="modal-id"
+                          style={{ display: "none" }}
+                        >
+                          <Label htmlFor="id-field1" className="form-label">
+                            ID
+                          </Label>
+                          <Input
+                            type="text"
+                            id="id-field1"
+                            className="form-control"
+                            placeholder="ID"
+                            readOnly
+                          />
+                        </div>
+                        <div className="mb-3">
+                          <Label
+                            htmlFor="customername-field"
+                            className="form-label"
+                          >
+                            Title:
+                          </Label>
+                          <Input
+                            name="title"
+                            id="title-field"
+                            className="form-control"
+                            placeholder="Enter title"
+                            type="text"
+                            tabIndex={1}
+                            validate={{
+                              required: { value: true },
+                            }}
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.customer || ""}
+                            invalid={
+                              validation.touched.customer &&
+                              validation.errors.customer
+                                ? true
+                                : false
+                            }
+                            autoFocus
+                          />
+                          {validation.touched.customer &&
+                          validation.errors.customer ? (
                             <FormFeedback type="invalid">
-                              {validation.errors.status}
+                              {validation.errors.customer}
                             </FormFeedback>
-                          ) : null} */}
-                    </div>
+                          ) : null}
+                        </div>
+                        <div className="mb-3">
+                          <Label
+                            htmlFor="customername-field"
+                            className="form-label"
+                          >
+                            Customer Name
+                          </Label>
+                          <Input
+                            name="customer"
+                            id="customername-field"
+                            className="form-control"
+                            placeholder="Enter Name"
+                            type="text"
+                            tabIndex={2}
+                            validate={{
+                              required: { value: true },
+                            }}
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.customer || ""}
+                            invalid={
+                              validation.touched.customer &&
+                              validation.errors.customer
+                                ? true
+                                : false
+                            }
+                          />
+                          {validation.touched.customer &&
+                          validation.errors.customer ? (
+                            <FormFeedback type="invalid">
+                              {validation.errors.customer}
+                            </FormFeedback>
+                          ) : null}
+                        </div>
+
+                        <div className="mb-3">
+                          <Label htmlFor="email-field" className="form-label">
+                            Email
+                          </Label>
+                          <Input
+                            name="email"
+                            type="email"
+                            id="email-field"
+                            tabIndex={3}
+                            placeholder="Enter Email"
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.email || ""}
+                            invalid={
+                              validation.touched.email &&
+                              validation.errors.email
+                                ? true
+                                : false
+                            }
+                          />
+                          {validation.touched.email &&
+                          validation.errors.email ? (
+                            <FormFeedback type="invalid">
+                              {validation.errors.email}
+                            </FormFeedback>
+                          ) : null}
+                        </div>
+                      </Col>
+                      <Col lg={6}>
+                        <div className="mb-3">
+                          <Label htmlFor="phone-field" className="form-label">
+                            Phone
+                          </Label>
+                          <Input
+                            name="phone"
+                            type="text"
+                            tabIndex={4}
+                            id="phone-field"
+                            placeholder="Enter Phone no."
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.phone || ""}
+                            invalid={
+                              validation.touched.phone &&
+                              validation.errors.phone
+                                ? true
+                                : false
+                            }
+                          />
+                          {validation.touched.phone &&
+                          validation.errors.phone ? (
+                            <FormFeedback type="invalid">
+                              {validation.errors.phone}
+                            </FormFeedback>
+                          ) : null}
+                        </div>
+
+                        <div className="mb-3">
+                          <Label htmlFor="date-field" className="form-label">
+                            Joining Date
+                          </Label>
+
+                          <Flatpickr
+                            name="date"
+                            id="date-field"
+                            tabIndex={5}
+                            className="form-control"
+                            placeholder="Select a date"
+                            options={{
+                              altInput: true,
+                              altFormat: "d M, Y",
+                              dateFormat: "d M, Y",
+                            }}
+                            onChange={(date: any) =>
+                              validation.setFieldValue(
+                                "date",
+                                moment(date[0]).format("DD MMMM ,YYYY")
+                              )
+                            }
+                            value={validation.values.date || ""}
+                          />
+                          {validation.errors.date && validation.touched.date ? (
+                            <FormFeedback type="invalid" className="d-block">
+                              {validation.errors.date}
+                            </FormFeedback>
+                          ) : null}
+                        </div>
+
+                        <div>
+                          <Label htmlFor="status-field" className="form-label">
+                            Status
+                          </Label>
+
+                          <Input
+                            name="status"
+                            type="select"
+                            tabIndex={6}
+                            className="form-select"
+                            id="status-field"
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.status || ""}
+                            invalid={
+                              validation.touched.status &&
+                              validation.errors.status
+                                ? true
+                                : false
+                            }
+                          >
+                            {customermocalstatus.map((item, key) => (
+                              <React.Fragment key={key}>
+                                {item.options.map((item, key) => (
+                                  <option value={item.value} key={key}>
+                                    {item.label}
+                                  </option>
+                                ))}
+                                {item.options.map((item, key) => (
+                                  <option value={item.value} key={key}>
+                                    {item.label}
+                                  </option>
+                                ))}
+                              </React.Fragment>
+                            ))}
+                          </Input>
+                        </div>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col lg={6}>
+                        <img
+                          id="current-image"
+                          src={noImg}
+                          width={100}
+                          height={100}
+                          className="rounded-circle me-5"
+                        />
+                        <label
+                          htmlFor="inputField"
+                          className="btn btn-info ahln-btn-module position-relative"
+                          style={{ top: "20px" }}
+                        >
+                          Select customer image
+                        </label>
+                        <input
+                          type="file"
+                          tabIndex={7}
+                          id="inputField"
+                          style={{ display: "none" }}
+                        />
+                      </Col>
+                    </Row>
                   </ModalBody>
                   <ModalFooter>
                     <div className="hstack gap-2 justify-content-end">
-                      
-
-                    <button type="submit" className="btn btn-success ahln-btn-module ">
+                      <button
+                        type="submit"
+                        className="btn btn-success btn-lg ahln-btn-module "
+                      >
                         {" "}
-                        {!!isEdit ? "Update" : "Add Customer"}{" "}
+                        {!!isEdit ? "Update" : "Add "}{" "}
                       </button>
 
                       <button
@@ -678,8 +729,6 @@ const EcommerceCustomers = () => {
                         {" "}
                         Close{" "}
                       </button>
-                    
-                      
                     </div>
                   </ModalFooter>
                 </Form>

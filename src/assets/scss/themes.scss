@@ -42,7 +42,7 @@ body {
   font-style: normal !important;
   margin: 0;
   padding: 0;
-  background-color: rgba(240, 240, 240, 0.127);
+  background-color: rgba(240, 240, 240, 0.3);
   // color: #118AB1 !important;
   * {
     outline: none;
@@ -310,12 +310,18 @@ aside.EmojiPickerReact.epr-main {
   }
 }
 .tbl-card {
-  border-radius: 16px;
+  border-radius: 16px !important;
+}
+.tbl-light {
+  border: 1.13px solid #e0e5f2;
+  border-radius: 16px !important;
 }
 .tbl-ahln {
   opacity: 0px;
-  border: 1.13px solid #e0e5f2;
+  border: none !important;
   box-shadow: 4.18px 4.18px 20.88px 0px #e7e4e833;
+  border-collapse: collapse !important;
+  border-radius: 30px;
   border-radius: 28.19px !important;
   .ahln-check {
     width: 22.7px !important;
@@ -330,8 +336,26 @@ aside.EmojiPickerReact.epr-main {
     background-color: rgba(17, 137, 177, 0.9098039216) !important;
   }
   input[type="checkbox"] {
-    width: 60px;
+    width: 45px;
     height: 21px !important ;
+  }
+  tbody tr {
+    border-top: 1.13px solid #e0e5f2;
+  }
+  td,
+  th,
+  td div input {
+    text-align: center !important;
+    border: none !important;
+  }
+  td div ,td ul{
+    position: relative;
+    left: 20px;
+  }
+
+  .text-muted {
+    font-size: 14px !important;
+    font-weight: 500 !important;
   }
 }
 .ahln-breadcrumb-link-main {
@@ -425,6 +449,7 @@ aside.EmojiPickerReact.epr-main {
   height: 31px !important;
   position: relative;
   top: 15px;
+  margin-top: 28px;
 }
 .ahln-filter-div {
   position: relative;
@@ -448,13 +473,27 @@ aside.EmojiPickerReact.epr-main {
 }
 .nav-item .nav-link {
   font-family: "SF Pro Display" !important;
-  font-size: 18px !important;
+  font-size: 15px !important;
   font-weight: 500 !important;
   line-height: 22px !important;
   text-align: left !important;
   letter-spacing: 1px !important;
-  color: #718EBF !important;
+  color: #718ebf !important;
 }
 .nav-item .active {
   color: #118ab1 !important;
+}
+.user-details-title {
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 21.23px !important;
+  letter-spacing: 0.005em !important;
+  text-align: left !important;
+}
+.user-details-info {
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  line-height: 21.23px !important;
+  letter-spacing: 0.005em !important;
+  text-align: left !important;
 }

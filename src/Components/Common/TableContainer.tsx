@@ -251,8 +251,8 @@ const TableContainer = ({
       <Card id={modelName} className="p-0">
         <div className="card-body p-0 w-100 tbl-card">
           <div>
-            <div className={divClass}>
-              <Table hover className={tableClass +" tbl-ahln"}>
+            <div className={divClass +"  tbl-light"}>
+              <Table hover className={tableClass +" tbl-ahln round-3 mb-0"}>
                 <thead>
                   {getHeaderGroups().map((headerGroup: any) => (
                     <tr className={trClass} key={headerGroup.id}>
@@ -296,7 +296,7 @@ const TableContainer = ({
                       <tr key={row.id}>
                         {row.getVisibleCells().map((cell: any) => {
                           return (
-                            <td key={cell.id}>
+                            <td key={cell.id} className="text-muted">
                               {flexRender(
                                 cell.column.columnDef.cell,
                                 cell.getContext()
