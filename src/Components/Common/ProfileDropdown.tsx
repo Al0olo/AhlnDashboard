@@ -59,7 +59,7 @@ const ProfileDropdown = () => {
     <Dropdown
       isOpen={isProfileDropdown}
       toggle={toggleProfileDropdown}
-      className="ms-sm-3 header-item topbar-user"
+      className="ms-sm-3 header-item topbar-user bg-white"
     >
       <DropdownToggle tag="button" type="button" className="btn">
         <span className="d-flex align-items-center">

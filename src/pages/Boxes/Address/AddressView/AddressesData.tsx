@@ -52,6 +52,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../../Components/Common/Loader";
 import { createSelector } from "reselect";
+import { Link } from "react-router-dom";
 
 const AddressesData = () => {
   const dispatch: any = useDispatch();
@@ -242,14 +243,14 @@ const AddressesData = () => {
           <input
             type="checkaddress"
             id="checkAddressAll"
-            className="form-check-input"
+            className="form-check-input ahln-check"
             onClick={() => checkedAll()}
           />
         ),
         cell: (cell: any) => (
           <input
             type="checkaddress"
-            className="addressCheckAddress form-check-input"
+            className="addressCheckAddress form-check-input ahln-check"
             value={cell.getValue()}
             onChange={() => deleteCheckaddress()}
           />
@@ -323,10 +324,32 @@ const AddressesData = () => {
       {
         header: "Actions",
         cell: (cell: any) => (
+          <>
+          <Link to={`/apps-boxs-details`} className="text-muted">
+            <i className="ri-edit-box-line "></i>{" "}
+          </Link>
+          <a 
+                  data-bs-toggle="modal"
+                  onClick={(e:any) => {
+                    e.preventDefault()
+                    const AddressData = cell.row.original;
+                    handleAddressesClick(AddressData);
+                  }} className="text-muted">
+            <i className="ri-pencil-fill "></i>{" "}
+          </a>
+          <a data-bs-toggle="modal"
+                  href="#deleteOrder"
+                  onClick={(e:any) => {
+                    e.preventDefault()
+                    const addressData = cell.row.original;
+                    onClickDelete(addressData);
+                  }} className="text-muted">
+            <i className="ri-close-circle-line "></i>{" "}
+          </a>
           <UncontrolledDropdown>
-            <DropdownToggle tag="a" className="btn btn-soft-secondary btn-sm">
+            {/* <DropdownToggle tag="a" className="btn btn-soft-secondary btn-sm">
               <i className="ri-more-fill align-middle"></i>
-            </DropdownToggle>
+            </DropdownToggle> */}
             <DropdownMenu className="dropdown-menu-end">
               <li>
                 <DropdownItem href="/apps-addresss-details">
@@ -364,6 +387,7 @@ const AddressesData = () => {
               </li>
             </DropdownMenu>
           </UncontrolledDropdown>
+          </>
         ),
       },
     ],
@@ -387,14 +411,14 @@ const AddressesData = () => {
           onCloseClick={() => setDeleteModalMulti(false)}
         />
         <Col lg={12}>
-          <Card>
-            <CardHeader className="border-0">
+          
+            <Card className="border-0 p-3">
               <div className="d-flex align-items-center">
-                <h5 className="card-title mb-0 flex-grow-1">Addresses</h5>
+                <h5 className="card-title mb-0 flex-grow-1 ahln-module-title">Addresses</h5>
                 <div className="flex-shrink-0">
                   <div className="d-flex flex-wrap gap-2">
                     <button
-                      className="btn btn-primary add-btn"
+                      className="btn btn-primary add-btn  ahln-btn-module"
                       onClick={() => {
                         setIsEdit(false);
                         toggle();
@@ -414,13 +438,13 @@ const AddressesData = () => {
                   </div>
                 </div>
               </div>
-            </CardHeader>
-            <CardBody className="pt-0">
+            </Card>
               {loader ? (
                 <Loader error={error} />
               ) : (
                 <TableContainer
                   columns={columns}
+                  modelName={`addresses`}
                   data={addressList}
                   isGlobalFilter={true}
                   customPageSize={8}
@@ -430,8 +454,8 @@ const AddressesData = () => {
                 />
               )}
               <ToastContainer closeButton={false} limit={1} />
-            </CardBody>
-          </Card>
+           
+          
         </Col>
       </Row>
 
@@ -440,10 +464,10 @@ const AddressesData = () => {
         toggle={toggle}
         centered
         size="lg"
-        className="border-0"
+        className="ahln-modal border-0"
         modalClassName="zoomIn"
       >
-        <ModalHeader toggle={toggle} className="p-3 bg-info-subtle">
+        <ModalHeader toggle={toggle} className="p-3 bg-info-subtle bg-img ">
           {!!isEdit ? "Edit Address" : "Add Address"}
         </ModalHeader>
         <Form
@@ -658,11 +682,12 @@ const AddressesData = () => {
           </ModalBody>
           <div className="modal-footer">
             <div className="hstack gap-2 justify-content-end">
-              <button onClick={toggle} type="button" className="btn btn-light">
-                Close
-              </button>
-              <button type="submit" className="btn btn-success" id="add-btn">
+              
+            <button type="submit" className="btn btn-success btn-lg ahln-btn-module" id="add-btn">
                 {!!isEdit ? "Update" : "Add Address"}
+              </button>
+              <button onClick={toggle} type="button" className="btn btn-light ahln-btn-muted text-center">
+                Close
               </button>
             </div>
           </div>
