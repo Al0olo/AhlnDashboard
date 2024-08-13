@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row } from "reactstrap";
+import { Card, Container, Row } from "reactstrap";
 import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import Widgets from "./Widgets";
 import TabletsData from "./TabletsData";
@@ -10,10 +10,12 @@ const TabletView = () => {
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <BreadCrumb title="Tablets List" pageTitle="Tablets" />
-          <Row>
-            <Widgets />
-          </Row>
+          <Card className="p-3">
+            <BreadCrumb title="Tablets List" pageTitle="Tablets" />
+            <Row>
+              <Widgets />
+            </Row>
+          </Card>
           <TabletsData />
         </Container>
       </div>

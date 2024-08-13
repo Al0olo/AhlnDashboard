@@ -417,7 +417,7 @@ const BoxesData = () => {
         toggle={toggle}
         centered
         size="lg"
-        className="ahl-modal border-0"
+        className="ahln-modal border-0"
         modalClassName="zoomIn"
       >
         <ModalHeader toggle={toggle} className="p-3 bg-img text-light">

@@ -12,7 +12,7 @@ const BoxesDetails = () => {
       <div className="page-content">
         <Container fluid>
           <Row>
-            <Section />
+            {/* <Section /> */}
           </Row>
           <Row>
             {/* <TicketDescription /> */}

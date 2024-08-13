@@ -52,6 +52,7 @@ import {
   GetTabletsAction,
   UpdateTabletAction,
 } from "slices/Box/tablet/thunk";
+import { Link } from "react-router-dom";
 
 const TabletsData = () => {
   const dispatch: any = useDispatch();
@@ -247,14 +248,14 @@ const TabletsData = () => {
           <input
             type="checktablet"
             id="checkTabletAll"
-            className="form-check-input"
+            className="form-check-input ahln-check"
             onClick={() => checkedAll()}
           />
         ),
         cell: (cell: any) => (
           <input
             type="checktablet"
-            className="tabletCheckTablet form-check-input"
+            className="tabletCheckTablet form-check-input ahln-check"
             value={cell.getValue()}
             onChange={() => deleteChecktablet()}
           />
@@ -298,47 +299,76 @@ const TabletsData = () => {
       {
         header: "Actions",
         cell: (cell: any) => (
-          <UncontrolledDropdown>
-            <DropdownToggle tag="a" className="btn btn-soft-secondary btn-sm">
-              <i className="ri-more-fill align-middle"></i>
-            </DropdownToggle>
-            <DropdownMenu className="dropdown-menu-end">
-              <li>
-                <DropdownItem href="/apps-tablets-details">
-                  <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
-                  View
-                </DropdownItem>
-              </li>
-              <li>
-                <DropdownItem
-                  className="edit-item-btn"
-                  href="#showModal"
-                  data-bs-toggle="modal"
-                  onClick={() => {
-                    const TabletData = cell.row.original;
-                    handleTabletsClick(TabletData);
-                  }}
-                >
-                  <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>{" "}
-                  Edit
-                </DropdownItem>
-              </li>
-              <li>
-                <DropdownItem
-                  className="remove-item-btn"
-                  data-bs-toggle="modal"
-                  href="#deleteOrder"
-                  onClick={() => {
-                    const tabletData = cell.row.original;
-                    onClickDelete(tabletData);
-                  }}
-                >
-                  <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
-                  Delete
-                </DropdownItem>
-              </li>
-            </DropdownMenu>
-          </UncontrolledDropdown>
+          <>
+            <Link to={`/apps-tablets-details`} className="text-muted">
+              <i className="ri-edit-box-line "></i>{" "}
+            </Link>
+            <a
+              href="#showModal"
+              data-bs-toggle="modal"
+              onClick={(e: any) => {
+                e.preventDefault();
+                const TabletData = cell.row.original;
+                handleTabletsClick(TabletData);
+              }}
+              className="text-muted"
+            >
+              <i className="ri-pencil-fill "></i>{" "}
+            </a>
+            <a
+              data-bs-toggle="modal"
+              href="#deleteOrder"
+              onClick={(e: any) => {
+                e.preventDefault();
+                const tabletData = cell.row.original;
+                onClickDelete(tabletData);
+              }}
+              className="text-muted"
+            >
+              <i className="ri-close-circle-line "></i>{" "}
+            </a>
+          </>
+          // <UncontrolledDropdown>
+          //   <DropdownToggle tag="a" className="btn btn-soft-secondary btn-sm">
+          //     <i className="ri-more-fill align-middle"></i>
+          //   </DropdownToggle>
+          //   <DropdownMenu className="dropdown-menu-end">
+          //     <li>
+          //       <DropdownItem href="/apps-tablets-details">
+          //         <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
+          //         View
+          //       </DropdownItem>
+          //     </li>
+          //     <li>
+          //       <DropdownItem
+          //         className="edit-item-btn"
+          //         href="#showModal"
+          //         data-bs-toggle="modal"
+          //         onClick={() => {
+          //           const TabletData = cell.row.original;
+          //           handleTabletsClick(TabletData);
+          //         }}
+          //       >
+          //         <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>{" "}
+          //         Edit
+          //       </DropdownItem>
+          //     </li>
+          //     <li>
+          //       <DropdownItem
+          //         className="remove-item-btn"
+          //         data-bs-toggle="modal"
+          //         href="#deleteOrder"
+          //         onClick={() => {
+          //           const tabletData = cell.row.original;
+          //           onClickDelete(tabletData);
+          //         }}
+          //       >
+          //         <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
+          //         Delete
+          //       </DropdownItem>
+          //     </li>
+          //   </DropdownMenu>
+          // </UncontrolledDropdown>
         ),
       },
     ],
@@ -364,51 +394,52 @@ const TabletsData = () => {
           onCloseClick={() => setDeleteModalMulti(false)}
         />
         <Col lg={12}>
-          <Card>
-            <CardHeader className="border-0">
-              <div className="d-flex align-items-center">
-                <h5 className="card-title mb-0 flex-grow-1">Tablets</h5>
-                <div className="flex-shrink-0">
-                  <div className="d-flex flex-wrap gap-2">
+          <Card className="border-0 p-3">
+            <div className="d-flex align-items-center">
+              <h5 className="card-title mb-0 flex-grow-1 ahln-module-title">
+                Tablets
+              </h5>
+              <div className="flex-shrink-0">
+                <div className="d-flex flex-wrap gap-2">
+                  <button
+                    className="btn btn-primary add-btn ahln-btn-module"
+                    onClick={() => {
+                      setIsEdit(false);
+                      toggle();
+                    }}
+                  >
+                    <i className="ri-add-line align-bottom"></i> Create Tablet
+                  </button>{" "}
+                  {isMultiDeleteButton && (
                     <button
-                      className="btn btn-primary add-btn"
-                      onClick={() => {
-                        setIsEdit(false);
-                        toggle();
-                      }}
+                      className="btn btn-soft-danger"
+                      onClick={() => setDeleteModalMulti(true)}
                     >
-                      <i className="ri-add-line align-bottom"></i> Create Tablet
-                    </button>{" "}
-                    {isMultiDeleteButton && (
-                      <button
-                        className="btn btn-soft-danger"
-                        onClick={() => setDeleteModalMulti(true)}
-                      >
-                        <i className="ri-delete-bin-2-line"></i>
-                      </button>
-                    )}
-                  </div>
+                      <i className="ri-delete-bin-2-line"></i>
+                    </button>
+                  )}
                 </div>
               </div>
-            </CardHeader>
-            <CardBody className="pt-0">
-              {tabletsList && tabletsList.length ? (
-                <TableContainer
-                  columns={columns}
-                  data={tabletsList}
-                  isGlobalFilter={true}
-                  customPageSize={8}
-                  divClass="table-responsive table-card mb-3"
-                  tableClass="align-middle table-nowrap mb-0"
-                  SearchPlaceholder="Search for tablet details or something..."
-                />
-              ) : (
-                <Loader error={error} />
-                // <></>
-              )}
-              <ToastContainer closeButton={false} limit={1} />
-            </CardBody>
+            </div>
           </Card>
+          <CardBody className="pt-0">
+            {tabletsList && tabletsList.length ? (
+              <TableContainer
+                columns={columns}
+                modelName={"tablets"}
+                data={tabletsList}
+                isGlobalFilter={true}
+                customPageSize={8}
+                divClass="table-responsive table-card mb-3"
+                tableClass="align-middle table-nowrap mb-0"
+                SearchPlaceholder="Search for tablet details or something..."
+              />
+            ) : (
+              <Loader error={error} />
+              // <></>
+            )}
+            <ToastContainer closeButton={false} limit={1} />
+          </CardBody>
         </Col>
       </Row>
 
@@ -417,10 +448,10 @@ const TabletsData = () => {
         toggle={toggle}
         centered
         size="lg"
-        className="border-0"
+        className="ahln-modal border-0"
         modalClassName="zoomIn"
       >
-        <ModalHeader toggle={toggle} className="p-3 bg-info-subtle">
+        <ModalHeader toggle={toggle} className="p-3 bg-info-subtle bg-img">
           {!!isEdit ? "Edit Tablet" : "Add Tablet"}
         </ModalHeader>
         <Form
@@ -501,11 +532,19 @@ const TabletsData = () => {
           </ModalBody>
           <div className="modal-footer">
             <div className="hstack gap-2 justify-content-end">
-              <button onClick={toggle} type="button" className="btn btn-light">
-                Close
+              <button
+                type="submit"
+                className="btn btn-success btn-lg ahln-btn-module "
+                id="add-btn"
+              >
+                {!!isEdit ? "Update" : "Add"}
               </button>
-              <button type="submit" className="btn btn-success" id="add-btn">
-                {!!isEdit ? "Update" : "Add Tablet"}
+              <button
+                onClick={toggle}
+                type="button"
+                className="btn btn-light ahln-btn-muted"
+              >
+                Close
               </button>
             </div>
           </div>
