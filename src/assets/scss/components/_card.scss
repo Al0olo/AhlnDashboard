@@ -11,6 +11,7 @@
 
 .card-header {
     border-bottom: 1px solid var(--#{$prefix}border-color);
+    border-radius: 16px !important;
 }
 
 //Card Header Dropdown
