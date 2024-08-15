@@ -121,13 +121,17 @@ const EcommerceEditProduct = (props: any) => {
       console.log("values", values);
       const model = {
         id: id,
-        model_name: values.model_name,
-        number_of_doors: values.number_of_doors,
+        model_name: values.model_name
+          ? values.model_name
+          : model_data.model.model_name,
+        number_of_doors: values.number_of_doors
+          ? values.number_of_doors
+          : model_data.model.number_of_doors,
         width: values.width ? values.width : model_data.model.width,
         height: values.height ? values.height : model_data.model.height,
-        model_image: values.model_image,
-
-        // check
+        model_image: values.model_image
+          ? values.model_image
+          : model_data.model.model_image,
         has_outside_camera: values.has_outside_camera
           ? values.has_outside_camera
           : false,
@@ -199,26 +203,83 @@ const EcommerceEditProduct = (props: any) => {
     <div className="page-content">
       <Container fluid>
         <BreadCrumb title="Edit Model" pageTitle="Ecommerce" />
-        {modelLoading.modelLoading ? (
-          <Spinner />
-        ) : (
-          <Form
-            encType="multipart/form-data"
-            onSubmit={(e) => {
-              e.preventDefault();
-              validation.handleSubmit();
-              return false;
-            }}
-          >
-            <Row>
-              <Col lg={8}>
-                {/* model_name */}
-                <Card>
-                  <CardBody>
-                    <div className="mb-3">
-                      <Label className="form-label" htmlFor="model-title-input">
-                        Model Title
-                      </Label>
+        <Form
+          encType="multipart/form-data"
+          onSubmit={(e) => {
+            e.preventDefault();
+            validation.handleSubmit();
+            return false;
+          }}
+        >
+          <Row>
+            <Col lg={8}>
+              {/* model_name */}
+              <Card>
+                <CardBody>
+                  <div className="mb-3">
+                    <Label className="form-label" htmlFor="model-title-input">
+                      Model Title
+                    </Label>
+
+                    <Input
+                      type="text"
+                      className="form-control"
+                      id="model-title-input"
+                      placeholder="Enter model title"
+                      name="model_name"
+                      value={validation.values.model_name}
+                      onBlur={validation.handleBlur}
+                      onChange={validation.handleChange}
+                      invalid={
+                        validation.errors.model_name &&
+                        validation.touched.model_name
+                          ? true
+                          : false
+                      }
+                    />
+                    {validation.errors.model_name &&
+                    validation.touched.model_name ? (
+                      <FormFeedback type="invalid">
+                        {validation.errors.model_name}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                </CardBody>
+              </Card>
+              {/* /model_name */}
+              {/* model_image */}
+              <Card>
+                <CardBody>
+                  <div className="mb-3">
+                    <Label className="form-label" htmlFor="model-title-input">
+                      Model Image
+                    </Label>
+                    <Input
+                      type="text"
+                      className="form-control"
+                      id="model-title-input"
+                      placeholder="Enter model image link"
+                      name="model_image"
+                      value={validation.values.model_image}
+                      onBlur={validation.handleBlur}
+                      onChange={validation.handleChange}
+                      invalid={
+                        validation.errors.model_image &&
+                        validation.touched.model_image
+                          ? true
+                          : false
+                      }
+                    />
+                    {validation.errors.model_image &&
+                    validation.touched.model_image ? (
+                      <FormFeedback type="invalid">
+                        {validation.errors.model_image}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                </CardBody>
+              </Card>
+              {/* /model_image */}
 
                       <Input
                         type="text"
@@ -418,17 +479,39 @@ const EcommerceEditProduct = (props: any) => {
                           }
                         />
                       </div>
-
-                      {validation.errors.has_outside_camera &&
-                      validation.touched.has_outside_camera ? (
+            <Col lg={4}>
+              <Card>
+                <CardHeader>
+                  <h5 className="card-title mb-3 ">Number of doors</h5>
+                </CardHeader>
+                <CardBody>
+                  <CardBody>
+                    <div className="mb-1">
+                      <Input
+                        type="text"
+                        className="form-control"
+                        id="model-no_of_doors-input"
+                        placeholder="Enter number of doors"
+                        name="number_of_doors"
+                        value={validation.values.number_of_doors}
+                        onBlur={validation.handleBlur}
+                        onChange={validation.handleChange}
+                        invalid={
+                          validation.errors.number_of_doors &&
+                          validation.touched.number_of_doors
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.errors.number_of_doors &&
+                      validation.touched.number_of_doors ? (
                         <FormFeedback type="invalid">
                           {validation.errors.has_outside_camera}
                         </FormFeedback>
                       ) : null}
                     </div>
                   </CardBody>
-                </Card>
-
+                 </Card>
                 <Card>
                   <CardHeader>
                     <h5 className="card-title mb-0">Has Inside Camera</h5>
