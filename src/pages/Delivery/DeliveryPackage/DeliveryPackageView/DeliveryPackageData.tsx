@@ -168,7 +168,7 @@ const DeliveryData = () => {
                   columns={columns}
                   data={deliveryList}
                   isGlobalFilter={true}
-                  customPageSize={8}
+                  customPageSize={50}
                   divClass="table-responsive table-card mb-3"
                   tableClass="align-middle table-nowrap mb-0"
                   SearchPlaceholder="Search for delivery details or something..."

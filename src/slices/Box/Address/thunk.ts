@@ -15,7 +15,7 @@ export const GetAddressesAction = createAsyncThunk(
       const response = await getAddresses();
       return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );
@@ -27,7 +27,7 @@ export const GetOneAddressAction = createAsyncThunk(
       const response = await getOneAddress(address);
       return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );
@@ -37,13 +37,9 @@ export const AddAddressAction = createAsyncThunk(
   async (address: any, thunkApi) => {
     try {
       const response = await addAddress(address);
-      const data = await response;
-      console.log("address", address);
-
-      toast.success("Address Added Successfully", { autoClose: 3000 });
-      return data;
+      return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );
@@ -53,11 +49,9 @@ export const UpdateAddressAction = createAsyncThunk(
   async (address: any, thunkApi) => {
     try {
       const response = await updateAddress(address);
-      const data = await response;
-      toast.success("Address Updated Successfully", { autoClose: 3000 });
-      return data;
+      return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );
@@ -66,13 +60,10 @@ export const DeleteAddressAction = createAsyncThunk(
   "address/delete",
   async (address: string, thunkApi) => {
     try {
-
       const response = await deleteAddress(address);
-      const data = await response;
-      toast.success("Address Deleted Successfully", { autoClose: 3000 });
-      return data;
+      return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );

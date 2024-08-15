@@ -8,13 +8,14 @@ import {
 } from "./thunk";
 
 export const initialState: any = {
-  tabletError: null,
   message: null,
   loading: true,
+  spinner: false,
   data: null,
   success: false,
   error: false,
   tablets: [],
+  tablet: {},
 };
 
 const tabletReducer = createSlice({
@@ -38,22 +39,22 @@ const tabletReducer = createSlice({
     });
 
     builder.addCase(AddTabletAction.pending, (state) => {
-      state.loading = true;
+      state.spinner = true;
       state.error = false;
     });
     builder.addCase(AddTabletAction.fulfilled, (state, action: any) => {
       state.tablets.push(action.payload);
       state.success = true;
-      state.loading = false;
+      state.spinner = false;
     });
     builder.addCase(AddTabletAction.rejected, (state, { payload }: any) => {
-      state.loading = false;
+      state.spinner = false;
       state.success = false;
       state.error = payload;
     });
 
     builder.addCase(DeleteTabletAction.pending, (state) => {
-      state.loading = true;
+      state.spinner = true;
       state.error = false;
     });
     builder.addCase(DeleteTabletAction.fulfilled, (state, action: any) => {
@@ -62,10 +63,10 @@ const tabletReducer = createSlice({
         (tablet: any) => tablet.id !== deletedTabletId
       );
       state.success = true;
-      state.loading = false;
+      state.spinner = false;
     });
     builder.addCase(DeleteTabletAction.rejected, (state, { payload }: any) => {
-      state.loading = false;
+      state.spinner = false;
       state.success = false;
       state.error = payload;
     });
@@ -86,7 +87,7 @@ const tabletReducer = createSlice({
     });
 
     builder.addCase(UpdateTabletAction.pending, (state) => {
-      state.loading = true;
+      state.spinner = true;
       state.error = false;
     });
     builder.addCase(UpdateTabletAction.fulfilled, (state, action: any) => {
@@ -96,10 +97,10 @@ const tabletReducer = createSlice({
       );
       state.tablets[index] = updatedTablet;
       state.success = true;
-      state.loading = false;
+      state.spinner = false;
     });
     builder.addCase(UpdateTabletAction.rejected, (state, { payload }: any) => {
-      state.loading = false;
+      state.spinner = false;
       state.success = false;
       state.error = payload;
     });

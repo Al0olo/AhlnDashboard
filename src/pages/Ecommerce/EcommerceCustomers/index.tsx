@@ -16,7 +16,7 @@ import {
   Button,
   Alert,
 } from "reactstrap";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
 // import { isEmpty } from "lodash";
 import moment from "moment";
@@ -34,6 +34,8 @@ import {
   addNewCustomer as onAddNewCustomer,
   updateCustomer as onUpdateCustomer,
   deleteCustomer as onDeleteCustomer,
+  updateUserStatus,
+  GetRolesAction,
 } from "../../../slices/thunks";
 
 //redux
@@ -65,8 +67,18 @@ const EcommerceCustomers = () => {
     ecomCustomerProperties
   );
 
+  const selectLayoutState = (state: any) => state.Role;
+
+  const roleLayoutProperties = createSelector(selectLayoutState, (state) => ({
+    RoleList: state.data,
+    isRoleSuccess: state.isRoleSuccess,
+    error: state.error,
+    loader: state.loading,
+  }));
+  const { RoleList, isRoleSuccess } = useSelector(roleLayoutProperties);
+
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [customer, setCustomer] = useState<any>([]);
+  const [customer, setCustomer] = useState<any>({});
 
   // Delete customer
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
@@ -74,24 +86,13 @@ const EcommerceCustomers = () => {
   const [modal, setModal] = useState<boolean>(false);
 
   const toggle = useCallback(() => {
-    if (modal) {
-      setModal(false);
-      setCustomer(null);
-    } else {
-      setModal(true);
-      // setDate(dateFormat());
-    }
-  }, [modal]);
+    setModal((prevState) => !prevState);
+  }, []);
 
-  const customermocalstatus = [
-    {
-      options: [
-        { label: "Status", value: "Status" },
-        { label: "Active", value: "true" },
-        { label: "Block", value: "false" },
-      ],
-    },
-  ];
+  const updateStatusUser = (userId: string, status: boolean) => {
+    dispatch(updateUserStatus({ userId, status }));
+    setModal(false);
+  };
 
   // Delete Data
   const onClickDelete = (customer: any) => {
@@ -105,88 +106,128 @@ const EcommerceCustomers = () => {
     enableReinitialize: true,
 
     initialValues: {
-      customer: (customer && customer.customer) || "",
-      email: (customer && customer.email) || "",
-      phone: (customer && customer.phone) || "",
-      date: (customer && customer.date) || "",
-      status: (customer && customer.status) || "",
+      id: customer.id ? customer.id : "",
+      user_name: customer.user_name ? customer.user_name : "",
+      email: customer.email ? customer.email : "",
+      phone_number: customer.phone_number ? customer.phone_number : "",
+      role_id: customer.role_id ? customer.role_id : 2,
+      status: customer.is_active ? customer.is_active : "",
     },
     validationSchema: Yup.object({
-      customer: Yup.string().required("Please Enter Customer Name"),
+      user_name: Yup.string().required("Please Enter Customer Name"),
       email: Yup.string().required("Please Enter Your Email"),
-      phone: Yup.string().required("Please Enter Your Phone"),
-      date: Yup.string().required("Please Enter date"),
-      status: Yup.string().required("Please Enter Your Status"),
+      phone_number: Yup.string().length(10).required("Please Enter Your Phone"),
     }),
-    onSubmit: (values) => {
+    onSubmit: (values: any) => {
       if (isEdit) {
         const updateCustomer = {
-          id: customer ? customer.id : 0,
-          customer: values.customer,
-          email: values.email,
-          phone: values.phone,
-          date: values.date,
-          status: values.status,
+          id: validation.values.id,
+          user_name: values.user_name || undefined,
+          phone_number: values.phone_number || undefined,
+          role_id: values.role_id,
         };
-        // update customer
-        dispatch(onUpdateCustomer(updateCustomer));
+
+        // Remove the keys which have undefined values from the updateCustomer object
+        const updatedCustomerObj = Object.keys(updateCustomer)
+          .filter(
+            (key) =>
+              updateCustomer[key as keyof typeof updateCustomer] !== undefined
+          )
+          .reduce((obj: any, key) => {
+            obj[key] = updateCustomer[key as keyof typeof updateCustomer];
+            return obj;
+          }, {});
+        if (
+          Object.values(updatedCustomerObj).some((val) => val !== undefined)
+        ) {
+          dispatch(onUpdateCustomer(updatedCustomerObj));
+        }
+
         validation.resetForm();
       } else {
         const newCustomer = {
-          id: "",
-          customer: values["customer"],
-          email: values["email"],
-          phone: values["phone"],
-          date: values["date"],
-          status: values["status"],
+          user_name: values.user_name,
+          email: values.email,
+          role_id: values.role_id || 2,
+          phone_number: values.phone_number,
         };
-        // save new customer
         dispatch(onAddNewCustomer(newCustomer));
         validation.resetForm();
       }
+      dispatch(onGetCustomers());
       toggle();
     },
   });
 
   // Delete Data
   const handleDeleteCustomer = () => {
-    if (customer) {
-      dispatch(onDeleteCustomer(customer.id));
-      setDeleteModal(false);
-    }
+    dispatch(onDeleteCustomer(customer.id));
+    setDeleteModal(false);
+    dispatch(onGetCustomers());
   };
 
   // Update Data
   const handleCustomerClick = useCallback(
     (arg: any) => {
-      const customer = arg;
-
-      setCustomer({
-        id: customer.id,
-        customer: customer.customer,
-        email: customer.email,
-        phone: customer.phone,
-        date: customer.date,
-        status: customer.status,
-      });
-      setCustomer({
-        id: customer.id,
-        customer: customer.customer,
-        email: customer.email,
-        phone: customer.phone,
-        date: customer.date,
-        status: customer.status,
-      });
-
       setIsEdit(true);
+      setCustomer({
+        id: arg.id,
+        user_name: arg.user_name,
+        email: arg.email,
+        phone_number: arg.phone_number,
+        role_id: arg.role_id,
+        status: arg.is_active,
+      });
       toggle();
     },
     [toggle]
   );
+
   useEffect(() => {
     dispatch(onGetCustomers());
+    dispatch(GetRolesAction());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (customer) {
+      validation.setValues({
+        id: customer.id || "",
+        user_name: customer.user_name || "",
+        email: customer.email || "",
+        phone_number: customer.phone_number || "",
+        role_id: customer.role_id || "",
+        status: customer.is_active ? customer.is_active : 1,
+      });
+    }
+  }, [customer]);
+
+  // useEffect(() => {
+  //   dispatch(onGetCustomers());
+  // }, [dispatch]);
+  //   if (customers && !customers.length) {
+  //     dispatch(onGetCustomers());
+  //   }
+  // }, [dispatch]);
+
+  // useEffect(() => {
+  //   setCustomer(customers);
+  // }, [customers]);
+
+  // useEffect(() => {
+  //   if (!isEmpty(customers)) {
+  //     setCustomer(customers);
+  //     setIsEdit(false);
+  //   }
+  // }, [customers]);
+
+  // Node API
+  // Node API
+  // useEffect(() => {
+  //   if (isCustomerCreated) {
+  //     setCustomer(null);
+  //     dispatch(onGetCustomers());
+  //   }
+  // }, [dispatch, isCustomerCreated]);
   const handleValidDate = (date: any) => {
     const date1 = moment(new Date(date)).format("DD MMM Y");
     return date1;
@@ -287,9 +328,15 @@ const EcommerceCustomers = () => {
         enableColumnFilter: false,
       },
       {
-        header: "Role ID",
-        accessorKey: "role_id",
+        header: "Role",
+        accessorKey: "title",
         enableColumnFilter: false,
+      },
+      {
+        header: "Updated At",
+        accessorKey: "updatedat",
+        enableColumnFilter: false,
+        cell: (cell: any) => moment(cell.getValue()).format("DD MMMM, YYYY"),
       },
       {
         header: "Status",
@@ -306,12 +353,10 @@ const EcommerceCustomers = () => {
                 value={cellProps.getValue() === true ? "Active" : "Block"}
                 className="form-check-input"
                 onChange={(e) => {
-                  // updateStatusUser(cellProps.row.original.id, e.target.checked);
+                  updateStatusUser(cellProps.row.original.id, e.target.checked);
                 }}
                 defaultChecked={cellProps.getValue() === true ? true : false}
-              >
-                {/* {cellProps.getValue() === true ? "Active" : "Block"} */}
-              </Input>
+              ></Input>
             </div>
           );
         },
@@ -356,7 +401,7 @@ const EcommerceCustomers = () => {
   // Export Modal
   const [isExportCSV, setIsExportCSV] = useState<boolean>(false);
 
-  document.title = "Customers | Ahln - React Admin & Dashboard";
+  document.title = "Users | Ahln - React Admin & Dashboard";
   return (
     <React.Fragment>
       <div className="page-content">
@@ -379,6 +424,7 @@ const EcommerceCustomers = () => {
           onCloseClick={() => setDeleteModalMulti(false)}
         />
         <Container fluid>
+          <BreadCrumb title="USERS" pageTitle="Ecommerce" />
           <Row>
             <Col lg={12}>
               <Card id="customerList">
@@ -423,13 +469,48 @@ const EcommerceCustomers = () => {
                           }}
                         >
                           <i className="ri-add-line align-bottom me-1"></i> Add
-                          Customer
+                          User
+                        </button>{" "}
+                        <button
+                          type="button"
+                          className="btn btn-secondary"
+                          onClick={() => setIsExportCSV(true)}
+                        >
+                          <i className="ri-file-download-line align-bottom me-1"></i>{" "}
+                          Export
                         </button>
                       </div>
                     </div>
                   </Row>
                 </CardHeader>
-              </Card>
+                <div className="card-body pt-0">
+                  {loader ? (
+                    <Loader error={error} />
+                  ) : (
+                    <TableContainer
+                      columns={columns}
+                      data={customers || []}
+                      isGlobalFilter={true}
+                      customPageSize={10}
+                      isCustomerFilter={true}
+                      theadClass="table-light text-muted"
+                      SearchPlaceholder="Search for user, email, phone, status or something..."
+                    />
+                  )}
+                  <Modal id="showModal" isOpen={modal} toggle={toggle} centered>
+                    <ModalHeader className="bg-light p-3" toggle={toggle}>
+                      {!!isEdit ? "Edit Customer" : "Add Customer"}
+                    </ModalHeader>
+                    <Form
+                      className="tablelist-form"
+                      onSubmit={(e: any) => {
+                        e.preventDefault();
+                        validation.handleSubmit();
+                        return false;
+                      }}
+                    >
+                      <ModalBody>
+                        <input type="hidden" id="id-field" />
 
               {isCustomerSuccess && customers.length ? (
                 <TableContainer
@@ -523,15 +604,12 @@ const EcommerceCustomers = () => {
                           ) : null}
                         </div>
                         <div className="mb-3">
-                          <Label
-                            htmlFor="customername-field"
-                            className="form-label"
-                          >
-                            Customer Name
+                          <Label htmlFor="user_name" className="form-label">
+                            User Name
                           </Label>
                           <Input
-                            name="customer"
-                            id="customername-field"
+                            name="user_name"
+                            id="user_name"
                             className="form-control"
                             placeholder="Enter Name"
                             type="text"
@@ -541,146 +619,132 @@ const EcommerceCustomers = () => {
                             }}
                             onChange={validation.handleChange}
                             onBlur={validation.handleBlur}
-                            value={validation.values.customer || ""}
+                            value={validation.values.user_name || ""}
                             invalid={
-                              validation.touched.customer &&
-                              validation.errors.customer
+                              validation.touched.user_name &&
+                              validation.errors.user_name
                                 ? true
                                 : false
                             }
                           />
-                          {validation.touched.customer &&
-                          validation.errors.customer ? (
+                          {validation.touched.user_name &&
+                          validation.errors.user_name ? (
                             <FormFeedback type="invalid">
-                              {validation.errors.customer}
+                              {validation.errors.user_name}
                             </FormFeedback>
                           ) : null}
                         </div>
+                        {!isEdit && (
+                          <div className="mb-3">
+                            <Label htmlFor="email-field" className="form-label">
+                              Email
+                            </Label>
+                            <Input
+                              name="email"
+                              type="email"
+                              id="email-field"
+                              placeholder="Enter Email"
+                              onChange={validation.handleChange}
+                              onBlur={validation.handleBlur}
+                              value={validation.values.email || ""}
+                              invalid={
+                                validation.touched.email &&
+                                validation.errors.email
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validation.touched.email &&
+                            validation.errors.email ? (
+                              <FormFeedback type="invalid">
+                                {validation.errors.email}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                        )}
 
+                        {
+                          <div className="mb-3">
+                            <Label
+                              htmlFor="role_id-field"
+                              className="form-label"
+                            >
+                              Role
+                            </Label>
+                            <Input
+                              name="role_id"
+                              type="select"
+                              id="role_id-field"
+                              onChange={validation.handleChange}
+                              onBlur={validation.handleBlur}
+                              value={validation.values.role_id}
+                              invalid={
+                                validation.touched.role_id &&
+                                validation.errors.role_id
+                                  ? true
+                                  : false
+                              }
+                            >
+                              <option value="">Select Role</option>
+                              {RoleList &&
+                                RoleList?.map((role: any) => (
+                                  <option key={role.id} value={role.id}>
+                                    {role.title}
+                                  </option>
+                                ))}
+                            </Input>
+                            {validation.touched.role_id &&
+                            validation.errors.role_id ? (
+                              <FormFeedback type="invalid">
+                                {validation.errors.role_id}
+                              </FormFeedback>
+                            ) : null}
+                          </div>
+                        }
                         <div className="mb-3">
-                          <Label htmlFor="email-field" className="form-label">
-                            Email
-                          </Label>
-                          <Input
-                            name="email"
-                            type="email"
-                            id="email-field"
-                            tabIndex={3}
-                            placeholder="Enter Email"
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.email || ""}
-                            invalid={
-                              validation.touched.email &&
-                              validation.errors.email
-                                ? true
-                                : false
-                            }
-                          />
-                          {validation.touched.email &&
-                          validation.errors.email ? (
-                            <FormFeedback type="invalid">
-                              {validation.errors.email}
-                            </FormFeedback>
-                          ) : null}
-                        </div>
-                      </Col>
-                      <Col lg={6}>
-                        <div className="mb-3">
-                          <Label htmlFor="phone-field" className="form-label">
+                          <Label htmlFor="phone_number" className="form-label">
                             Phone
                           </Label>
                           <Input
-                            name="phone"
+                            name="phone_number"
                             type="text"
                             tabIndex={4}
-                            id="phone-field"
+                            id="phone_number"
                             placeholder="Enter Phone no."
                             onChange={validation.handleChange}
                             onBlur={validation.handleBlur}
-                            value={validation.values.phone || ""}
+                            value={validation.values.phone_number || ""}
                             invalid={
-                              validation.touched.phone &&
-                              validation.errors.phone
+                              validation.touched.phone_number &&
+                              validation.errors.phone_number
                                 ? true
                                 : false
                             }
                           />
-                          {validation.touched.phone &&
-                          validation.errors.phone ? (
+                          {validation.touched.phone_number &&
+                          validation.errors.phone_number ? (
                             <FormFeedback type="invalid">
-                              {validation.errors.phone}
+                              {validation.errors.phone_number}
                             </FormFeedback>
                           ) : null}
                         </div>
-
-                        <div className="mb-3">
-                          <Label htmlFor="date-field" className="form-label">
-                            Joining Date
-                          </Label>
-
-                          <Flatpickr
-                            name="date"
-                            id="date-field"
-                            tabIndex={5}
-                            className="form-control"
-                            placeholder="Select a date"
-                            options={{
-                              altInput: true,
-                              altFormat: "d M, Y",
-                              dateFormat: "d M, Y",
+                      </ModalBody>
+                      <ModalFooter>
+                        <div className="hstack gap-2 justify-content-end">
+                          <button
+                            type="button"
+                            className="btn btn-light"
+                            onClick={() => {
+                              setModal(false);
                             }}
-                            onChange={(date: any) =>
-                              validation.setFieldValue(
-                                "date",
-                                moment(date[0]).format("DD MMMM ,YYYY")
-                              )
-                            }
-                            value={validation.values.date || ""}
-                          />
-                          {validation.errors.date && validation.touched.date ? (
-                            <FormFeedback type="invalid" className="d-block">
-                              {validation.errors.date}
-                            </FormFeedback>
-                          ) : null}
-                        </div>
-
-                        <div>
-                          <Label htmlFor="status-field" className="form-label">
-                            Status
-                          </Label>
-
-                          <Input
-                            name="status"
-                            type="select"
-                            tabIndex={6}
-                            className="form-select"
-                            id="status-field"
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.status || ""}
-                            invalid={
-                              validation.touched.status &&
-                              validation.errors.status
-                                ? true
-                                : false
-                            }
                           >
-                            {customermocalstatus.map((item, key) => (
-                              <React.Fragment key={key}>
-                                {item.options.map((item, key) => (
-                                  <option value={item.value} key={key}>
-                                    {item.label}
-                                  </option>
-                                ))}
-                                {item.options.map((item, key) => (
-                                  <option value={item.value} key={key}>
-                                    {item.label}
-                                  </option>
-                                ))}
-                              </React.Fragment>
-                            ))}
-                          </Input>
+                            {" "}
+                            Close{" "}
+                          </button>
+                          <button type="submit" className="btn btn-success">
+                            {" "}
+                            {!!isEdit ? "Update" : "Add Customer"}{" "}
+                          </button>
                         </div>
                       </Col>
                     </Row>
