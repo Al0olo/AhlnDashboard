@@ -206,7 +206,7 @@ const authProtectedRoutes = [
 
   { path: "/apps-ecommerce-models", component: <EcommerceModels /> },
   {
-    path: "/apps-ecommerce-model-details/:_id",
+    path: "/apps-ecommerce-model-details/:id",
     component: <EcommerceModelDetail />,
   },
   {

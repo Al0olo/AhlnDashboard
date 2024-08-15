@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardBody,
@@ -14,7 +14,7 @@ import {
   TabContent,
   TabPane,
 } from "reactstrap";
-
+import { getModel as onGetModel } from "../../../slices/thunks";
 //Simple bar
 import SimpleBar from "simplebar-react";
 
@@ -36,60 +36,13 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 
 import { FreeMode, Navigation, Pagination, Thumbs } from "swiper/modules";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { createSelector } from "reselect";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import moment from "moment";
 
-
-
-const ProductReview = (props :any) => {
-  return (
-    <React.Fragment>
-      <li className="py-2">
-        <div className="border border-dashed rounded p-3">
-          <div className="d-flex align-items-start mb-3">
-            <div className="hstack gap-3">
-              <div className="badge rounded-pill bg-success mb-0">
-                <i className="mdi mdi-star"></i> {props.review.rating}
-              </div>
-              <div className="vr"></div>
-              <div className="flex-grow-1">
-                <p className="text-muted mb-0">{props.review.comment}</p>
-              </div>
-            </div>
-          </div>
-          {props.review.subitem && (
-            <React.Fragment>
-              <div className="d-flex flex-grow-1 gap-2 mb-3">
-                {props.review.subitem.map((subItem :any, key :any) => (
-                  <React.Fragment key={key}>
-                    <Link to="#" className="d-block">
-                      <img
-                        src={subItem.img}
-                        alt=""
-                        className="avatar-sm rounded object-fit-cover"
-                      />
-                    </Link>
-                  </React.Fragment>
-                ))}
-              </div>
-            </React.Fragment>
-          )}
-
-          <div className="d-flex align-items-end">
-            <div className="flex-grow-1">
-              <h5 className="fs-14 mb-0">{props.review.name}</h5>
-            </div>
-
-            <div className="flex-shrink-0">
-              <p className="text-muted fs-13 mb-0">{props.review.date}</p>
-            </div>
-          </div>
-        </div>
-      </li>
-    </React.Fragment>
-  );
-};
-
-const PricingWidgetList = (props :any) => {
+const PricingWidgetList = (props: any) => {
   return (
     <React.Fragment>
       <Col lg={3} sm={6}>
@@ -111,7 +64,7 @@ const PricingWidgetList = (props :any) => {
   );
 };
 
-function EcommerceProductDetail(props :any) {
+function EcommerceProductDetail(props: any) {
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [ttop, setttop] = useState<boolean>(false);
 
@@ -120,17 +73,62 @@ function EcommerceProductDetail(props :any) {
   const [lsize, setlsize] = useState<boolean>(false);
   const [xlsize, setxlsize] = useState<boolean>(false);
   const [customActiveTab, setcustomActiveTab] = useState<any>("1");
-  const toggleCustom = (tab :any) => {
+  const toggleCustom = (tab: any) => {
     if (customActiveTab !== tab) {
       setcustomActiveTab(tab);
     }
   };
+  const dispatch: any = useDispatch();
+  let id = useParams().id;
+  const [model_data, setModel] = useState<any>({
+    color: null,
+    has_inside_camera: true,
+    has_outside_camera: true,
+    has_tablet: true,
+    height: null,
+    model_image: null,
+    model_name: null,
+    number_of_doors: null,
+    width: null,
+  });
 
-document.title ="Product Details | Velzon - React Admin & Dashboard Template";
+  const selectModelLoading = createSelector(
+    (state: any) => state.Ecommerce,
+    (state) => ({
+      modelLoading: state.modelLoading,
+    })
+  );
+  const modelLoading: any = useSelector(selectModelLoading);
+  const selectModelData = createSelector(
+    (state: any) => state.Ecommerce,
+    (state) => ({
+      model: state.model,
+    })
+  );
+  const modelData = useSelector(selectModelData);
+  useEffect(() => {
+    dispatch(onGetModel(id));
+  }, []);
+  useEffect(() => {
+    if (modelData.model) {
+      setModel({
+        color: modelData.model.color,
+        has_inside_camera: modelData.model.has_inside_camera,
+        has_outside_camera: modelData.model.has_outside_camera,
+        has_tablet: modelData.model.has_tablet,
+        height: modelData.model.height,
+        model_image: modelData.model.model_image,
+        model_name: modelData.model.model_name,
+        number_of_doors: modelData.model.number_of_doors,
+        width: modelData.model.width,
+      });
+    }
+  }, [modelData.model]);
+  document.title = "Model Details | Model Dashboard";
   return (
     <div className="page-content">
-      <Container fluid>        
-        <BreadCrumb title="Product Details" pageTitle="Ecommerce" />
+      <Container fluid>
+        <BreadCrumb title="Model Details" pageTitle="Ecommerce" />
 
         <Row>
           <Col lg={12}>
@@ -140,20 +138,20 @@ document.title ="Product Details | Velzon - React Admin & Dashboard Template";
                   <Col xl={4} md={8} className="mx-auto">
                     <div className="product-img-slider sticky-side-div">
                       <Swiper
-                     navigation={true}
-                     thumbs={{ swiper: thumbsSwiper }}
-                     className="swiper product-thumbnail-slider p-2 rounded bg-light"
-                     modules={[Thumbs,Navigation]}
+                        navigation={true}
+                        thumbs={{ swiper: thumbsSwiper }}
+                        className="swiper product-thumbnail-slider p-2 rounded bg-light"
+                        modules={[Thumbs, Navigation]}
                       >
                         <div className="swiper-wrapper">
                           <SwiperSlide>
                             <img
-                              src={product8}
+                              src={modelData.model.model_image}
                               alt=""
                               className="img-fluid d-block"
                             />
                           </SwiperSlide>
-                          <SwiperSlide>
+                          {/* <SwiperSlide>
                             <img
                               src={product6}
                               alt=""
@@ -173,26 +171,25 @@ document.title ="Product Details | Velzon - React Admin & Dashboard Template";
                               alt=""
                               className="img-fluid d-block"
                             />
-                          </SwiperSlide>
+                          </SwiperSlide> */}
                         </div>
                       </Swiper>
 
                       <div className="product-nav-slider mt-2">
-                      <Swiper
+                        <Swiper
                           onSwiper={setThumbsSwiper}
-                          
                           pagination={{
-                            type: 'progressbar',
+                            type: "progressbar",
                           }}
                           slidesPerView={4}
                           freeMode={true}
                           watchSlidesProgress={true}
                           spaceBetween={10}
                           className="swiper product-nav-slider mt-2 overflow-hidden"
-                          modules={[ FreeMode,Pagination]}
+                          modules={[FreeMode, Pagination]}
                         >
                           <div className="swiper-wrapper">
-                            <SwiperSlide className="rounded">
+                            {/* <SwiperSlide className="rounded">
                               <div className="nav-slide-item">
                                 <img
                                   src={product8}
@@ -200,8 +197,8 @@ document.title ="Product Details | Velzon - React Admin & Dashboard Template";
                                   className="img-fluid d-block rounded"
                                 />
                               </div>
-                            </SwiperSlide>
-                            <SwiperSlide>
+                            </SwiperSlide> */}
+                           {/* <SwiperSlide>
                               <div className="nav-slide-item">
                                 <img
                                   src={product6}
@@ -218,7 +215,7 @@ document.title ="Product Details | Velzon - React Admin & Dashboard Template";
                                   className="img-fluid d-block rounded"
                                 />
                               </div>
-                            </SwiperSlide>
+                            </SwiperSlide> 
                             <SwiperSlide>
                               <div className="nav-slide-item">
                                 <img
@@ -227,7 +224,7 @@ document.title ="Product Details | Velzon - React Admin & Dashboard Template";
                                   className="img-fluid d-block rounded"
                                 />
                               </div>
-                            </SwiperSlide>
+                            </SwiperSlide> */}
                           </div>
                         </Swiper>
                       </div>
@@ -238,25 +235,15 @@ document.title ="Product Details | Velzon - React Admin & Dashboard Template";
                     <div className="mt-xl-0 mt-5">
                       <div className="d-flex">
                         <div className="flex-grow-1">
-                          <h5>Full Sleeve Sweatshirt for Men (Pink)</h5>
+                          <h5 className="text-capitalize">{modelData.model.model_name}</h5>
                           <div className="hstack gap-3 flex-wrap">
-                            <div>
-                              <Link to="#" className="text-primary d-block">
-                                Tommy Hilfiger
-                              </Link>
-                            </div>
-                            <div className="vr"></div>
-                            <div className="text-muted">
-                              Seller :{" "}
-                              <span className="text-body fw-medium">
-                                Zoetic Fashion
-                              </span>
-                            </div>
                             <div className="vr"></div>
                             <div className="text-muted">
                               Published :{" "}
                               <span className="text-body fw-medium">
-                                26 Mar, 2021
+                                {moment(
+                                  new Date(modelData.model.createdat)
+                                ).format("dd,DD MMM YYYY")}
                               </span>
                             </div>
                           </div>
@@ -274,7 +261,7 @@ document.title ="Product Details | Velzon - React Admin & Dashboard Template";
                               Edit
                             </Tooltip>
                             <a
-                              href="apps-ecommerce-add-product"
+                              href={`apps-ecommerce-edit-model/${modelData.model.id}`}
                               id="TooltipTop"
                               className="btn btn-light"
                             >
@@ -284,125 +271,10 @@ document.title ="Product Details | Velzon - React Admin & Dashboard Template";
                         </div>
                       </div>
 
-                      <div className="d-flex flex-wrap gap-2 align-items-center mt-3">
-                        <div className="text-muted fs-16">
-                          <span className="mdi mdi-star text-warning"></span>
-                          <span className="mdi mdi-star text-warning"></span>
-                          <span className="mdi mdi-star text-warning"></span>
-                          <span className="mdi mdi-star text-warning"></span>
-                          <span className="mdi mdi-star text-warning"></span>
-                        </div>
-                        <div className="text-muted">
-                          ( 5.50k Customer Review )
-                        </div>
-                      </div>
-
-                      <Row className="mt-4">
-                        {productDetailsWidgets.map((pricingDetails, key) => (
-                          <PricingWidgetList
-                            pricingDetails={pricingDetails}
-                            key={key}
-                          />
-                        ))}
-                      </Row>
+                      <Row className="mt-4"></Row>
 
                       <Row>
-                        <Col xl={6}>
-                          <div className=" mt-4">
-                            <h5 className="fs-14">Sizes :</h5>
-                            <div className="d-flex flex-wrap gap-2">
-                              <Tooltip
-                                placement="top"
-                                isOpen={ssize}
-                                target="TooltipSSize"
-                                toggle={() => {
-                                  setssize(!ssize);
-                                }}
-                              >
-                                Out of Stock
-                              </Tooltip>
-                              <Tooltip
-                                placement="top"
-                                isOpen={msize}
-                                target="TooltipMSize"
-                                toggle={() => {
-                                  setmsize(!msize);
-                                }}
-                              >
-                                04 Items Available
-                              </Tooltip>
-                              <Tooltip
-                                placement="top"
-                                isOpen={lsize}
-                                target="TooltipLSize"
-                                toggle={() => {
-                                  setlsize(!lsize);
-                                }}
-                              >
-                                06 Items Available
-                              </Tooltip>
-                              <Tooltip
-                                placement="top"
-                                isOpen={xlsize}
-                                target="TooltipXlSize"
-                                toggle={() => {
-                                  setxlsize(!xlsize);
-                                }}
-                              >
-                                Out of Stock
-                              </Tooltip>
-
-                              <Input
-                                type="radio"
-                                className="btn-check"
-                                name="productsize-radio"
-                              />
-                              <Label
-                                className="btn btn-soft-primary avatar-xs rounded-circle p-0 d-flex justify-content-center align-items-center"
-                                id="TooltipSSize"
-                              >
-                                S
-                              </Label>
-
-                              <Input
-                                type="radio"
-                                className="btn-check"
-                                name="productsize-radio"
-                              />
-                              <Label
-                                className="btn btn-soft-primary avatar-xs rounded-circle p-0 d-flex justify-content-center align-items-center"
-                                id="TooltipMSize"
-                              >
-                                M
-                              </Label>
-
-                              <Input
-                                type="radio"
-                                className="btn-check"
-                                name="productsize-radio"
-                              />
-                              <Label
-                                className="btn btn-soft-primary avatar-xs rounded-circle p-0 d-flex justify-content-center align-items-center"
-                                id="TooltipLSize"
-                              >
-                                L
-                              </Label>
-
-                              <Input
-                                type="radio"
-                                className="btn-check"
-                                name="productsize-radio"
-                              />
-                              <Label
-                                className="btn btn-soft-primary avatar-xs rounded-circle p-0 d-flex justify-content-center align-items-center"
-                                id="TooltipXlSize"
-                              >
-                                XL
-                              </Label>
-                            </div>
-                          </div>
-                        </Col>
-
+                        {/* Colors */}
                         <Col xl={6}>
                           <div className=" mt-4">
                             <h5 className="fs-14">Colors :</h5>
@@ -515,6 +387,7 @@ document.title ="Product Details | Velzon - React Admin & Dashboard Template";
                             </div>
                           </div>
                         </Col>
+                        {/* /Colors */}
                       </Row>
 
                       <div className="mt-4 text-muted">
@@ -529,59 +402,9 @@ document.title ="Product Details | Velzon - React Admin & Dashboard Template";
                         </p>
                       </div>
 
-                      <Row>
-                        <Col sm={6}>
-                          <div className="mt-3">
-                            <h5 className="fs-14">Features :</h5>
-                            <ul className="list-unstyled">
-                              <li className="py-1">
-                                <i className="mdi mdi-circle-medium me-1 text-muted align-middle"></i>{" "}
-                                Full Sleeve
-                              </li>
-                              <li className="py-1">
-                                <i className="mdi mdi-circle-medium me-1 text-muted align-middle"></i>{" "}
-                                Cotton
-                              </li>
-                              <li className="py-1">
-                                <i className="mdi mdi-circle-medium me-1 text-muted align-middle"></i>{" "}
-                                All Sizes available
-                              </li>
-                              <li className="py-1">
-                                <i className="mdi mdi-circle-medium me-1 text-muted align-middle"></i>{" "}
-                                4 Different Color
-                              </li>
-                            </ul>
-                          </div>
-                        </Col>
-                        <Col sm={6}>
-                          <div className="mt-3">
-                            <h5 className="fs-14">Services :</h5>
-                            <ul className="list-unstyled product-desc-list">
-                              <li className="py-1">10 Days Replacement</li>
-                              <li className="py-1">
-                                Cash on Delivery available
-                              </li>
-                            </ul>
-                          </div>
-                        </Col>
-                      </Row>
-
                       <div className="product-content mt-5">
-                        <h5 className="fs-14 mb-3">Product Description :</h5>
+                        <h5 className="fs-14 mb-3">Model Description :</h5>
                         <Nav tabs className="nav-tabs-custom nav-success">
-                          <NavItem>
-                            <NavLink
-                              style={{ cursor: "pointer" }}
-                              className={classnames({
-                                active: customActiveTab === "1",
-                              })}
-                              onClick={() => {
-                                toggleCustom("1");
-                              }}
-                            >
-                              Specification
-                            </NavLink>
-                          </NavItem>
                           <NavItem>
                             <NavLink
                               style={{ cursor: "pointer" }}
@@ -598,262 +421,73 @@ document.title ="Product Details | Velzon - React Admin & Dashboard Template";
                         </Nav>
 
                         <TabContent
-                        activeTab={customActiveTab}
+                          activeTab={customActiveTab}
                           className="border border-top-0 p-4"
                           id="nav-tabContent"
                         >
-                          <TabPane
-                            id="nav-speci"
-                            tabId="1"
-                          >
+                          <TabPane id="nav-speci" tabId="1">
                             <div className="table-responsive">
                               <table className="table mb-0">
                                 <tbody>
                                   <tr>
                                     <th scope="row" style={{ width: "200px" }}>
-                                      Category
+                                      Number of Doors
                                     </th>
-                                    <td>T-Shirt</td>
-                                  </tr>
-                                  <tr>
-                                    <th scope="row">Brand</th>
-                                    <td>Tommy Hilfiger</td>
+                                    <td>{modelData.model.number_of_doors}</td>
                                   </tr>
                                   <tr>
                                     <th scope="row">Color</th>
                                     <td>Blue</td>
                                   </tr>
                                   <tr>
-                                    <th scope="row">Material</th>
-                                    <td>Cotton</td>
+                                    <th scope="row">Dimensions</th>
+                                    <td>
+                                      {modelData.model.width}*
+                                      {modelData.model.height}(Width*Height)
+                                    </td>
                                   </tr>
                                   <tr>
-                                    <th scope="row">Weight</th>
-                                    <td>140 Gram</td>
+                                    <th scope="row">Has Outside Camera</th>
+                                    <td>
+                                      <span className="badge bg-light text-body fs-12 fw-bold">
+                                        {modelData.model.has_outside_camera ? (
+                                          <i className="mdi mdi-check text-success me-1"></i>
+                                        ) : (
+                                          <i className="mdi mdi-cancel text-danger me-1"></i>
+                                        )}
+                                      </span>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Has Inside Camera</th>
+                                    <td>
+                                      <span className="badge bg-light text-body fs-12 fw-medium">
+                                        {modelData.model.has_inside_camera ? (
+                                          <i className="mdi mdi-check text-success me-1"></i>
+                                        ) : (
+                                          <i className="mdi mdi-cancel text-danger me-1"></i>
+                                        )}
+                                      </span>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Has Tablet</th>
+                                    <td>
+                                      <span className="badge bg-light text-body fs-12 fw-medium">
+                                        {modelData.model.has_tablet ? (
+                                          <i className="mdi mdi-check text-success me-1"></i>
+                                        ) : (
+                                          <i className="mdi mdi-cancel text-danger me-1"></i>
+                                        )}
+                                      </span>
+                                    </td>
                                   </tr>
                                 </tbody>
                               </table>
                             </div>
                           </TabPane>
-                          <TabPane
-                            id="nav-detail"
-                            tabId="2"
-                          >
-                            <div>
-                              <h5 className="font-size-16 mb-3">
-                                Tommy Hilfiger Sweatshirt for Men (Pink)
-                              </h5>
-                              <p>
-                                Tommy Hilfiger men striped pink sweatshirt.
-                                Crafted with cotton. Material composition is
-                                100% organic cotton. This is one of the world’s
-                                leading designer lifestyle brands and is
-                                internationally recognized for celebrating the
-                                essence of classic American cool style,
-                                featuring preppy with a twist designs.
-                              </p>
-                              <div>
-                                <p className="mb-2">
-                                  <i className="mdi mdi-circle-medium me-1 text-muted align-middle"></i>{" "}
-                                  Machine Wash
-                                </p>
-                                <p className="mb-2">
-                                  <i className="mdi mdi-circle-medium me-1 text-muted align-middle"></i>{" "}
-                                  Fit Type: Regular
-                                </p>
-                                <p className="mb-2">
-                                  <i className="mdi mdi-circle-medium me-1 text-muted align-middle"></i>{" "}
-                                  100% Cotton
-                                </p>
-                                <p className="mb-0">
-                                  <i className="mdi mdi-circle-medium me-1 text-muted align-middle"></i>{" "}
-                                  Long sleeve
-                                </p>
-                              </div>
-                            </div>
-                          </TabPane>
+                          <TabPane id="nav-detail" tabId="2"></TabPane>
                         </TabContent>
-                      </div>
-
-                      <div className="mt-5">
-                        <div>
-                          <h5 className="fs-14 mb-3">Ratings & Reviews</h5>
-                        </div>
-                        <Row className="gy-4 gx-0">
-                          <Col lg={4}>
-                            <div>
-                              <div className="pb-3">
-                                <div className="bg-light px-3 py-2 rounded-2 mb-2">
-                                  <div className="d-flex align-items-center">
-                                    <div className="flex-grow-1">
-                                      <div className="fs-16 align-middle text-warning">
-                                        <i className="ri-star-fill"></i>{" "}
-                                        <i className="ri-star-fill"></i>{" "}
-                                        <i className="ri-star-fill"></i>{" "}
-                                        <i className="ri-star-fill"></i>{" "}
-                                        <i className="ri-star-half-fill"></i>
-                                      </div>
-                                    </div>
-                                    <div className="flex-shrink-0">
-                                      <h6 className="mb-0">4.5 out of 5</h6>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="text-center">
-                                  <div className="text-muted">
-                                    Total{" "}
-                                    <span className="fw-medium">5.50k</span>{" "}
-                                    reviews
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div className="mt-3">
-                                <Row className="align-items-center g-2">
-                                  <div className="col-auto">
-                                    <div className="p-2">
-                                      <h6 className="mb-0">5 star</h6>
-                                    </div>
-                                  </div>
-                                  <div className="col">
-                                    <div className="p-2">
-                                      <div className="progress animated-progess progress-sm">
-                                        <div
-                                          className="progress-bar bg-success"
-                                          role="progressbar"
-                                          style={{ width: "50.16%" }}
-                                        ></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="col-auto">
-                                    <div className="p-2">
-                                      <h6 className="mb-0 text-muted">2758</h6>
-                                    </div>
-                                  </div>
-                                </Row>
-
-                                <Row className="align-items-center g-2">
-                                  <div className="col-auto">
-                                    <div className="p-2">
-                                      <h6 className="mb-0">4 star</h6>
-                                    </div>
-                                  </div>
-                                  <div className="col">
-                                    <div className="p-2">
-                                      <div className="progress animated-progess progress-sm">
-                                        <div
-                                          className="progress-bar bg-primary"
-                                          role="progressbar"
-                                          style={{ width: "19.32%" }}
-                                        ></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="col-auto">
-                                    <div className="p-2">
-                                      <h6 className="mb-0 text-muted">1063</h6>
-                                    </div>
-                                  </div>
-                                </Row>
-
-                                <Row className="align-items-center g-2">
-                                  <div className="col-auto">
-                                    <div className="p-2">
-                                      <h6 className="mb-0">3 star</h6>
-                                    </div>
-                                  </div>
-                                  <div className="col">
-                                    <div className="p-2">
-                                      <div className="progress animated-progess progress-sm">
-                                        <div
-                                          className="progress-bar bg-success"
-                                          role="progressbar"
-                                          style={{ width: "18.12%" }}
-                                        ></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="col-auto">
-                                    <div className="p-2">
-                                      <h6 className="mb-0 text-muted">997</h6>
-                                    </div>
-                                  </div>
-                                </Row>
-
-                                <Row className="align-items-center g-2">
-                                  <div className="col-auto">
-                                    <div className="p-2">
-                                      <h6 className="mb-0">2 star</h6>
-                                    </div>
-                                  </div>
-                                  <div className="col">
-                                    <div className="p-2">
-                                      <div className="progress animated-progess progress-sm">
-                                        <div
-                                          className="progress-bar bg-warning"
-                                          role="progressbar"
-                                          style={{ width: "7.42%" }}
-                                        ></div>
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div className="col-auto">
-                                    <div className="p-2">
-                                      <h6 className="mb-0 text-muted">408</h6>
-                                    </div>
-                                  </div>
-                                </Row>
-
-                                <Row className="align-items-center g-2">
-                                  <div className="col-auto">
-                                    <div className="p-2">
-                                      <h6 className="mb-0">1 star</h6>
-                                    </div>
-                                  </div>
-                                  <div className="col">
-                                    <div className="p-2">
-                                      <div className="progress animated-progess progress-sm">
-                                        <div
-                                          className="progress-bar bg-danger"
-                                          role="progressbar"
-                                          style={{ width: "4.98%" }}
-                                        ></div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="col-auto">
-                                    <div className="p-2">
-                                      <h6 className="mb-0 text-muted">274</h6>
-                                    </div>
-                                  </div>
-                                </Row>
-                              </div>
-                            </div>
-                          </Col>
-
-                          <Col lg={8}>
-                            <div className="ps-lg-4">
-                              <div className="d-flex flex-wrap align-items-start gap-3">
-                                <h5 className="fs-14">Reviews: </h5>
-                              </div>
-
-                              <SimpleBar
-                                className="me-lg-n3 pe-lg-4"
-                                style={{ maxHeight: "225px" }}
-                              >
-                                <ul className="list-unstyled mb-0">
-                                  {reviews.map((review, key) => (
-                                    <React.Fragment key={key}>
-                                      <ProductReview review={review} />
-                                    </React.Fragment>
-                                  ))}
-                                </ul>
-                              </SimpleBar>
-                            </div>
-                          </Col>
-                        </Row>
                       </div>
                     </div>
                   </Col>

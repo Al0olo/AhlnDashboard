@@ -16,6 +16,7 @@ import {
   Label,
   FormFeedback,
   Form,
+  Spinner,
 } from "reactstrap";
 
 // Redux
@@ -26,7 +27,7 @@ import {
 } from "../../../slices/thunks";
 
 import Dropzone from "react-dropzone";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, redirect, useNavigate, useParams } from "react-router-dom";
 
 //formik
 import { useFormik } from "formik";
@@ -67,7 +68,7 @@ const EcommerceEditProduct = (props: any) => {
       modelLoading: state.modelLoading,
     })
   );
-  const modelLoading = useSelector(selectModelLoading);
+  const modelLoading: any = useSelector(selectModelLoading);
   const selectModelData = createSelector(
     (state: any) => state.Ecommerce,
     (state) => ({
@@ -75,11 +76,9 @@ const EcommerceEditProduct = (props: any) => {
     })
   );
   const modelData = useSelector(selectModelData);
-
   useEffect(() => {
     dispatch(onGetModel(id));
   }, []);
-
   useEffect(() => {
     if (modelData.model) {
       setModel({
@@ -119,6 +118,7 @@ const EcommerceEditProduct = (props: any) => {
       model_image: Yup.string().required("Please Enter model image Link"),
     }),
     onSubmit: (values) => {
+      console.log("values", values);
       const model = {
         id: id,
         model_name: values.model_name
@@ -138,9 +138,10 @@ const EcommerceEditProduct = (props: any) => {
         has_inside_camera: values.has_inside_camera
           ? values.has_inside_camera
           : false,
-        has_tablet: values.has_tablet ? values.has_tablet : false,
+        has_tablet: values.has_tablet,
       };
       // save new product
+      console.log("model", model);
       dispatch(onUpdateModel(model));
       history("/apps-ecommerce-models");
       validation.resetForm();
@@ -280,80 +281,204 @@ const EcommerceEditProduct = (props: any) => {
               </Card>
               {/* /model_image */}
 
-              <Row>
-                <Col lg={6}>
-                  <Card>
-                    <CardHeader>
-                      <h5 className="card-title mb-0">Width</h5>
-                    </CardHeader>
+                      <Input
+                        type="text"
+                        className="form-control"
+                        id="model-title-input"
+                        placeholder="Enter model title"
+                        name="model_name"
+                        value={validation.values.model_name}
+                        onBlur={validation.handleBlur}
+                        onChange={validation.handleChange}
+                        invalid={
+                          validation.errors.model_name &&
+                          validation.touched.model_name
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.errors.model_name &&
+                      validation.touched.model_name ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.model_name}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </CardBody>
+                </Card>
+                {/* /model_name */}
+                {/* model_image */}
+                <Card>
+                  <CardBody>
+                    <div className="mb-3">
+                      <Label className="form-label" htmlFor="model-title-input">
+                        Model Image
+                      </Label>
+                      <Input
+                        type="text"
+                        className="form-control"
+                        id="model-title-input"
+                        placeholder="Enter model image link"
+                        name="model_image"
+                        value={validation.values.model_image}
+                        onBlur={validation.handleBlur}
+                        onChange={validation.handleChange}
+                        invalid={
+                          validation.errors.model_image &&
+                          validation.touched.model_image
+                            ? true
+                            : false
+                        }
+                      />
+                      {validation.errors.model_image &&
+                      validation.touched.model_image ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.model_image}
+                        </FormFeedback>
+                      ) : null}
+                    </div>
+                  </CardBody>
+                </Card>
+                {/* /model_image */}
 
+                <Row>
+                  <Col lg={6}>
+                    <Card>
+                      <CardHeader>
+                        <h5 className="card-title mb-0">Width</h5>
+                      </CardHeader>
+
+                      <CardBody>
+                        <div className="mb-3">
+                          <Input
+                            type="text"
+                            className="form-control"
+                            id="model-width-input"
+                            placeholder="Enter height"
+                            name="width"
+                            value={validation.values.width}
+                            onBlur={validation.handleBlur}
+                            // onChange={validation.handleChange}
+                            onChange={validation.handleChange}
+                            invalid={
+                              validation.errors.width &&
+                              validation.touched.width
+                                ? true
+                                : false
+                            }
+                          />
+                          {validation.errors.width &&
+                          validation.touched.width ? (
+                            <FormFeedback type="invalid">
+                              {validation.errors.width}
+                            </FormFeedback>
+                          ) : null}
+                        </div>
+                      </CardBody>
+                    </Card>
+                  </Col>
+                  <Col lg={6}>
+                    <Card>
+                      <CardHeader>
+                        <h5 className="card-title mb-0">Height</h5>
+                      </CardHeader>
+                      <CardBody>
+                        <div className="mb-3">
+                          <Input
+                            type="text"
+                            className="form-control"
+                            id="model-height-input"
+                            placeholder="Enter height"
+                            name="height"
+                            value={validation.values.height}
+                            onBlur={validation.handleBlur}
+                            onChange={validation.handleChange}
+                            invalid={
+                              validation.errors.height &&
+                              validation.touched.height
+                                ? true
+                                : false
+                            }
+                          />
+                          {validation.errors.height &&
+                          validation.touched.height ? (
+                            <FormFeedback type="invalid">
+                              {validation.errors.height}
+                            </FormFeedback>
+                          ) : null}
+                        </div>
+                      </CardBody>
+                    </Card>
+                  </Col>
+                </Row>
+                <div className="text-end mb-3 ">
+                  <button type="submit" className="btn btn-success w-sm">
+                    Save
+                  </button>
+                </div>
+              </Col>
+
+              <Col lg={4}>
+                <Card>
+                  <CardHeader>
+                    <h5 className="card-title mb-3 ">Number of doors</h5>
+                  </CardHeader>
+                  <CardBody>
                     <CardBody>
-                      <div className="mb-3">
+                      <div className="mb-1">
                         <Input
                           type="text"
                           className="form-control"
-                          id="model-width-input"
-                          placeholder="Enter height"
-                          name="width"
-                          value={validation.values.width}
+                          id="model-no_of_doors-input"
+                          placeholder="Enter number of doors"
+                          name="number_of_doors"
+                          value={validation.values.number_of_doors}
                           onBlur={validation.handleBlur}
                           onChange={validation.handleChange}
                           invalid={
-                            validation.errors.width && validation.touched.width
+                            validation.errors.number_of_doors &&
+                            validation.touched.number_of_doors
                               ? true
                               : false
                           }
                         />
-                        {validation.errors.width && validation.touched.width ? (
+                        {validation.errors.number_of_doors &&
+                        validation.touched.number_of_doors ? (
                           <FormFeedback type="invalid">
-                            {validation.errors.width}
+                            {validation.errors.number_of_doors}
                           </FormFeedback>
                         ) : null}
                       </div>
                     </CardBody>
-                  </Card>
-                </Col>
-                <Col lg={6}>
-                  <Card>
-                    <CardHeader>
-                      <h5 className="card-title mb-0">Height</h5>
-                    </CardHeader>
-                    <CardBody>
-                      <div className="mb-3">
+                  </CardBody>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <h5 className="card-title mb-0">Has Outside Camera</h5>
+                  </CardHeader>
+                  <CardBody>
+                    <div className="mb-3">
+                      <div
+                        className="form-check form-switch form-switch-lg"
+                        dir="ltr"
+                      >
                         <Input
-                          type="text"
-                          className="form-control"
-                          id="model-height-input"
-                          placeholder="Enter height"
-                          name="height"
-                          value={validation.values.height}
+                          type="switch"
+                          value={validation.values.has_outside_camera}
+                          checked={validation.values.has_outside_camera}
+                          name="has_outside_camera"
+                          className="form-check-input"
+                          id="model-has_outside_camera-input"
                           onBlur={validation.handleBlur}
                           onChange={validation.handleChange}
                           invalid={
-                            validation.errors.height &&
-                            validation.touched.height
+                            validation.errors.has_outside_camera &&
+                            validation.touched.has_outside_camera
                               ? true
                               : false
                           }
                         />
-                        {validation.errors.height &&
-                        validation.touched.height ? (
-                          <FormFeedback type="invalid">
-                            {validation.errors.height}
-                          </FormFeedback>
-                        ) : null}
                       </div>
-                    </CardBody>
-                  </Card>
-                </Col>
-              </Row>
-              <div className="text-end mb-3 ">
-                <button type="submit" className="btn btn-success w-sm">
-                  Save
-                </button>
-              </div>
-            </Col>
-
             <Col lg={4}>
               <Card>
                 <CardHeader>
@@ -381,128 +506,80 @@ const EcommerceEditProduct = (props: any) => {
                       {validation.errors.number_of_doors &&
                       validation.touched.number_of_doors ? (
                         <FormFeedback type="invalid">
-                          {validation.errors.number_of_doors}
+                          {validation.errors.has_outside_camera}
                         </FormFeedback>
                       ) : null}
                     </div>
                   </CardBody>
-                </CardBody>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <h5 className="card-title mb-0">Has Outside Camera</h5>
-                </CardHeader>
-                <CardBody>
-                  <div className="mb-3">
-                    <div
-                      className="form-check form-switch form-switch-lg"
-                      dir="ltr"
-                    >
-                      <Input
-                        type="checkbox"
-                        value="true"
-                        name="has_outside_camera"
-                        className="form-check-input"
-                        id="model-has_outside_camera-input"
-                        onBlur={validation.handleBlur}
-                        onChange={validation.handleChange}
-                        invalid={
-                          validation.errors.has_outside_camera &&
-                          validation.touched.has_outside_camera
-                            ? true
-                            : false
-                        }
-                        defaultChecked={model_data.has_outside_camera}
-                      />
+                 </Card>
+                <Card>
+                  <CardHeader>
+                    <h5 className="card-title mb-0">Has Inside Camera</h5>
+                  </CardHeader>
+                  <CardBody>
+                    <div className="mb-3">
+                      <div
+                        className="form-check form-switch form-switch-lg"
+                        dir="ltr"
+                      >
+                        <Input
+                          type="switch"
+                          value={validation.values.has_inside_camera}
+                          checked={validation.values.has_inside_camera}
+                          name="has_inside_camera"
+                          className="form-check-input"
+                          id="model-has_inside_camera-input"
+                          onBlur={validation.handleBlur}
+                          onChange={validation.handleChange}
+                          invalid={
+                            validation.errors.has_inside_camera &&
+                            validation.touched.has_inside_camera
+                              ? true
+                              : false
+                          }
+                        />
+                      </div>
+
+                      {validation.errors.has_inside_camera &&
+                      validation.touched.has_inside_camera ? (
+                        <FormFeedback type="invalid">
+                          {validation.errors.has_inside_camera}
+                        </FormFeedback>
+                      ) : null}
                     </div>
-
-                    {validation.errors.has_outside_camera &&
-                    validation.touched.has_outside_camera ? (
-                      <FormFeedback type="invalid">
-                        {validation.errors.has_outside_camera}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </CardBody>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <h5 className="card-title mb-0">Has Inside Camera</h5>
-                </CardHeader>
-                <CardBody>
-                  <div className="mb-3">
-                    <div
-                      className="form-check form-switch form-switch-lg"
-                      dir="ltr"
-                    >
-                      <Input
-                        type="checkbox"
-                        value="true"
-                        name="has_inside_camera"
-                        className="form-check-input"
-                        id="model-has_inside_camera-input"
-                        onBlur={validation.handleBlur}
-                        onChange={validation.handleChange}
-                        invalid={
-                          validation.errors.has_inside_camera &&
-                          validation.touched.has_inside_camera
-                            ? true
-                            : false
-                        }
-                        defaultChecked={model_data.has_inside_camera}
-                      />
+                  </CardBody>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <h5 className="card-title mb-0">Has Tablet</h5>
+                  </CardHeader>
+                  <CardBody>
+                    <div className="mb-3">
+                      <div
+                        className="form-check form-switch form-switch-lg"
+                        dir="ltr"
+                      >
+                        <Input
+                          // type="checkbox"
+                          name="has_tablet"
+                          value={validation.values.has_tablet}
+                          className="form-check-input"
+                          id="model-has_tablet-input"
+                          // onBlur={validation.handleBlur}
+                          onChange={validation.handleChange}
+                          Checked={validation.values.has_tablet}
+                          type="switch"
+                          checked={validation.values.has_tablet}
+                          onClick={validation.handleChange}
+                        />
+                      </div>
                     </div>
-
-                    {validation.errors.has_inside_camera &&
-                    validation.touched.has_inside_camera ? (
-                      <FormFeedback type="invalid">
-                        {validation.errors.has_inside_camera}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </CardBody>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <h5 className="card-title mb-0">Has Tablet</h5>
-                </CardHeader>
-                <CardBody>
-                  <div className="mb-3">
-                    <div
-                      className="form-check form-switch form-switch-lg"
-                      dir="ltr"
-                    >
-                      <Input
-                        type="checkbox"
-                        value="true"
-                        name="has_tablet"
-                        className="form-check-input"
-                        id="model-has_tablet-input"
-                        onBlur={validation.handleBlur}
-                        onChange={validation.handleChange}
-                        invalid={
-                          validation.errors.has_tablet &&
-                          validation.touched.has_tablet
-                            ? true
-                            : false
-                        }
-                        defaultChecked={model_data.has_tablet}
-                      />
-                    </div>
-
-                    {validation.errors.has_tablet &&
-                    validation.touched.has_tablet ? (
-                      <FormFeedback type="invalid">
-                        {validation.errors.has_tablet}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-        </Form>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </Form>
+        )}
       </Container>
     </div>
   );

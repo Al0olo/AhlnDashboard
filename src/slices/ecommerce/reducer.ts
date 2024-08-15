@@ -38,15 +38,23 @@ const EcommerceSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     //Models
+    builder.addCase(getModels.pending, (state: any, action: any) => {
+      state.modelsLoading = true;
+    });
     builder.addCase(getModels.fulfilled, (state: any, action: any) => {
       state.models = action.payload;
+      state.modelsLoading = false;
+    });
+
+    builder.addCase(addNewModel.fulfilled, (state: any, action: any) => {
+      state.models.push(action.payload)
     });
     builder.addCase(getModel.pending, (state: any, action: any) => {
       state.modelLoading = true;
     });
     builder.addCase(getModel.fulfilled, (state: any, action: any) => {
-      state.modelLoading = false;
       state.model = action.payload;
+      state.modelLoading = false;
     });
     builder.addCase(updateModel.fulfilled, (state: any, action: any) => {
       state.models = state.models.map((model: any) =>

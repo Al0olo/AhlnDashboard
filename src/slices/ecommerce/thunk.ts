@@ -64,12 +64,12 @@ export const addNewModel = createAsyncThunk(
   "ecommerce/addNewModel",
   async (model: any, thunkApi) => {
     try {
-      const response = addNewModelApi(model);
-      const data = await response;
+      const response = await addNewModelApi(model);
       toast.success("Model Added Successfully", { autoClose: 3000 });
-      return data;
-    } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return response.data;
+    } catch (error) {
+      toast.error("Model Add Failed", { autoClose: 3000 });
+      return error;
     }
   }
 );
