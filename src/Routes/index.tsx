@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 // Layouts
 import VerticalLayout from '../Layouts/index';
@@ -42,7 +42,7 @@ const Index = () => {
                 ))}
 
                 {/* Catch-all route to redirect to login if user tries to access a non-existent route */}
-                <Route path="*" element={<Navigate to="/login" />} />
+                {/* <Route path="*" element={<Navigate to="/login" />} /> */}
             </Routes>
         </React.Fragment>
     );
