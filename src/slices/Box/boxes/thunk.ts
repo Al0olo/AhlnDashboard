@@ -1,18 +1,32 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getBoxes, addBox } from "../../../helpers/fakebackend_helper";
-import { toast } from "react-toastify";
+import {
+  getBoxes,
+  addBox,
+  deleteBox,
+  updateBox,
+  getOneBox,
+} from "../../../helpers/fakebackend_helper";
 
-export const GetBoxAction = createAsyncThunk(
+export const GetBoxesAction = createAsyncThunk(
   "box/get-all",
   async (_, thunkApi) => {
     try {
       const response = await getBoxes();
-      console.log("Response", response);
-      console.log("Response Data", response.data);
-
       return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
+    }
+  }
+);
+
+export const GetOneBoxAction = createAsyncThunk(
+  "box/get-one",
+  async (box: any, thunkApi) => {
+    try {
+      const response = await getOneBox(box);
+      return response.data;
+    } catch (error: any) {
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );
@@ -22,11 +36,33 @@ export const AddBoxAction = createAsyncThunk(
   async (box: any, thunkApi) => {
     try {
       const response = await addBox(box);
-      const data = await response;
-      toast.success("Box Added Successfully", { autoClose: 3000 });
-      return data;
+      return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
+    }
+  }
+);
+
+export const UpdateBoxAction = createAsyncThunk(
+  "box/update",
+  async (box: any, thunkApi) => {
+    try {
+      const response = await updateBox(box);
+      return response.data;
+    } catch (error: any) {
+      return thunkApi.rejectWithValue(error || error.message);
+    }
+  }
+);
+
+export const DeleteBoxAction = createAsyncThunk(
+  "box/delete",
+  async (box: string, thunkApi) => {
+    try {
+      const response = await deleteBox(box);
+      return response.data;
+    } catch (error: any) {
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );

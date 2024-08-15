@@ -20,10 +20,16 @@ import {
 //redux
 import { useSelector, useDispatch } from "react-redux";
 import TableContainer from "../../../../Components/Common/TableContainer";
-import { TabletAction } from "../../../../slices/thunks";
+import {
+  GetShippingCompaniesAction,
+  AddShippingCompanyAction,
+  UpdateShippingCompanyAction,
+  DeleteShippingCompanyAction,
+  GetOneShippingCompanyAction,
+} from "../../../../slices/thunks";
 
 // import {
-//   TabletsId,
+//   ShippingCompanysId,
 //   Title,
 //   Client,
 //   AssignedTo,
@@ -47,25 +53,25 @@ import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../../Components/Common/Loader";
 import { createSelector } from "reselect";
 
-const TabletsData = () => {
+const ShippingCompaniesData = () => {
   const dispatch: any = useDispatch();
-  const selectLayoutState = (state: any) => state.Tablets;
+  const selectLayoutState = (state: any) => state.ShippingCompanies;
 
   const selectLayoutProperties = createSelector(selectLayoutState, (state) => ({
-    tabletsList: state.data,
-    isTabletSuccess: state.isTabletSuccess,
+    shippingCompanysList: state.data,
+    isShippingCompanySuccess: state.isShippingCompanySuccess,
     error: state.error,
+    loader: state.loading,
   }));
 
   // Inside your component
-  const { tabletsList, isTabletSuccess, error } = useSelector(
-    selectLayoutProperties
-  );
+  const { shippingCompanysList, isShippingCompanySuccess, error, loader } =
+    useSelector(selectLayoutProperties);
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [tablet, setTablet] = useState<any>([]);
+  const [shippingCompany, setShippingCompany] = useState<any>([]);
 
-  // Delete Tablets
+  // Delete ShippingCompanies
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
@@ -73,12 +79,12 @@ const TabletsData = () => {
   const toggle = useCallback(() => {
     if (modal) {
       setModal(false);
-      setTablet("");
+      setShippingCompany(shippingCompany);
     } else {
       setModal(true);
-      setTablet("");
+      setShippingCompany(shippingCompany);
     }
-  }, [modal]);
+  }, [modal, shippingCompany]);
 
   // validation
   const validation: any = useFormik({
@@ -86,60 +92,54 @@ const TabletsData = () => {
     enableReinitialize: true,
 
     initialValues: {
-      // Initial values are used to set up the initial form values.
-      // The keys of the object correspond to the keys of the values object we defined in validationSchema.
-      // The values correspond to the initial values for those fields.
-      // The || "" is used to prevent uncaught errors if the tablet object is undefined.
-      id: (tablet && tablet.id) || "",
-      // tabletId: (tablet && tablet.tabletId) || "",
-      // title: (tablet && tablet.title) || "",
-      // client: (tablet && tablet.client) || "",
-      // assigned: (tablet && tablet.assigned) || "",
-      // createDate: (tablet && tablet.createDate) || "",
-      // dueDate: (tablet && tablet.dueDate) || "",
-      // status: (tablet && tablet.status) || "",
-      // priority: (tablet && tablet.priority) || "",
+      serial_number: (shippingCompany && shippingCompany.serial_number) || "",
+      shippingCompany_label:
+        (shippingCompany && shippingCompany.shippingCompany_label) || "",
+      has_empty_lockers:
+        (shippingCompany && shippingCompany.has_empty_lockers) || "",
+      current_tablet_id:
+        (shippingCompany && shippingCompany.current_tablet_id) || "",
+      previous_tablet_id:
+        (shippingCompany && shippingCompany.previous_tablet_id) || "",
+      shippingCompany_model_id:
+        (shippingCompany && shippingCompany.shippingCompany_model_id) || "",
+      address_id: (shippingCompany && shippingCompany.address_id) || "",
     },
     validationSchema: Yup.object({
-      title: Yup.string().required("Please Enter Title"),
-      client: Yup.string().required("Please Enter Client Name"),
-      assigned: Yup.string().required("Please Enter Assigned Name"),
-      createDate: Yup.string().required("Please Enter Date"),
-      dueDate: Yup.string().required("Please Enter Date"),
-      status: Yup.string().required("Please Enter Your Joining status"),
-      priority: Yup.string().required("Please Enter Your Priority"),
+      serial_number: Yup.string().required("Please Enter Serial Number"),
+      shippingCompany_label: Yup.string().required(
+        "Please Enter ShippingCompany Label"
+      ),
+      current_tablet_id: Yup.number().required("Please Enter Tablet Id"),
+      shippingCompany_model_id: Yup.string().required(
+        "Please Enter ShippingCompany Generation Id"
+      ),
     }),
     onSubmit: (values) => {
       if (isEdit) {
-        const updateTablets = {
-          id: tablet ? tablet.id : 0,
-          // tabletId: values.tabletId,
-          // title: values.title,
-          // client: values.client,
-          // assigned: values.assigned,
-          // createDate: values.createDate,
-          // dueDate: values.dueDate,
-          // status: values.status,
-          // priority: values.priority,
+        const updateShippingCompanies = {
+          serial_number: values.serial_number,
+          shippingCompany_label: values.shippingCompany_label,
+          has_empty_lockers: values.has_empty_lockers,
+          current_tablet_id: values.current_tablet_id,
+          previous_tablet_id: values.previous_tablet_id,
+          shippingCompany_model_id: values.shippingCompany_model_id,
+          address_id: values.address_id,
         };
-        // update tablet
-        // dispatch(updateTablet(updateTablets));
+        // update shippingCompany
+        dispatch(UpdateShippingCompanyAction(updateShippingCompanies));
         validation.resetForm();
       } else {
-        const newTablet = {
-          id: (Math.floor(Math.random() * (30 - 20)) + 20).toString(),
-          tabletId:
-            "#VLZ4" + (Math.floor(Math.random() * (30 - 20)) + 20).toString(),
-          // title: values["title"],
-          // client: values["client"],
-          // assigned: values["assigned"],
-          // createDate: values["createDate"],
-          // dueDate: values["dueDate"],
-          // status: values["status"],
-          // priority: values["priority"],
+        const newShippingCompany = {
+          serial_number: values["serial_number"],
+          shippingCompany_label: values["shippingCompany_label"],
+          has_empty_lockers: values["has_empty_lockers"],
+          shippingCompany_model_id: values["shippingCompany_model_id"],
         };
-        // save new tablet
-        // dispatch(onAddNewTablet(newTablet));
+        console.log("RRRRRRRRRRRRRRR");
+
+        // save new shippingCompany
+        dispatch(AddShippingCompanyAction(newShippingCompany));
         validation.resetForm();
       }
       toggle();
@@ -147,32 +147,30 @@ const TabletsData = () => {
   });
 
   // Delete Data
-  const onClickDelete = (tablet: any) => {
-    setTablet(tablet);
+  const onClickDelete = (shippingCompany: any) => {
+    setShippingCompany(shippingCompany);
     setDeleteModal(true);
   };
 
-  const handleDeleteTablet = () => {
-    if (tablet) {
-      //   dispatch(deleteTablet(tablet.id));
+  const handleDeleteShippingCompany = () => {
+    console.log("shippingCompany", shippingCompany);
+
+    if (shippingCompany) {
+      dispatch(DeleteShippingCompanyAction(shippingCompany.id));
       setDeleteModal(false);
     }
   };
 
   // Update Data
-  const handleTabletsClick = (arg: any) => {
-    const tablet = arg;
+  const handleShippingCompaniesClick = (arg: any) => {
+    const shippingCompany = arg;
 
-    setTablet({
-      id: tablet.id,
-      // tabletId: tablet.id,
-      // title: tablet.serial_number,
-      // client: tablet.client,
-      // assigned: tablet.assigned,
-      // createDate: tablet.createDate,
-      // dueDate: tablet.dueDate,
-      // status: tablet.status,
-      // priority: tablet.priority,
+    setShippingCompany({
+      serial_number: shippingCompany.serial_number,
+      shippingCompany_label: shippingCompany.shippingCompany_label,
+      has_empty_lockers: shippingCompany.has_empty_lockers,
+      shippingCompany_model_id: shippingCompany.shippingCompany_model_id,
+      address_id: shippingCompany.address_id,
     });
 
     setIsEdit(true);
@@ -182,23 +180,15 @@ const TabletsData = () => {
   // Get Data
 
   useEffect(() => {
-    dispatch(TabletAction()).then((res: { payload: any; type: any }) => {
-      if (res.type === "tablet/get-all/fulfilled" && res.payload) {
-        toast("Tablets Retrived successful", {
-          position: "top-right",
-          hideProgressBar: false,
-          className: "bg-success text-white",
-          progress: undefined,
-          toastId: "",
-        });
-      }
-    });
+    dispatch(GetShippingCompaniesAction());
   }, [dispatch]);
 
   // Checked All
   const checkedAll = useCallback(() => {
-    const checkall: any = document.getElementById("checkTabletAll");
-    const ele = document.querySelectorAll(".tabletCheckTablet");
+    const checkall: any = document.getElementById("checkShippingCompanyAll");
+    const ele = document.querySelectorAll(
+      ".shippingCompanyCheckShippingCompany"
+    );
 
     if (checkall.checked) {
       ele.forEach((ele: any) => {
@@ -209,19 +199,21 @@ const TabletsData = () => {
         ele.checked = false;
       });
     }
-    deleteChecktablet();
+    deleteCheckshippingCompany();
   }, []);
 
   // Delete Multiple
-  const [selectedCheckTabletDelete, setSelectedCheckTabletDelete] =
-    useState<any>([]);
+  const [
+    selectedCheckShippingCompanyDelete,
+    setSelectedCheckShippingCompanyDelete,
+  ] = useState<any>([]);
   const [isMultiDeleteButton, setIsMultiDeleteButton] =
     useState<boolean>(false);
 
   const deleteMultiple = () => {
-    const checkall: any = document.getElementById("checkTabletAll");
-    selectedCheckTabletDelete.forEach((element: any) => {
-      //   dispatch(deleteTablet(element.value));
+    const checkall: any = document.getElementById("checkShippingCompanyAll");
+    selectedCheckShippingCompanyDelete.forEach((element: any) => {
+      dispatch(DeleteShippingCompanyAction(element.id));
       setTimeout(() => {
         toast.clearWaitingQueue();
       }, 3000);
@@ -230,12 +222,14 @@ const TabletsData = () => {
     checkall.checked = false;
   };
 
-  const deleteChecktablet = () => {
-    const ele = document.querySelectorAll(".tabletCheckTablet:checked");
-    ele.length > 0
+  const deleteCheckshippingCompany = () => {
+    const ele = document.querySelectorAll(
+      ".shippingCompanyCheckShippingCompany:checked"
+    );
+    ele?.length > 0
       ? setIsMultiDeleteButton(true)
       : setIsMultiDeleteButton(false);
-    setSelectedCheckTabletDelete(ele);
+    setSelectedCheckShippingCompanyDelete(ele);
   };
 
   const columns = useMemo(
@@ -243,18 +237,18 @@ const TabletsData = () => {
       {
         header: (
           <input
-            type="checktablet"
-            id="checkTabletAll"
+            type="checkshippingCompany"
+            id="checkShippingCompanyAll"
             className="form-check-input"
             onClick={() => checkedAll()}
           />
         ),
         cell: (cell: any) => (
           <input
-            type="checktablet"
-            className="tabletCheckTablet form-check-input"
+            type="checkshippingCompany"
+            className="shippingCompanyCheckShippingCompany form-check-input"
             value={cell.getValue()}
-            onChange={() => deleteChecktablet()}
+            onChange={() => deleteCheckshippingCompany()}
           />
         ),
         id: "#",
@@ -263,13 +257,23 @@ const TabletsData = () => {
         enableSorting: false,
       },
       {
-        header: "Serial",
-        accessorKey: "serial_number",
+        header: "ID",
+        accessorKey: "id",
         enableColumnFilter: false,
       },
       {
         header: "Title",
-        accessorKey: "android_id",
+        accessorKey: "title",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Tracking System",
+        accessorKey: "tracking_system",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Logo",
+        accessorKey: "logo",
         enableColumnFilter: false,
       },
       {
@@ -287,7 +291,7 @@ const TabletsData = () => {
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-end">
               <li>
-                <DropdownItem href="/apps-tablets-details">
+                <DropdownItem href="/apps-shippingCompanys-details">
                   <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
                   View
                 </DropdownItem>
@@ -298,8 +302,8 @@ const TabletsData = () => {
                   href="#showModal"
                   data-bs-toggle="modal"
                   onClick={() => {
-                    const TabletData = cell.row.original;
-                    handleTabletsClick(TabletData);
+                    const ShippingCompanyData = cell.row.original;
+                    handleShippingCompaniesClick(ShippingCompanyData);
                   }}
                 >
                   <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>{" "}
@@ -312,8 +316,8 @@ const TabletsData = () => {
                   data-bs-toggle="modal"
                   href="#deleteOrder"
                   onClick={() => {
-                    const tabletData = cell.row.original;
-                    onClickDelete(tabletData);
+                    const shippingCompanyData = cell.row.original;
+                    onClickDelete(shippingCompanyData);
                   }}
                 >
                   <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
@@ -328,14 +332,12 @@ const TabletsData = () => {
     [checkedAll]
   );
 
-  console.log(tabletsList, "tabletsList");
-
   return (
     <React.Fragment>
       <Row>
         <DeleteModal
           show={deleteModal}
-          onDeleteClick={handleDeleteTablet}
+          onDeleteClick={handleDeleteShippingCompany}
           onCloseClick={() => setDeleteModal(false)}
         />
         <DeleteModal
@@ -350,7 +352,9 @@ const TabletsData = () => {
           <Card>
             <CardHeader className="border-0">
               <div className="d-flex align-items-center">
-                <h5 className="card-title mb-0 flex-grow-1">Tablets</h5>
+                <h5 className="card-title mb-0 flex-grow-1">
+                  Shipping Companies
+                </h5>
                 <div className="flex-shrink-0">
                   <div className="d-flex flex-wrap gap-2">
                     <button
@@ -360,7 +364,8 @@ const TabletsData = () => {
                         toggle();
                       }}
                     >
-                      <i className="ri-add-line align-bottom"></i> Create Tablet
+                      <i className="ri-add-line align-bottom"></i> Create
+                      Shipping Company
                     </button>{" "}
                     {isMultiDeleteButton && (
                       <button
@@ -375,19 +380,18 @@ const TabletsData = () => {
               </div>
             </CardHeader>
             <CardBody className="pt-0">
-              {tabletsList && tabletsList.length ? (
+              {loader ? (
+                <Loader error={error} />
+              ) : (
                 <TableContainer
                   columns={columns}
-                  data={tabletsList}
+                  data={shippingCompanysList}
                   isGlobalFilter={true}
-                  customPageSize={8}
+                  customPageSize={10}
                   divClass="table-responsive table-card mb-3"
                   tableClass="align-middle table-nowrap mb-0"
-                  SearchPlaceholder="Search for tablet details or something..."
+                  SearchPlaceholder="Search for shippingCompany details or something..."
                 />
-              ) : (
-                <Loader error={error} />
-                // <></>
               )}
               <ToastContainer closeButton={false} limit={1} />
             </CardBody>
@@ -395,7 +399,7 @@ const TabletsData = () => {
         </Col>
       </Row>
 
-      {/* <Modal
+      <Modal
         isOpen={modal}
         toggle={toggle}
         centered
@@ -404,13 +408,13 @@ const TabletsData = () => {
         modalClassName="zoomIn"
       >
         <ModalHeader toggle={toggle} className="p-3 bg-info-subtle">
-          {!!isEdit ? "Edit Tablet" : "Add Tablet"}
+          {!!isEdit ? "Edit ShippingCompany" : "Add ShippingCompany"}
         </ModalHeader>
         <Form
           className="tablelist-form"
-          onSubmit={(e: any) => {
+          onSubmit={(e) => {
             e.preventDefault();
-            validation.handleSubmit();
+            validation.submitForm();
             return false;
           }}
         >
@@ -419,60 +423,64 @@ const TabletsData = () => {
               <Col lg={12}>
                 <div>
                   <Label htmlFor="tasksTitle-field" className="form-label">
-                    Title
+                    Serial Number
                   </Label>
                   <Input
-                    name="title"
-                    id="tasksTitle-field"
+                    name="serial_number"
+                    id="serial-field"
                     className="form-control"
-                    placeholder="Enter Title"
+                    placeholder="Enter Serial Number"
                     type="text"
                     validate={{
                       required: { value: true },
                     }}
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.title || ""}
+                    value={validation.values.serial_number || ""}
                     invalid={
-                      validation.touched.title && validation.errors.title
+                      validation.touched.serial_number &&
+                      validation.errors.serial_number
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.title && validation.errors.title ? (
+                  {validation.touched.serial_number &&
+                  validation.errors.serial_number ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.title}
+                      {validation.errors.serial_number}
                     </FormFeedback>
                   ) : null}
                 </div>
               </Col>
-              <Col lg={6}>
+              <Col lg={12}>
                 <div>
                   <Label htmlFor="client_nameName-field" className="form-label">
-                    Client
+                    ShippingCompany Label
                   </Label>
                   <Input
-                    name="client"
+                    name="shippingCompany_label"
                     type="text"
-                    id="client_nameName-field"
-                    placeholder="Enter Client Name"
+                    id="shippingCompany_label-field"
+                    placeholder="Enter ShippingCompany Label"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.client || ""}
+                    value={validation.values.shippingCompany_label || ""}
                     invalid={
-                      validation.touched.client && validation.errors.client
+                      validation.touched.shippingCompany_label &&
+                      validation.errors.shippingCompany_label
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.client && validation.errors.client ? (
+                  {validation.touched.shippingCompany_label &&
+                  validation.errors.shippingCompany_label ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.client}
+                      {validation.errors.shippingCompany_label}
                     </FormFeedback>
                   ) : null}
                 </div>
               </Col>
-              <Col lg={6}>
+              {/* <Col lg={6}>
                 <div>
                   <Label htmlFor="assignedtoName-field" className="form-label">
                     Assigned To
@@ -497,122 +505,68 @@ const TabletsData = () => {
                     </FormFeedback>
                   ) : null}
                 </div>
-              </Col>
-              <Col lg={6}>
-                <Label htmlFor="date-field" className="form-label">
-                  Create Date
-                </Label>
-                <Flatpickr
-                  name="createDate"
-                  id="date-field"
-                  className="form-control"
-                  placeholder="Select a date"
-                  options={{
-                    altInput: true,
-                    altFormat: "d M, Y",
-                    dateFormat: "d M, Y",
-                  }}
-                  onChange={(createDate: any) =>
-                    validation.setFieldValue(
-                      "createDate",
-                      moment(createDate[0]).format("DD MMMM ,YYYY")
-                    )
-                  }
-                  value={validation.values.createDate || ""}
-                />
-                {validation.errors.createDate &&
-                validation.touched.createDate ? (
-                  <FormFeedback type="invalid" className="d-block">
-                    {validation.errors.createDate}
-                  </FormFeedback>
-                ) : null}
-              </Col>
-              <Col lg={6}>
-                <Label htmlFor="duedate-field" className="form-label">
-                  Due Date
-                </Label>
-                <Flatpickr
-                  name="dueDate"
-                  id="date-field"
-                  className="form-control"
-                  placeholder="Select a date"
-                  options={{
-                    altInput: true,
-                    altFormat: "d M, Y",
-                    dateFormat: "d M, Y",
-                  }}
-                  onChange={(dueDate: any) =>
-                    validation.setFieldValue(
-                      "dueDate",
-                      moment(dueDate[0]).format("DD MMMM ,YYYY")
-                    )
-                  }
-                  value={validation.values.dueDate || ""}
-                />
-                {validation.errors.dueDate && validation.touched.dueDate ? (
-                  <FormFeedback type="invalid" className="d-block">
-                    {validation.errors.dueDate}
-                  </FormFeedback>
-                ) : null}
-              </Col>
-              <Col lg={6}>
-                <Label htmlFor="tablet-status" className="form-label">
-                  Status
+              </Col> */}
+
+              <Col lg={12}>
+                <Label htmlFor="shippingCompany-status" className="form-label">
+                  Has Empty Lockers
                 </Label>
                 <Input
                   name="status"
                   type="select"
                   className="form-select"
-                  id="status-field"
+                  id="lockers-field"
                   onChange={validation.handleChange}
                   onBlur={validation.handleBlur}
-                  value={validation.values.status || ""}
+                  value={validation.values.has_empty_lockers || ""}
                   invalid={
-                    validation.touched.status && validation.errors.status
+                    validation.touched.has_empty_lockers &&
+                    validation.errors.has_empty_lockers
                       ? true
                       : false
                   }
                 >
-                  <option value="">Status</option>
-                  <option value="New">New</option>
-                  <option value="Inprogress">Inprogress</option>
-                  <option value="Closed">Closed</option>
-                  <option value="Open">Open</option>
+                  <option value="true">True</option>
+                  <option value="false">False</option>
                 </Input>
-                {validation.touched.status && validation.errors.status ? (
+                {validation.touched.has_empty_lockers &&
+                validation.errors.has_empty_lockers ? (
                   <FormFeedback type="invalid">
-                    {validation.errors.status}
+                    {validation.errors.has_empty_lockers}
                   </FormFeedback>
                 ) : null}
               </Col>
-              <Col lg={6}>
-                <Label htmlFor="priority-field" className="form-label">
-                  Priority
-                </Label>
-                <Input
-                  name="priority"
-                  type="select"
-                  className="form-select"
-                  id="priority-field"
-                  onChange={validation.handleChange}
-                  onBlur={validation.handleBlur}
-                  value={validation.values.priority || ""}
-                  invalid={
-                    validation.touched.priority && validation.errors.priority
-                      ? true
-                      : false
-                  }
-                >
-                  <option value="">Priority</option>
-                  <option value="High">High</option>
-                  <option value="Medium">Medium</option>
-                  <option value="Low">Low</option>
-                </Input>
-                {validation.touched.priority && validation.errors.priority ? (
-                  <FormFeedback type="invalid">
-                    {validation.errors.priority}
-                  </FormFeedback>
-                ) : null}
+              <Col lg={12}>
+                <div>
+                  <Label htmlFor="tasksTitle-field" className="form-label">
+                    ShippingCompany Generation ID
+                  </Label>
+                  <Input
+                    name="shippingCompany_model_id"
+                    id="serial-field"
+                    className="form-control"
+                    placeholder="Enter ShippingCompany Generation Model"
+                    type="text"
+                    validate={{
+                      required: { value: true },
+                    }}
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.shippingCompany_model_id || ""}
+                    invalid={
+                      validation.touched.shippingCompany_model_id &&
+                      validation.errors.shippingCompany_model_id
+                        ? true
+                        : false
+                    }
+                  />
+                  {validation.touched.shippingCompany_model_id &&
+                  validation.errors.shippingCompany_model_id ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.shippingCompany_model_id}
+                    </FormFeedback>
+                  ) : null}
+                </div>
               </Col>
             </Row>
           </ModalBody>
@@ -622,14 +576,14 @@ const TabletsData = () => {
                 Close
               </button>
               <button type="submit" className="btn btn-success" id="add-btn">
-                {!!isEdit ? "Update" : "Add Tablet"}
+                {!!isEdit ? "Update" : "Add ShippingCompany"}
               </button>
             </div>
           </div>
         </Form>
-      </Modal> */}
+      </Modal>
     </React.Fragment>
   );
 };
 
-export default TabletsData;
+export default ShippingCompaniesData;

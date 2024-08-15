@@ -322,7 +322,7 @@ const EcommerceOrders = () => {
           <input
             type="checkbox"
             id="checkBoxAll"
-            className="form-check-input"
+            className="form-check-input ahln-check"
             onClick={() => checkedAll()}
           />
         ),
@@ -330,7 +330,7 @@ const EcommerceOrders = () => {
           return (
             <input
               type="checkbox"
-              className="orderCheckBox form-check-input"
+              className="orderCheckBox form-check-input ahln-check"
               value={cell.getValue()}
               onChange={() => deleteCheckbox()}
             />
@@ -660,7 +660,7 @@ const EcommerceOrders = () => {
                       columns={columns}
                       data={orderList || []}
                       isGlobalFilter={true}
-                      customPageSize={8}
+                      customPageSize={10}
                       divClass="table-responsive table-card mb-1 mt-0"
                       tableClass="align-middle table-nowrap"
                       theadClass="table-light text-muted text-uppercase"

@@ -14,6 +14,7 @@ import {
   Card,
   CardHeader,
   Col,
+  Spinner,
 } from "reactstrap";
 import classnames from "classnames";
 
@@ -24,7 +25,7 @@ import DeleteModal from "../../../Components/Common/DeleteModal";
 
 import BreadCrumb from "../../../Components/Common/BreadCrumb";
 import TableContainer from "../../../Components/Common/TableContainer";
-import { Rating, Published, Price, Camera } from "./EcommerceModelCol";
+import { Rating, Published, Price, GetValid } from "./EcommerceModelCol";
 //Import data
 import { modelsData } from "../../../common/data";
 
@@ -38,12 +39,20 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { createSelector } from "reselect";
+import Spinners from "Components/Common/Spinner";
 
 
 
 const EcommerceModels = (props: any) => {
   const dispatch: any = useDispatch();
 
+  const selectModelLoading = createSelector(
+    (state: any) => state.Ecommerce,
+    (state) => ({
+      modelsLoading: state.modelsLoading,
+    })
+  );
+  const modelsLoading:any = useSelector(selectModelLoading);
   const selectModelData = createSelector(
     (state: any) => state.Ecommerce,
     (state) => ({
@@ -67,6 +76,7 @@ const EcommerceModels = (props: any) => {
   useEffect(() => {
     if (!isEmpty(models)) setModelList(models);
   }, [models]);
+  console.log("models",models)
   //delete order
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
@@ -182,7 +192,7 @@ const EcommerceModels = (props: any) => {
         accessorKey: "has_outside_camera",
         enableColumnFilter: false,
         cell: (cell: any) => {
-          return <Camera {...cell} />;
+          return <GetValid {...cell} />;
         },
       },
       {
@@ -190,7 +200,15 @@ const EcommerceModels = (props: any) => {
         accessorKey: "has_inside_camera",
         enableColumnFilter: false,
         cell: (cell: any) => {
-          return <Camera {...cell} />;
+          return <GetValid {...cell} />;
+        },
+      },
+      {
+        header: "Has Table",
+        accessorKey: "has_tablet",
+        enableColumnFilter: false,
+        cell: (cell: any) => {
+          return <GetValid {...cell} />;
         },
       },
       {
@@ -204,6 +222,7 @@ const EcommerceModels = (props: any) => {
       {
         header: "Action",
         cell: (cell: any) => {
+          
           return (
             <UncontrolledDropdown>
               <DropdownToggle
@@ -213,13 +232,13 @@ const EcommerceModels = (props: any) => {
               >
                 <i className="ri-more-fill" />
               </DropdownToggle>
-              <DropdownMenu className="dropdown-menu-end">
-                <DropdownItem href="apps-ecommerce-product-details">
+              <DropdownMenu className="dropdown-menu-end" >
+                <DropdownItem href={`apps-ecommerce-model-details/${cell.row.original.id}`}>
                   <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
                   View
                 </DropdownItem>
 
-                <DropdownItem href="apps-ecommerce-add-model">
+                <DropdownItem href={`apps-ecommerce-edit-model/${cell.row.original.id}`} >
                   <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>{" "}
                   Edit
                 </DropdownItem>
@@ -351,32 +370,38 @@ const EcommerceModels = (props: any) => {
                     </div>
                   </Row>
                 </div>
+                {modelsLoading===true?
+                (
+                  <Spinners/>
+                )
+                :(
                 <div className="card-body pt-0">
                   
-                  {modelList && modelList.length > 0 ? (
-                    <TableContainer
-                      columns={columns}
-                      data={modelList || [models]}
-                      isGlobalFilter={true}
-                      customPageSize={10}
-                      divClass="table-responsive mb-1"
-                      tableClass="mb-0 align-middle table-borderless"
-                      theadClass="table-light text-muted"
-                      isProductsFilter={true}
-                      SearchPlaceholder="Search Models..."
-                    />
-                  ) : (
-                    <div className="py-4 text-center">
-                      <div>
-                        <i className="ri-search-line display-5 text-success"></i>
-                      </div>
-
-                      <div className="mt-4">
-                        <h5>Sorry! No Result Found</h5>
-                      </div>
+                {modelList && modelList.length > 0 ? (
+                  <TableContainer
+                    columns={columns}
+                    data={modelList || [models]}
+                    isGlobalFilter={true}
+                    customPageSize={10}
+                    divClass="table-responsive mb-1"
+                    tableClass="mb-0 align-middle table-borderless"
+                    theadClass="table-light text-muted"
+                    isModelFilter={true}
+                    SearchPlaceholder="Search Models..."
+                  />
+                ) : (
+                  <div className="py-4 text-center">
+                    <div>
+                      <i className="ri-search-line display-5 text-success"></i>
                     </div>
-                  )}
-                </div>
+
+                    <div className="mt-4">
+                      <h5>Sorry! No Result Found</h5>
+                    </div>
+                  </div>
+                )}
+              </div>)
+                }
               </Card>
             </div>
           </Col>

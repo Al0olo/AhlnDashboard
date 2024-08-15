@@ -2,23 +2,26 @@ import React from "react";
 import { Container, Row } from "reactstrap";
 import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import Widgets from "./Widgets";
-import TabletsData from "./TabletsData";
+import DeliveryPackageData from "./DeliveryPackageData";
 
-const TabletView = () => {
-  document.title = "Tablets List | Ahln - React Admin & Dashboard";
+const BoxView = () => {
+  document.title = "Delivery Package List | Ahln - React Admin & Dashboard";
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <BreadCrumb title="Tablets List" pageTitle="Tablets" />
+          <BreadCrumb
+            title="Delivery Package List"
+            pageTitle="Delivery Package"
+          />
           <Row>
             <Widgets />
           </Row>
-          <TabletsData />
+          <DeliveryPackageData />
         </Container>
       </div>
     </React.Fragment>
   );
 };
 
-export default TabletView;
+export default BoxView;

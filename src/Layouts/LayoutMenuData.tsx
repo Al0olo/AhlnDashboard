@@ -28,6 +28,8 @@ const Navdata = () => {
   const [isInvoices, setIsInvoices] = useState<boolean>(false);
   const [isSupportTickets, setIsSupportTickets] = useState<boolean>(false);
   const [isBox, setIsBox] = useState<boolean>(false);
+  const [isDelivery, setIsDelivery] = useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   // const [isNFTMarketplace, setIsNFTMarketplace] = useState<boolean>(false);
   // const [isJobs, setIsJobs] = useState<boolean>(false);
   // const [isJobList, setIsJobList] = useState<boolean>(false);
@@ -193,8 +195,8 @@ const Navdata = () => {
           childItems: [
             {
               id: 1,
-              label: "Mailbox",
-              link: "/apps-mailbox",
+              label: "Contact Us",
+              link: "/contact-us",
               parentId: "apps",
             },
           ],
@@ -211,54 +213,55 @@ const Navdata = () => {
           parentId: "apps",
           stateVariables: isEcommerce,
           childItems: [
-            {
-              id: 1,
-              label: "Models",
-              link: "/apps-ecommerce-models",
-              parentId: "apps",
-            },
-            {
-              id: 2,
-              label: "Model Details",
-              link: "/apps-ecommerce-model-details",
-              parentId: "apps",
-            },
-            {
-              id: 3,
-              label: "Create model",
-              link: "/apps-ecommerce-add-model",
-              parentId: "apps",
-            },
-            {
-              id: 4,
-              label: "Products",
-              link: "/apps-ecommerce-products",
-              parentId: "apps",
-            },
-            {
-              id: 5,
-              label: "Product Details",
-              link: "/apps-ecommerce-product-details",
-              parentId: "apps",
-            },
-            {
-              id: 6,
-              label: "Create Product",
-              link: "/apps-ecommerce-add-product",
-              parentId: "apps",
-            },
-            {
-              id: 7,
-              label: "Orders",
-              link: "/apps-ecommerce-orders",
-              parentId: "apps",
-            },
-            {
-              id: 8,
-              label: "Order Details",
-              link: "/apps-ecommerce-order-details",
-              parentId: "apps",
-            },
+
+            // {
+            //   id: 1,
+            //   label: "Models",
+            //   link: "/apps-ecommerce-models",
+            //   parentId: "apps",
+            // },
+            // {
+            //   id: 2,
+            //   label: "Model Details",
+            //   link: "/apps-ecommerce-model-details",
+            //   parentId: "apps",
+            // },
+            // {
+            //   id: 3,
+            //   label: "Create model",
+            //   link: "/apps-ecommerce-add-model",
+            //   parentId: "apps",
+            // },
+            // {
+            //   id: 4,
+            //   label: "Products",
+            //   link: "/apps-ecommerce-products",
+            //   parentId: "apps",
+            // },
+            // {
+            //   id: 5,
+            //   label: "Product Details",
+            //   link: "/apps-ecommerce-product-details",
+            //   parentId: "apps",
+            // },
+            // {
+            //   id: 6,
+            //   label: "Create Product",
+            //   link: "/apps-ecommerce-add-product",
+            //   parentId: "apps",
+            // },
+            // {
+            //   id: 7,
+            //   label: "Orders",
+            //   link: "/apps-ecommerce-orders",
+            //   parentId: "apps",
+            // },
+            // {
+            //   id: 8,
+            //   label: "Order Details",
+            //   link: "/apps-ecommerce-order-details",
+            //   parentId: "apps",
+            // },
             {
               id: 9,
               label: "Customers",
@@ -267,71 +270,77 @@ const Navdata = () => {
             },
             {
               id: 10,
-              label: "Shopping Cart",
-              link: "/apps-ecommerce-cart",
+              label: "Relative Customers",
+              link: "/apps-ecommerce-relative-customers",
               parentId: "apps",
             },
-            {
-              id: 11,
-              label: "Checkout",
-              link: "/apps-ecommerce-checkout",
-              parentId: "apps",
-            },
-            {
-              id: 12,
-              label: "Sellers",
-              link: "/apps-ecommerce-sellers",
-              parentId: "apps",
-            },
-            {
-              id: 13,
-              label: "Seller Details",
-              link: "/apps-ecommerce-seller-details",
-              parentId: "apps",
-            },
+            // {
+            //   id: 11,
+            //   label: "Shopping Cart",
+            //   link: "/apps-ecommerce-cart",
+            //   parentId: "apps",
+            // },
+            // {
+            //   id: 12,
+            //   label: "Checkout",
+            //   link: "/apps-ecommerce-checkout",
+            //   parentId: "apps",
+            // },
+            // {
+            //   id: 13,
+            //   label: "Sellers",
+            //   link: "/apps-ecommerce-sellers",
+            //   parentId: "apps",
+            // },
+            // {
+            //   id: 14,
+            //   label: "Seller Details",
+            //   link: "/apps-ecommerce-seller-details",
+            //   parentId: "apps",
+            // },
           ],
         },
 
-        {
-          id: "invoices",
-          label: "Invoices",
-          link: "/#",
-          isChildItem: true,
-          click: function (e: any) {
-            e.preventDefault();
-            setIsInvoices(!isInvoices);
-          },
-          parentId: "apps",
-          stateVariables: isInvoices,
-          childItems: [
-            { id: 1, label: "List View", link: "/apps-invoices-list" },
-            { id: 2, label: "Details", link: "/apps-invoices-details" },
-            { id: 3, label: "Create Invoice", link: "/apps-invoices-create" },
-          ],
-        },
-        {
-          id: "supportTickets",
-          label: "Support Tickets",
-          link: "/#",
-          isChildItem: true,
-          click: function (e: any) {
-            e.preventDefault();
-            setIsSupportTickets(!isSupportTickets);
-          },
-          parentId: "apps",
-          stateVariables: isSupportTickets,
-          childItems: [
-            { id: 1, label: "List View", link: "/apps-tickets-list" },
-            { id: 2, label: "Ticket Details", link: "/apps-tickets-details" },
-          ],
-        },
+        // {
+        //   id: "invoices",
+        //   label: "Invoices",
+        //   link: "/#",
+        //   isChildItem: true,
+        //   click: function (e: any) {
+        //     e.preventDefault();
+        //     setIsInvoices(!isInvoices);
+        //   },
+        //   parentId: "apps",
+        //   stateVariables: isInvoices,
+        //   childItems: [
+        //     { id: 1, label: "List View", link: "/apps-invoices-list" },
+        //     { id: 2, label: "Details", link: "/apps-invoices-details" },
+        //     { id: 3, label: "Create Invoice", link: "/apps-invoices-create" },
+        //   ],
+        // },
+        // {
+        //   id: "supportTickets",
+        //   label: "Support Tickets",
+        //   link: "/#",
+        //   isChildItem: true,
+        //   click: function (e: any) {
+        //     e.preventDefault();
+        //     setIsSupportTickets(!isSupportTickets);
+        //   },
+        //   parentId: "apps",
+        //   stateVariables: isSupportTickets,
+        //   childItems: [
+        //     { id: 1, label: "List View", link: "/apps-tickets-list" },
+        //     { id: 2, label: "Ticket Details", link: "/apps-tickets-details" },
+        //   ],
+        // },
 
-        {
-          id: "todo",
-          label: "To Do",
-          link: "/apps-todo",
-          parentId: "apps",
-        },
+        // {
+        //   id: "todo",
+        //   label: "To Do",
+        //   link: "/apps-todo",
+        //   parentId: "apps",
+        // },
         {
           id: "boxes",
           label: "Boxes",
@@ -346,12 +355,55 @@ const Navdata = () => {
           childItems: [
             // Routes needs to be adjusted
             { id: 1, label: "Boxes List", link: "/boxes" },
-            { id: 2, label: "Box Generation", link: "/apps-tickets-details" },
+            { id: 2, label: "Box Generation", link: "/box-generation" },
             { id: 3, label: "Tablets", link: "/tablets" },
             { id: 4, label: "Addresses", link: "/addresses" },
             { id: 5, label: "Boxes Locker", link: "/apps-tickets-details" },
-            { id: 6, label: "Boxes Images", link: "/apps-tickets-details" },
-            { id: 7, label: "User Boxes", link: "/apps-tickets-details" },
+            { id: 6, label: "Boxes Images", link: "/boxes-images" },
+            { id: 7, label: "User Boxes", link: "/user-boxes" },
+          ],
+        },
+        {
+          id: "delivery",
+          label: "Delivery",
+          link: "/#",
+          isChildItem: true,
+          click: function (e: any) {
+            e.preventDefault();
+            setIsDelivery(!isDelivery);
+          },
+          parentId: "apps",
+          stateVariables: isDelivery,
+          childItems: [
+            // Routes needs to be adjusted
+            {
+              id: 1,
+              label: "Delivery Packages List",
+              link: "/delivery-packages",
+            },
+            {
+              id: 2,
+              label: "Shipping Companies",
+              link: "/shipping-companies",
+            },
+          ],
+        },
+        {
+          id: "admin",
+          label: "Administration",
+          link: "/#",
+          isChildItem: true,
+          click: function (e: any) {
+            e.preventDefault();
+            setIsAdmin(!isAdmin);
+          },
+          parentId: "apps",
+          stateVariables: isAdmin,
+          childItems: [
+            // Routes needs to be adjusted
+            { id: 1, label: "Roles", link: "/role" },
+            { id: 2, label: "Audit Trail", link: "/audit-trail" },
+            { id: 3, label: "System Log", link: "/system-log" },
           ],
         },
       ],

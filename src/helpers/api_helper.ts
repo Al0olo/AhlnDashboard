@@ -40,15 +40,13 @@ AxiosInstance.interceptors.response.use(
       return Promise.reject("Network error or server is not responding.");
     }
 
-    console.error("Request failed:", error.response.status);
-
     let message;
     switch (error.response.status) {
       case 500:
         message = "Internal Server Error";
         break;
       case 400:
-        message = "Invalid credentials";
+        message = error.response?.data?.message;
         break;
       case 404:
         message = "Sorry! The data you are looking for could not be found";
@@ -67,9 +65,7 @@ AxiosInstance.interceptors.response.use(
 const setAuthorization = (token: string) => {
   if (token) {
     // sessionStorage.setItem("token", token);
-    AxiosInstance.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${token}`;
+    AxiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   } else {
     delete AxiosInstance.defaults.headers.common["Authorization"];
     sessionStorage.removeItem("authUser");
@@ -99,7 +95,7 @@ class APIClient {
   };
 
   update = (url: string, data: any) => {
-    return AxiosInstance.patch(url, data);
+    return AxiosInstance.put(url, data);
   };
 
   put = (url: string, data: any) => {
@@ -120,4 +116,3 @@ const getLoggedinUser = () => {
 };
 
 export { APIClient, getLoggedinUser, removeAuthorization, setAuthorization };
-

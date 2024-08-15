@@ -4,11 +4,14 @@
 
 .card {
     margin-bottom: $grid-gutter-width;
-    box-shadow: $card-box-shadow;
+    // box-shadow: rgba(100, 98, 92, 0.03) 0 0 5px 0.5px;
+    // background-color: red;
+    border-radius: 16px !important;
 }
 
 .card-header {
     border-bottom: 1px solid var(--#{$prefix}border-color);
+    border-radius: 16px !important;
 }
 
 //Card Header Dropdown

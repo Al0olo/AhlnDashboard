@@ -12,6 +12,23 @@ import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
 import Select from "react-select";
 
+const ModelGlobalFilter = () => {
+    return (
+        <React.Fragment>
+            <div className="col-sm-auto ms-auto">
+                <div>
+                    <Link
+                        to="/apps-ecommerce-add-model"
+                        className="btn btn-secondary"
+                    >
+                        <i className="ri-add-line align-bottom me-1"></i> Add
+                        Model
+                    </Link>
+                </div>
+            </div>
+        </React.Fragment>
+    );
+};
 const ProductsGlobalFilter = () => {
     return (
         <React.Fragment>
@@ -48,10 +65,10 @@ const CustomersGlobalFilter = () => {
     ];
     return (
         <React.Fragment>
-            <Col xl={7}>
+            <Col sm={7}>
                 <Row className="g-3">
                     <Col sm={4}>
-                        <div className="">
+                        <div className="ahln-picker">
                             <Flatpickr
                                 className="form-control"
                                 id="datepicker-publish-input"
@@ -82,7 +99,7 @@ const CustomersGlobalFilter = () => {
                         <div>
                             <button
                                 type="button"
-                                className="btn btn-primary w-100"
+                                className="btn btn-primary ahln-btn-module   w-100"
                             >
                                 {" "}
                                 <i className="ri-equalizer-fill me-2 align-bottom"></i>
@@ -183,7 +200,7 @@ const OrderGlobalFilter = () => {
 
             <Col sm={4} className="col-xxl-1">
                 <div>
-                    <button type="button" className="btn btn-primary w-100" style={{ paddingInline: 10 }}>
+                    <button type="button" className="btn btn-primary ahln-btn-module  w-100" style={{ paddingInline: 10 }}>
                         {" "}
                         <i className="ri-equalizer-fill me-1 align-bottom"></i>
                         Filters
@@ -270,12 +287,12 @@ const CompaniesGlobalFilter = () => {
 const CryptoOrdersGlobalFilter = () => {
     return (
         <React.Fragment>
-            <Col xl={2} md={6}>
+            <Col xl={2} md={12}>
                 <div className="input-group">
                     <span className="input-group-text" id="basic-addon1"><i className="ri-calendar-2-line"></i></span>
                     <Flatpickr
                         placeholder="Select date"
-                        className="form-control"
+                        className="form-control col-md-3"
                         options={{
                             mode: "range",
                             dateFormat: "d M, Y"
@@ -283,7 +300,7 @@ const CryptoOrdersGlobalFilter = () => {
                     />
                 </div>
             </Col>
-            <Col xl={2} md={4}>
+            <Col xl={2} md={12}>
                 <select className="form-control" data-choices data-choices-search-false name="choices-single-default"
                     id="choices-single-default">
                     <option defaultValue="all">Select Type</option>
@@ -291,7 +308,7 @@ const CryptoOrdersGlobalFilter = () => {
                     <option value="Sell">Buy</option>
                 </select>
             </Col>
-            <Col xl={2} md={4}>
+            <Col xl={2} md={12}>
                 <select className="form-control" data-choices data-choices-search-false name="choices-single-default2"
                     id="choices-single-default2">
                     <option defaultValue="all">Select Status</option>
@@ -300,7 +317,7 @@ const CryptoOrdersGlobalFilter = () => {
                     <option value="Pending">Pending</option>
                 </select>
             </Col>
-            <Col xl={1} md={4}>
+            <Col xl={1} md={12}>
                 <button className="btn btn-secondary w-100">Filters</button>
             </Col>
         </React.Fragment>
@@ -448,7 +465,7 @@ const TaskListGlobalFilter = () => {
                 </div>
             </div>
             <div className="col-xxl-1 col-sm-4">
-                <button type="button" className="btn btn-primary w-100" style={{ paddingInline: 10 }}> <i className="ri-equalizer-fill me-1 align-bottom"></i>
+                <button type="button" className="btn btn-primary ahln-btn-module  w-100" style={{ paddingInline: 10 }}> <i className="ri-equalizer-fill me-1 align-bottom"></i>
                     Filters
                 </button>
             </div>
@@ -525,6 +542,7 @@ const LeadsGlobalFilter = ({ onClickDelete } :any) => {
 };
 
 export {
+    ModelGlobalFilter,
     ProductsGlobalFilter,
     CustomersGlobalFilter,
     OrderGlobalFilter,

@@ -8,11 +8,11 @@ const Widgets = () => {
     <React.Fragment>
       {(ticketsWidgets || []).map((item, key) => (
         <Col xxl={3} sm={6} key={key}>
-          <Card className="card-animate">
-            <CardBody>
+          <Card className="card-animate  border border-light">
+            <CardBody className={"bg-"+item.color+"-subtle rounded rounded-4"}>
               <div className="d-flex justify-content-between">
                 <div>
-                  <p className="fw-medium text-muted mb-0">{item.title}</p>
+                  <p className="fw-medium text-muted mb-0" id="ahln-widget-dark">{item.title}</p>
                   <h4 className="mt-4 ff-secondary fw-semibold">
                     <span className="counter-value" data-target="547">
                       <CountUp
@@ -31,7 +31,7 @@ const Widgets = () => {
                         "badge bg-light text-" + item.percentageClass + " mb-0"
                       }
                     >
-                      <i className={item.arrowIcon + " align-middle"}></i>{" "}
+                      <i className={item.arrowIcon + " align-middle text-light"}></i>{" "}
                       {item.percentage}
                     </span>{" "}
                     vs. previous month
@@ -44,11 +44,10 @@ const Widgets = () => {
                         "avatar-title rounded-circle fs-4 text-" +
                         item.color +
                         " bg-" +
-                        item.color +
-                        "-subtle"
+                        item.color 
                       }
                     >
-                      <i className={item.icon}></i>
+                      <i className={item.icon + " text-light"}></i>
                     </span>
                   </div>
                 </div>

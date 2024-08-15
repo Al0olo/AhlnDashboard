@@ -10,6 +10,9 @@ import { registerSlices } from "./auth/register/reducer";
 import { forgotPasswordSlices } from "./auth/forgetpwd/reducer";
 import { verifySlices } from "./auth/verifyOtp/reducer";
 
+// Admin
+import { roleSlices } from "./admin/role/reducer";
+
 import ProfileReducer from "./auth/profile/reducer";
 
 //Boxes
@@ -17,6 +20,22 @@ import { boxSlices } from "./Box/boxes/reducer";
 
 //Tablets
 import { tabletSlices } from "./Box/tablet/reducer";
+
+//Address
+import { addressSlices } from "./Box/Address/reducer";
+
+//User Boxes
+import { userBoxSlices } from "./Box/UserBoxes/reducer";
+
+// Box Images
+import { boxImgesSlices } from "./Box/BoxImages/reducer";
+
+// Delivery Packages
+import { deliverySlices } from "./delivery/deliveryPackage/reducer";
+
+// Shipping Companies
+import { shippingCompaniesSlices } from "./delivery/shippingCompany/reducer";
+
 //Calendar
 import CalendarReducer from "./calendar/reducer";
 //Chat
@@ -76,13 +95,29 @@ import JobReducer from "./jobs/reducer";
 
 // API Key
 import APIKeyReducer from "./apiKey/reducer";
+import { relativeCustomerSlices } from "./Box/RelativeCustomer/reducer";
+import { contactUsSlices } from "./admin/constactUs/reducer";
+import { auditTrailSlices } from "./admin/auditTrail/reducer";
+import { systemLogSlices } from "./admin/systemLog/reducer";
+import { boxGenerationSlices } from "./Box/boxGeneration/reducer";
 
 const rootReducer = combineReducers({
+  Role: roleSlices,
+  ContactUs: contactUsSlices,
+  AuditTrail: auditTrailSlices,
+  SystemLog: systemLogSlices,
+  BoxGeneration: boxGenerationSlices,
   Layout: LayoutReducer,
   Login: loginSlices,
   Logout: authSlices,
   Boxes: boxSlices,
+  BoxImages: boxImgesSlices,
+  RelativeCustomer: relativeCustomerSlices,
   Tablets: tabletSlices,
+  Address: addressSlices,
+  UserBox: userBoxSlices,
+  Delivery: deliverySlices,
+  ShippingCompanies: shippingCompaniesSlices,
   Account: registerSlices,
   ForgetPassword: forgotPasswordSlices,
   VerifyPasswordOtp: verifySlices,
