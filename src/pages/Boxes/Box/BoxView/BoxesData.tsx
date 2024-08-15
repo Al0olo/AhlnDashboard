@@ -18,27 +18,18 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import TableContainer from "../../../../Components/Common/TableContainer";
 import {
   GetBoxesAction,
   AddBoxAction,
   DeleteBoxAction,
   UpdateBoxAction,
+  GetBoxGenerationsAction,
+  GetTabletsAction,
+  GetAddressesAction,
 } from "../../../../slices/thunks";
 
-// import {
-//   BoxsId,
-//   Title,
-//   Client,
-//   AssignedTo,
-//   CreateDate,
-//   DueDate,
-//   Status,
-//   Priority,
-// } from "./TicketCol";
-//Import Flatepicker
-import Flatpickr from "react-flatpickr";
 import * as moment from "moment";
 
 // Formik
@@ -50,41 +41,39 @@ import DeleteModal from "../../../../Components/Common/DeleteModal";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../../Components/Common/Loader";
-import { createSelector } from "reselect";
+import { useAppSelector } from "redux-hooks";
 
 const BoxesData = () => {
   const dispatch: any = useDispatch();
-  const selectLayoutState = (state: any) => state.Boxes;
 
-  const selectLayoutProperties = createSelector(selectLayoutState, (state) => ({
-    boxsList: state.data,
-    isBoxSuccess: state.isBoxSuccess,
-    error: state.error,
-    loader: state.loading,
-  }));
+  const { boxes, loading, spinner } = useAppSelector((state) => state.Boxes);
+  const { boxGenerations } = useAppSelector((state) => state.BoxGeneration);
 
-  // Inside your component
-  const { boxsList, isBoxSuccess, error, loader } = useSelector(
-    selectLayoutProperties
-  );
+  const [filterTablet, setFilterTablet] = useState<any>([]);
+  const [filterAddress, setFilterAddress] = useState<any>([]);
+
+  const [addressData, setAddressData] = useState<any>({});
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [box, setBox] = useState<any>([]);
+  const [box, setBox] = useState<any>({
+    id: "",
+    serial_number: "",
+    box_label: "",
+    has_empty_lockers: "",
+    box_model_id: "",
+    current_tablet_id: "",
+    previous_tablet_id: "",
+    address_id: "",
+  });
 
   // Delete Boxes
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
+  // const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
 
   const toggle = useCallback(() => {
-    if (modal) {
-      setModal(false);
-      setBox(box);
-    } else {
-      setModal(true);
-      setBox(box);
-    }
-  }, [modal, box]);
+    setModal((prevState) => !prevState);
+  }, [modal]);
 
   // validation
   const validation: any = useFormik({
@@ -92,48 +81,75 @@ const BoxesData = () => {
     enableReinitialize: true,
 
     initialValues: {
-      serial_number: (box && box.serial_number) || "",
-      box_label: (box && box.box_label) || "",
-      has_empty_lockers: (box && box.has_empty_lockers) || "",
-      current_tablet_id: (box && box.current_tablet_id) || "",
-      previous_tablet_id: (box && box.previous_tablet_id) || "",
-      box_model_id: (box && box.box_model_id) || "",
-      address_id: (box && box.address_id) || "",
+      id: box.id ? box.id : "",
+      serial_number: box.serial_number ? box.serial_number : "",
+      box_label: box.box_label ? box.box_label : "",
+      has_empty_lockers: box.has_empty_lockers ? box.has_empty_lockers : "",
+      box_model_id: box.box_model_id ? box.box_model_id : "",
+      current_tablet_id: box.current_tablet_id ? box.current_tablet_id : "",
+      previous_tablet_id: box.previous_tablet_id ? box.previous_tablet_id : "",
+      address_id: box.address_id ? box.address_id : "",
     },
     validationSchema: Yup.object({
       serial_number: Yup.string().required("Please Enter Serial Number"),
       box_label: Yup.string().required("Please Enter Box Label"),
-      current_tablet_id: Yup.number().required("Please Enter Tablet Id"),
       box_model_id: Yup.string().required("Please Enter Box Generation Id"),
+      has_empty_lockers: Yup.string().required(
+        "Please Enter Has Empty Lockers"
+      ),
+      current_tablet_id: Yup.string().required(
+        "Please Enter Current Tablet Id"
+      ),
+      address_id: Yup.string().required("Please Enter Address Id"),
     }),
     onSubmit: (values) => {
       if (isEdit) {
         const updateBoxes = {
+          id: values.id,
           serial_number: values.serial_number,
           box_label: values.box_label,
           has_empty_lockers: values.has_empty_lockers,
           current_tablet_id: values.current_tablet_id,
-          previous_tablet_id: values.previous_tablet_id,
+          previous_tablet_id: values.previous_tablet_id || null,
           box_model_id: values.box_model_id,
           address_id: values.address_id,
         };
         // update box
-        dispatch(UpdateBoxAction(updateBoxes));
+        dispatch(UpdateBoxAction(updateBoxes)).then((result: any) => {
+          if (result.type === "box/update/fulfilled") {
+            toast.success("Box Updated Successfully", { autoClose: 3000 });
+            toggle();
+          } else {
+            toast.error(`Error ${result.payload}`, { autoClose: 3000 });
+          }
+        });
         validation.resetForm();
       } else {
         const newBox = {
-          serial_number: values["serial_number"],
-          box_label: values["box_label"],
-          has_empty_lockers: values["has_empty_lockers"],
-          box_model_id: values["box_model_id"],
+          serial_number: values.serial_number,
+          box_label: values.box_label,
+          has_empty_lockers: values.has_empty_lockers,
+          box_model_id: values.box_model_id,
+          current_tablet_id: values.current_tablet_id
+            ? values.current_tablet_id
+            : null,
+          previous_tablet_id: values.current_tablet_id
+            ? values.previous_tablet_id
+            : null,
+          address_id: values.address_id ? values.address_id : null,
         };
-        console.log("RRRRRRRRRRRRRRR");
 
         // save new box
-        dispatch(AddBoxAction(newBox));
+        dispatch(AddBoxAction(newBox)).then((result: any) => {
+          if (result.type === "box/add/fulfilled") {
+            toast.success("Box Added Successfully", { autoClose: 3000 });
+            toggle();
+          } else {
+            toast.error(`Error ${result.payload}`, { autoClose: 3000 });
+          }
+        });
         validation.resetForm();
       }
-      toggle();
     },
   });
 
@@ -143,98 +159,144 @@ const BoxesData = () => {
     setDeleteModal(true);
   };
 
-  const handleDeleteBox = () => {
-    console.log("box", box);
+  const handleOnChange = (event: any) => {
+    console.log(event.target.value, "AAASSS");
 
+    const value = event.target.value;
+    setAddressData(value);
+  };
+  const handleDeleteBox = () => {
     if (box) {
-      dispatch(DeleteBoxAction(box.id));
+      dispatch(DeleteBoxAction(box.id)).then((result: any) => {
+        if (result.type === "box/delete/fulfilled") {
+          toast.success("Box Deleted Successfully", { autoClose: 3000 });
+        } else {
+          toast.error(`Error ${result.payload}`, { autoClose: 3000 });
+        }
+      });
       setDeleteModal(false);
     }
   };
 
   // Update Data
-  const handleBoxesClick = (arg: any) => {
-    const box = arg;
-
-    setBox({
-      serial_number: box.serial_number,
-      box_label: box.box_label,
-      has_empty_lockers: box.has_empty_lockers,
-      box_model_id: box.box_model_id,
-      address_id: box.address_id,
-    });
-
-    setIsEdit(true);
-    setModal(true);
-  };
+  const handleBoxesClick = useCallback(
+    (arg: any) => {
+      setIsEdit(true);
+      filterTablet.push({ id: arg.current_tablet_id });
+      setBox({
+        id: arg.id,
+        serial_number: arg.serial_number,
+        box_label: arg.box_label,
+        has_empty_lockers: arg.has_empty_lockers,
+        current_tablet_id: arg.current_tablet_id,
+        previous_tablet_id: arg.previous_tablet_id,
+        box_model_id: arg.box_model_id,
+        address_id: arg.address_id,
+      });
+      toggle();
+    },
+    [toggle, filterTablet]
+  );
 
   // Get Data
 
   useEffect(() => {
     dispatch(GetBoxesAction());
+    dispatch(GetBoxGenerationsAction());
+    dispatch(GetTabletsAction()).then((res: any) => {
+      if (res.type === "tablet/get-all/fulfilled") {
+        // setFilterTablet(
+        //   [box, ...res.payload.filter((obj: any) => !obj.box_id)].filter(
+        //     (v, i, a) =>
+        //       a.findIndex(
+        //         (t) => t.current_tablet_id === v.current_tablet_id
+        //       ) === i
+        //   )
+        // );
+        console.log(res.payload, "res.payload.before");
+
+        setFilterTablet(
+          res.payload.filter((obj: any) => !obj.box_id)
+          // res.payload.filter((obj: any) => ({
+          //   box_id: !obj.box_id,
+          //   current_tablet_id: obj.tablet_id,
+          // }))
+        );
+        // setFilterTablet(res.payload.filter((obj: any) => !obj.box_id));
+        console.log("res.payload", res.payload);
+      }
+    });
+    dispatch(GetAddressesAction()).then((res: any) => {
+      if (res.type === "address/get-all/fulfilled") {
+        setFilterAddress(res.payload.filter((obj: any) => !obj.box_id));
+      }
+    });
   }, [dispatch]);
 
+  console.log("filterTablet", filterTablet);
+
   // Checked All
-  const checkedAll = useCallback(() => {
-    const checkall: any = document.getElementById("checkBoxAll");
-    const ele = document.querySelectorAll(".boxCheckBox");
+  // const checkedAll = useCallback(() => {
+  //   const checkall: any = document.getElementById("checkBoxAll");
+  //   const ele = document.querySelectorAll(".boxCheckBox");
 
-    if (checkall.checked) {
-      ele.forEach((ele: any) => {
-        ele.checked = true;
-      });
-    } else {
-      ele.forEach((ele: any) => {
-        ele.checked = false;
-      });
-    }
-    deleteCheckbox();
-  }, []);
+  //   if (checkall.checked) {
+  //     ele.forEach((ele: any) => {
+  //       ele.checked = true;
+  //     });
+  //   } else {
+  //     ele.forEach((ele: any) => {
+  //       ele.checked = false;
+  //     });
+  //   }
+  //   deleteCheckbox();
+  // }, []);
 
-  // Delete Multiple
-  const [selectedCheckBoxDelete, setSelectedCheckBoxDelete] = useState<any>([]);
-  const [isMultiDeleteButton, setIsMultiDeleteButton] =
-    useState<boolean>(false);
+  // // Delete Multiple
+  // const [selectedCheckBoxDelete, setSelectedCheckBoxDelete] = useState<any>([]);
+  // const [isMultiDeleteButton, setIsMultiDeleteButton] =
+  //   useState<boolean>(false);
 
-  const deleteMultiple = () => {
-    const checkall: any = document.getElementById("checkBoxAll");
-    selectedCheckBoxDelete.forEach((element: any) => {
-      dispatch(DeleteBoxAction(element.id));
-      setTimeout(() => {
-        toast.clearWaitingQueue();
-      }, 3000);
-    });
-    setIsMultiDeleteButton(false);
-    checkall.checked = false;
-  };
+  // const deleteMultiple = () => {
+  //   const checkall: any = document.getElementById("checkBoxAll");
+  //   selectedCheckBoxDelete.forEach((element: any) => {
+  //     dispatch(DeleteBoxAction(element.id));
+  //     setTimeout(() => {
+  //       toast.clearWaitingQueue();
+  //     }, 3000);
+  //   });
+  //   setIsMultiDeleteButton(false);
+  //   checkall.checked = false;
+  // };
 
-  const deleteCheckbox = () => {
-    const ele = document.querySelectorAll(".boxCheckBox:checked");
-    ele?.length > 0
-      ? setIsMultiDeleteButton(true)
-      : setIsMultiDeleteButton(false);
-    setSelectedCheckBoxDelete(ele);
-  };
+  // const deleteCheckbox = () => {
+  //   const ele = document.querySelectorAll(".boxCheckBox:checked");
+  //   ele?.length > 0
+  //     ? setIsMultiDeleteButton(true)
+  //     : setIsMultiDeleteButton(false);
+  //   setSelectedCheckBoxDelete(ele);
+  // };
+  console.log("filterTablet", filterTablet);
 
   const columns = useMemo(
     () => [
       {
-        header: (
-          <input
-            type="checkbox"
-            id="checkBoxAll"
-            className="form-check-input"
-            onClick={() => checkedAll()}
-          />
-        ),
-        cell: (cell: any) => (
-          <input
-            type="checkbox"
-            className="boxCheckBox form-check-input"
-            value={cell.getValue()}
-            onChange={() => deleteCheckbox()}
-          />
-        ),
+        // header: (
+        //   <input
+        //     type="checkbox"
+        //     id="checkBoxAll"
+        //     className="form-check-input"
+        //     onClick={() => checkedAll()}
+        //   />
+        // ),
+        // cell: (cell: any) => (
+        //   <input
+        //     type="checkbox"
+        //     className="boxCheckBox form-check-input"
+        //     value={cell.getValue()}
+        //     onChange={() => deleteCheckbox()}
+        //   />
+        // ),
         id: "#",
         accessorKey: "",
         enableColumnFilter: false,
@@ -269,6 +331,11 @@ const BoxesData = () => {
       {
         header: "Tablet ID",
         accessorKey: "current_tablet_id",
+        enableColumnFilter: false,
+      },
+      {
+        header: "Address ID",
+        accessorKey: "address_id",
         enableColumnFilter: false,
       },
       {
@@ -318,8 +385,9 @@ const BoxesData = () => {
         ),
       },
     ],
-    [checkedAll]
+    [handleBoxesClick]
   );
+  console.log(validation.values, "validation values");
 
   return (
     <React.Fragment>
@@ -329,14 +397,14 @@ const BoxesData = () => {
           onDeleteClick={handleDeleteBox}
           onCloseClick={() => setDeleteModal(false)}
         />
-        <DeleteModal
+        {/* <DeleteModal
           show={deleteModalMulti}
           onDeleteClick={() => {
             deleteMultiple();
             setDeleteModalMulti(false);
           }}
           onCloseClick={() => setDeleteModalMulti(false)}
-        />
+        /> */}
         <Col lg={12}>
           <Card>
             <CardHeader className="border-0">
@@ -344,7 +412,7 @@ const BoxesData = () => {
                 <h5 className="card-title mb-0 flex-grow-1">Boxes</h5>
                 <div className="flex-shrink-0">
                   <div className="d-flex flex-wrap gap-2">
-                    <button
+                    <Form
                       className="btn btn-primary add-btn"
                       onClick={() => {
                         setIsEdit(false);
@@ -352,28 +420,28 @@ const BoxesData = () => {
                       }}
                     >
                       <i className="ri-add-line align-bottom"></i> Create Box
-                    </button>{" "}
-                    {isMultiDeleteButton && (
+                    </Form>{" "}
+                    {/* {isMultiDeleteButton && (
                       <button
                         className="btn btn-soft-danger"
                         onClick={() => setDeleteModalMulti(true)}
                       >
                         <i className="ri-delete-bin-2-line"></i>
                       </button>
-                    )}
+                    )} */}
                   </div>
                 </div>
               </div>
             </CardHeader>
             <CardBody className="pt-0">
-              {loader ? (
-                <Loader error={error} />
+              {loading ? (
+                <Loader error={spinner} />
               ) : (
                 <TableContainer
                   columns={columns}
-                  data={boxsList}
+                  data={boxes}
                   isGlobalFilter={true}
-                  customPageSize={8}
+                  customPageSize={10}
                   divClass="table-responsive table-card mb-3"
                   tableClass="align-middle table-nowrap mb-0"
                   SearchPlaceholder="Search for box details or something..."
@@ -397,10 +465,10 @@ const BoxesData = () => {
           {!!isEdit ? "Edit Box" : "Add Box"}
         </ModalHeader>
         <Form
-          className="tablelist-form"
+          encType="multipart/form-data"
           onSubmit={(e) => {
             e.preventDefault();
-            validation.submitForm();
+            validation.handleSubmit();
             return false;
           }}
         >
@@ -412,26 +480,23 @@ const BoxesData = () => {
                     Serial Number
                   </Label>
                   <Input
-                    name="serial_number"
-                    id="serial-field"
-                    className="form-control"
-                    placeholder="Enter Serial Number"
                     type="text"
-                    validate={{
-                      required: { value: true },
-                    }}
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
+                    className="form-control"
+                    id="serial-input"
+                    placeholder="Enter Serial Number"
+                    name="serial_number"
                     value={validation.values.serial_number || ""}
+                    onBlur={validation.handleBlur}
+                    onChange={validation.handleChange}
                     invalid={
-                      validation.touched.serial_number &&
-                      validation.errors.serial_number
+                      validation.errors.serial_number &&
+                      validation.touched.serial_number
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.serial_number &&
-                  validation.errors.serial_number ? (
+                  {validation.errors.serial_number &&
+                  validation.touched.serial_number ? (
                     <FormFeedback type="invalid">
                       {validation.errors.serial_number}
                     </FormFeedback>
@@ -493,59 +558,122 @@ const BoxesData = () => {
                 </div>
               </Col> */}
 
-              <Col lg={12}>
-                <Label htmlFor="box-status" className="form-label">
-                  Has Empty Lockers
-                </Label>
-                <Input
-                  name="status"
-                  type="select"
-                  className="form-select"
-                  id="lockers-field"
-                  onChange={validation.handleChange}
-                  onBlur={validation.handleBlur}
-                  value={validation.values.has_empty_lockers || ""}
-                  invalid={
-                    validation.touched.has_empty_lockers &&
-                    validation.errors.has_empty_lockers
-                      ? true
-                      : false
-                  }
-                >
-                  <option value="true">True</option>
-                  <option value="false">False</option>
-                </Input>
-                {validation.touched.has_empty_lockers &&
-                validation.errors.has_empty_lockers ? (
-                  <FormFeedback type="invalid">
-                    {validation.errors.has_empty_lockers}
-                  </FormFeedback>
-                ) : null}
+              <Col lg={6}>
+                <div>
+                  <Label htmlFor="current_tablet_id" className="form-label">
+                    Tablet ID
+                  </Label>
+                  <Input
+                    name="current_tablet_id"
+                    type="select"
+                    id="current_tablet_id"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.current_tablet_id}
+                    invalid={
+                      validation.touched.current_tablet_id &&
+                      validation.errors.current_tablet_id
+                        ? true
+                        : false
+                    }
+                  >
+                    <option
+                      value={undefined}
+                      defaultValue={validation.values.current_tablet_id}
+                    >
+                      Select Tablet ID
+                    </option>
+                    {filterTablet &&
+                      filterTablet?.map((tablet: any) => (
+                        <option
+                          key={tablet.id}
+                          value={tablet.id}
+                          defaultValue={tablet.id}
+                        >
+                          {tablet.id}
+                        </option>
+                      ))}
+                  </Input>
+                  {validation.touched.current_tablet_id &&
+                  validation.errors.current_tablet_id ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.current_tablet_id}
+                    </FormFeedback>
+                  ) : null}
+                </div>
               </Col>
-              <Col lg={12}>
+              <Col lg={6}>
+                <div>
+                  <Label htmlFor="address_id" className="form-label">
+                    Address ID
+                  </Label>
+                  <Input
+                    name="address_id"
+                    type="select"
+                    id="address_id"
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.address_id}
+                    invalid={
+                      validation.touched.address_id &&
+                      validation.errors.address_id
+                        ? true
+                        : false
+                    }
+                  >
+                    <option
+                      value={undefined}
+                      defaultValue={validation.values.address_id}
+                    >
+                      Select Address ID
+                    </option>
+                    {filterAddress &&
+                      filterAddress?.map((address: any) => (
+                        <option value={address.id} key={address.id}>
+                          {address.id}
+                        </option>
+                      ))}
+                  </Input>
+                  {validation.touched.address_id &&
+                  validation.errors.address_id ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.address_id}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+              </Col>
+              <Col lg={6}>
                 <div>
                   <Label htmlFor="tasksTitle-field" className="form-label">
                     Box Generation ID
                   </Label>
                   <Input
                     name="box_model_id"
-                    id="serial-field"
-                    className="form-control"
-                    placeholder="Enter Box Generation Model"
-                    type="text"
-                    validate={{
-                      required: { value: true },
-                    }}
+                    type="select"
+                    id="box_model_id-field"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.box_model_id || ""}
+                    value={validation.values.box_model_id}
                     invalid={
                       validation.touched.box_model_id &&
                       validation.errors.box_model_id
                         ? true
                         : false
                     }
-                  />
+                  >
+                    <option
+                      value={undefined}
+                      defaultValue={validation.values.box_model_id}
+                    >
+                      Select Box Generation
+                    </option>
+                    {boxGenerations &&
+                      boxGenerations?.map((boxGenerarion: any) => (
+                        <option key={boxGenerarion.id} value={boxGenerarion.id}>
+                          {boxGenerarion.model_name}
+                        </option>
+                      ))}
+                  </Input>
                   {validation.touched.box_model_id &&
                   validation.errors.box_model_id ? (
                     <FormFeedback type="invalid">
@@ -553,6 +681,30 @@ const BoxesData = () => {
                     </FormFeedback>
                   ) : null}
                 </div>
+              </Col>
+              <Col lg={6}>
+                <Label htmlFor="has_empty_lockers">Has Empty Lockers ?</Label>
+                <Input
+                  type="checkbox"
+                  value="true"
+                  name="has_empty_lockers"
+                  className="form-check-input mx-3"
+                  id="has_empty_lockers"
+                  onBlur={validation.handleBlur}
+                  onChange={validation.handleChange}
+                  invalid={
+                    validation.touched.has_empty_lockers &&
+                    validation.errors.has_empty_lockers
+                      ? true
+                      : false
+                  }
+                />
+                {validation.touched.has_empty_lockers &&
+                validation.errors.has_empty_lockers ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.has_empty_lockers}
+                  </FormFeedback>
+                ) : null}
               </Col>
             </Row>
           </ModalBody>

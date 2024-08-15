@@ -6,7 +6,6 @@ import {
   deleteTablet,
   updateTablet,
 } from "../../../helpers/fakebackend_helper";
-import { toast } from "react-toastify";
 
 export const GetTabletsAction = createAsyncThunk(
   "tablet/get-all",
@@ -16,7 +15,7 @@ export const GetTabletsAction = createAsyncThunk(
 
       return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );
@@ -28,7 +27,7 @@ export const GetOneTabletAction = createAsyncThunk(
       const response = await getOneTablet(tablet);
       return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );
@@ -38,12 +37,10 @@ export const AddTabletAction = createAsyncThunk(
   async (tablet: any, thunkApi) => {
     try {
       const response = await addTablet(tablet);
-      const data = await response;
 
-      toast.success("Tablet Added Successfully", { autoClose: 3000 });
-      return data;
+      return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );
@@ -53,11 +50,10 @@ export const UpdateTabletAction = createAsyncThunk(
   async (tablet: any, thunkApi) => {
     try {
       const response = await updateTablet(tablet);
-      const data = await response;
-      toast.success("Tablet Updated Successfully", { autoClose: 3000 });
-      return data;
+
+      return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );
@@ -66,13 +62,10 @@ export const DeleteTabletAction = createAsyncThunk(
   "tablet/delete",
   async (tablet: string, thunkApi) => {
     try {
-
       const response = await deleteTablet(tablet);
-      const data = await response;
-      toast.success("Tablet Deleted Successfully", { autoClose: 3000 });
-      return data;
+      return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );

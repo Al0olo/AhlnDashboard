@@ -178,17 +178,25 @@ import TermsCondition from "../pages/Pages/TermsCondition";
 
 // User Profilez
 import UserProfile from "../pages/Authentication/user-profile";
-
-import BoxView from "pages/Boxes/Box/BoxView";
-import TabletView from "pages/Boxes/Tablets/TabletView";
-import AddressView from "pages/Boxes/Address/AddressView";
-import DeliveryView from "pages/Delivery/DeliveryPackage/DeliveryPackageView";
-import ShippingCompaniesView from "pages/Delivery/ShippingCompany/ShippingCompaniesView";
 import UILink from "../pages/BaseUi/UiLink/Index";
 import FunnelCharts from "../pages/Charts/ApexCharts/FunnelCharts/Index";
 import RangeArea from "../pages/Charts/ApexCharts/RangeAreaCharts/Index";
 import ToDoList from "../pages/ToDo";
 import EcommerceEditProduct from "pages/Ecommerce/EcommerceModels/EcommerceEditModel";
+
+import BoxView from "pages/Boxes/Box/BoxView";
+import TabletView from "pages/Boxes/Tablets";
+import AddressView from "pages/Boxes/Address";
+import DeliveryView from "pages/Delivery/DeliveryPackage/DeliveryPackageView";
+import ShippingCompaniesView from "pages/Delivery/ShippingCompany/ShippingCompaniesView";
+import RolesView from "pages/Admin/Role";
+import UserBoxesView from "pages/Boxes/UserBoxes";
+import BoxImagesView from "pages/Boxes/BoxImages";
+import RelativeCustomerView from "pages/Boxes/RelativeCustomer";
+import ContactUsView from "pages/Admin/ContactUs";
+import AuditTrailView from "pages/Admin/AuditTrail";
+import SystemLogView from "pages/Admin/SystemLog";
+import BoxGenerationView from "pages/Boxes/BoxGeneration";
 
 const authProtectedRoutes = [
   { path: "/dashboard-analytics", component: <DashboardAnalytics /> },
@@ -206,17 +214,20 @@ const authProtectedRoutes = [
     component: <EcommerceModelDetail />,
   },
   { path: "/apps-ecommerce-add-model", component: <EcommerceAddModel /> },
-{ path: "/apps-ecommerce-models", component: <EcommerceModels /> },
-{
-  path: "/apps-ecommerce-model-details/:_id",
-  component: <EcommerceModelDetail />,
-},
-{
-  path: "/apps-ecommerce-model-details",
-  component: <EcommerceModelDetail />,
-},
-{ path: "/apps-ecommerce-add-model", component: <EcommerceAddModel /> },
-{ path: "/apps-ecommerce-edit-model/:id", component: <EcommerceEditProduct/> },
+  { path: "/apps-ecommerce-models", component: <EcommerceModels /> },
+  {
+    path: "/apps-ecommerce-model-details/:_id",
+    component: <EcommerceModelDetail />,
+  },
+  {
+    path: "/apps-ecommerce-model-details",
+    component: <EcommerceModelDetail />,
+  },
+  { path: "/apps-ecommerce-add-model", component: <EcommerceAddModel /> },
+  {
+    path: "/apps-ecommerce-edit-model/:id",
+    component: <EcommerceEditProduct />,
+  },
 
   //Products
 
@@ -231,24 +242,28 @@ const authProtectedRoutes = [
   },
   { path: "/apps-ecommerce-add-product", component: <EcommerceAddProduct /> },
   //Orders
-{ path: "/apps-ecommerce-products", component: <EcommerceProducts /> },
-{
-  path: "/apps-ecommerce-product-details/:_id",
-  component: <EcommerceProductDetail />,
-},
-{
-  path: "/apps-ecommerce-product-details",
-  component: <EcommerceProductDetail />,
-},
-{ path: "/apps-ecommerce-add-product", component: <EcommerceAddModel /> },
-//Orders
+  { path: "/apps-ecommerce-products", component: <EcommerceProducts /> },
+  {
+    path: "/apps-ecommerce-product-details/:_id",
+    component: <EcommerceProductDetail />,
+  },
+  {
+    path: "/apps-ecommerce-product-details",
+    component: <EcommerceProductDetail />,
+  },
+  { path: "/apps-ecommerce-add-product", component: <EcommerceAddModel /> },
+  //Orders
 
   { path: "/apps-ecommerce-orders", component: <EcommerceOrders /> },
   {
     path: "/apps-ecommerce-order-details",
     component: <EcommerceOrderDetail />,
   },
-  // { path: "/apps-ecommerce-customers", component: <EcommerceCustomers /> },
+  { path: "/apps-ecommerce-customers", component: <EcommerceCustomers /> },
+  {
+    path: "/apps-ecommerce-relative-customers",
+    component: <RelativeCustomerView />,
+  },
   { path: "/apps-ecommerce-cart", component: <EcommerceCart /> },
   { path: "/apps-ecommerce-checkout", component: <EcommerceCheckout /> },
   { path: "/apps-ecommerce-sellers", component: <EcommerceSellers /> },
@@ -273,12 +288,21 @@ const authProtectedRoutes = [
 
   //Boxes
   { path: "/boxes", component: <BoxView /> },
+  { path: "/box-generation", component: <BoxGenerationView /> },
   { path: "/tablets", component: <TabletView /> },
   { path: "/addresses", component: <AddressView /> },
+  { path: "/user-boxes", component: <UserBoxesView /> },
+  { path: "/boxes-images", component: <BoxImagesView /> },
 
   // Delivery Packages
   { path: "/delivery-packages", component: <DeliveryView /> },
   { path: "/shipping-companies", component: <ShippingCompaniesView /> },
+
+  // Admin
+  { path: "/role", component: <RolesView /> },
+  { path: "/contact-us", component: <ContactUsView /> },
+  { path: "/audit-trail", component: <AuditTrailView /> },
+  { path: "/system-log", component: <SystemLogView /> },
 
   //charts
   { path: "/charts-apex-line", component: <LineCharts /> },

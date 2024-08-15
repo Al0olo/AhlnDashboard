@@ -8,11 +8,11 @@ import {
 } from "./thunk";
 
 export const initialState: any = {
-  addressError: null,
   message: null,
   loading: true,
   data: null,
   success: false,
+  spinner: false,
   error: false,
   addresses: [],
 };
@@ -38,22 +38,22 @@ const addressReducer = createSlice({
     });
 
     builder.addCase(AddAddressAction.pending, (state) => {
-      state.loading = true;
+      state.spinner = true;
       state.error = false;
     });
     builder.addCase(AddAddressAction.fulfilled, (state, action: any) => {
       state.addresses.push(action.payload);
       state.success = true;
-      state.loading = false;
+      state.spinner = false;
     });
     builder.addCase(AddAddressAction.rejected, (state, { payload }: any) => {
-      state.loading = false;
+      state.spinner = false;
       state.success = false;
       state.error = payload;
     });
 
     builder.addCase(DeleteAddressAction.pending, (state) => {
-      state.loading = true;
+      state.spinner = true;
       state.error = false;
     });
     builder.addCase(DeleteAddressAction.fulfilled, (state, action: any) => {
@@ -62,10 +62,10 @@ const addressReducer = createSlice({
         (address: any) => address.id !== deletedAddressId
       );
       state.success = true;
-      state.loading = false;
+      state.spinner = false;
     });
     builder.addCase(DeleteAddressAction.rejected, (state, { payload }: any) => {
-      state.loading = false;
+      state.spinner = false;
       state.success = false;
       state.error = payload;
     });
@@ -86,7 +86,7 @@ const addressReducer = createSlice({
     });
 
     builder.addCase(UpdateAddressAction.pending, (state) => {
-      state.loading = true;
+      state.spinner = true;
       state.error = false;
     });
     builder.addCase(UpdateAddressAction.fulfilled, (state, action: any) => {
@@ -96,10 +96,10 @@ const addressReducer = createSlice({
       );
       state.addresses[index] = updatedAddress;
       state.success = true;
-      state.loading = false;
+      state.spinner = false;
     });
     builder.addCase(UpdateAddressAction.rejected, (state, { payload }: any) => {
-      state.loading = false;
+      state.spinner = false;
       state.success = false;
       state.error = payload;
     });
