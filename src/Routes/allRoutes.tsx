@@ -184,6 +184,7 @@ import RangeArea from "../pages/Charts/ApexCharts/RangeAreaCharts/Index";
 import ToDoList from "../pages/ToDo";
 import EcommerceEditProduct from "pages/Ecommerce/EcommerceModels/EcommerceEditModel";
 import EcommerceCustomerInfo from "pages/Ecommerce/EcommerceCustomers/CustomerInfo";
+import EcommerceCustomerDetail from "pages/Ecommerce/EcommerceCustomers/CustomerDetail";
 
 import BoxView from "pages/Boxes/Box/BoxView";
 import TabletView from "pages/Boxes/Tablets";
@@ -262,6 +263,7 @@ const authProtectedRoutes = [
   },
   { path: "/apps-ecommerce-customers", component: <EcommerceCustomers /> },
   { path: "/apps-ecommerce-customer", component: <EcommerceCustomerInfo /> },
+  { path: "/apps-ecommerce-customer-detail", component: <EcommerceCustomerDetail /> },
   { path: "/apps-ecommerce-cart", component: <EcommerceCart /> },
   { path: "/apps-ecommerce-checkout", component: <EcommerceCheckout /> },
   { path: "/apps-ecommerce-sellers", component: <EcommerceSellers /> },

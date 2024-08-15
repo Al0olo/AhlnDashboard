@@ -12,7 +12,7 @@ const Widgets = () => {
           <Card className="card-animate rounded round-5">
             <Link to="#" className="">
               <CardBody md={12} className={"bg-" +item.bgcolor +
-                        "-subtle"}>
+                        "-subtle rounded rounded-4"}>
                 <div className="position-relative">
                   <div className="widget-number ">
                     <h4 className="fs-20 fw-semibold ff-secondary mb-4  ">
