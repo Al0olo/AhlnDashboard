@@ -8,13 +8,14 @@ import {
 } from "./thunk";
 
 export const initialState: any = {
-  boxGenerationError: null,
   message: null,
   loading: true,
+  spinner: false,
   data: null,
   success: false,
   error: false,
   boxGenerations: [],
+  boxGeneration: {},
 };
 
 const boxGenerationReducer = createSlice({
@@ -27,7 +28,7 @@ const boxGenerationReducer = createSlice({
       state.error = false;
     });
     builder.addCase(GetBoxGenerationsAction.fulfilled, (state, action: any) => {
-      state.data = action?.payload;
+      state.boxGenerations = action?.payload;
       state.success = true;
       state.loading = false;
     });
@@ -41,25 +42,25 @@ const boxGenerationReducer = createSlice({
     );
 
     builder.addCase(AddBoxGenerationAction.pending, (state) => {
-      state.loading = true;
+      state.spinner = true;
       state.error = false;
     });
     builder.addCase(AddBoxGenerationAction.fulfilled, (state, action: any) => {
       state.boxGenerations.push(action.payload);
       state.success = true;
-      state.loading = false;
+      state.spinner = false;
     });
     builder.addCase(
       AddBoxGenerationAction.rejected,
       (state, { payload }: any) => {
-        state.loading = false;
+        state.spinner = false;
         state.success = false;
         state.error = payload;
       }
     );
 
     builder.addCase(DeleteBoxGenerationAction.pending, (state) => {
-      state.loading = true;
+      state.spinner = true;
       state.error = false;
     });
     builder.addCase(
@@ -70,13 +71,13 @@ const boxGenerationReducer = createSlice({
           (boxGeneration: any) => boxGeneration.id !== deletedBoxGenerationId
         );
         state.success = true;
-        state.loading = false;
+        state.spinner = false;
       }
     );
     builder.addCase(
       DeleteBoxGenerationAction.rejected,
       (state, { payload }: any) => {
-        state.loading = false;
+        state.spinner = false;
         state.success = false;
         state.error = payload;
       }
@@ -104,7 +105,7 @@ const boxGenerationReducer = createSlice({
     );
 
     builder.addCase(UpdateBoxGenerationAction.pending, (state) => {
-      state.loading = true;
+      state.spinner = true;
       state.error = false;
     });
     builder.addCase(
@@ -116,13 +117,13 @@ const boxGenerationReducer = createSlice({
         );
         state.boxGenerations[index] = updatedBoxGeneration;
         state.success = true;
-        state.loading = false;
+        state.spinner = false;
       }
     );
     builder.addCase(
       UpdateBoxGenerationAction.rejected,
       (state, { payload }: any) => {
-        state.loading = false;
+        state.spinner = false;
         state.success = false;
         state.error = payload;
       }
