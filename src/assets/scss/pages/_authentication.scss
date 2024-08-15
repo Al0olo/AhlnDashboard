@@ -72,17 +72,29 @@
   bottom: 15px;
   left: 18px;
 }
+.full-width-container {
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
 .ahln-auth-form {
   background-repeat: no-repeat;
   background-position: top left;
+
   @media (max-width: 575.98px) {
     text-align: center !important;
-    display: flex;
+  width: 100% !important;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
+
     .lbl {
       display: none;
-      // text-align: left !important;
     }
   }
+
   label {
     color: black !important;
     margin-left: 4px;
