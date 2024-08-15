@@ -213,24 +213,24 @@ const Navdata = () => {
           parentId: "apps",
           stateVariables: isEcommerce,
           childItems: [
-            {
-              id: 1,
-              label: "Models",
-              link: "/apps-ecommerce-models",
-              parentId: "apps",
-            },
-            {
-              id: 2,
-              label: "Model Details",
-              link: "/apps-ecommerce-model-details",
-              parentId: "apps",
-            },
-            {
-              id: 3,
-              label: "Create model",
-              link: "/apps-ecommerce-add-model",
-              parentId: "apps",
-            },
+            // {
+            //   id: 1,
+            //   label: "Models",
+            //   link: "/apps-ecommerce-models",
+            //   parentId: "apps",
+            // },
+            // {
+            //   id: 2,
+            //   label: "Model Details",
+            //   link: "/apps-ecommerce-model-details",
+            //   parentId: "apps",
+            // },
+            // {
+            //   id: 3,
+            //   label: "Create model",
+            //   link: "/apps-ecommerce-add-model",
+            //   parentId: "apps",
+            // },
             // {
             //   id: 4,
             //   label: "Products",

@@ -26,7 +26,7 @@ export const addBox = (data: any) => {
 };
 // Update Exsiting Box
 export const updateBox = (data: any) => {
-  return api.get(url.UPDATE_BOX, data);
+  return api.update(`${url.UPDATE_BOX}/${data.id}`, data);
 };
 // Delete Box
 export const deleteBox = (data: any) => {
@@ -75,18 +75,6 @@ export const updateBoxGeneration = (data: any) => {
 // Delete BoxGeneration
 export const deleteBoxGeneration = (data: any) => {
   return api.delete(`${url.DELETE_BOX_GENERATION}/${data}`);
-};
-// update has outside camera
-export const updateHasOutSideCameraApi = (data: any) => {
-  return api.update(url.UPDATE_HAS_OUTSIDE_CAMERA + `/${data.id}`, data);
-};
-// update has inside camera
-export const updateHasInSideCameraApi = (data: any) => {
-  return api.update(url.UPDATE_HAS_INSIDE_CAMERA + `/${data.id}`, data);
-};
-// update has outside camera
-export const updateHasTabletApi = (data: any) => {
-  return api.update(url.UPDATE_HAS_TABLET + `/${data.id}`, data);
 };
 
 // ADDRESS

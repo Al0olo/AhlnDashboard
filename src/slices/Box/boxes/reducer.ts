@@ -8,13 +8,14 @@ import {
 } from "./thunk";
 
 export const initialState: any = {
-  boxError: null,
   message: null,
   loading: true,
+  spinner: false,
   data: null,
   success: false,
   error: false,
   boxes: [],
+  box: {},
 };
 
 const boxReducer = createSlice({
@@ -27,7 +28,7 @@ const boxReducer = createSlice({
       state.error = false;
     });
     builder.addCase(GetBoxesAction.fulfilled, (state, action: any) => {
-      state.data = action?.payload;
+      state.boxes = action?.payload;
       state.success = true;
       state.loading = false;
     });
@@ -44,16 +45,16 @@ const boxReducer = createSlice({
     builder.addCase(AddBoxAction.fulfilled, (state, action: any) => {
       state.boxes.push(action.payload);
       state.success = true;
-      state.loading = false;
+      state.spinner = false;
     });
     builder.addCase(AddBoxAction.rejected, (state, { payload }: any) => {
-      state.loading = false;
+      state.spinner = false;
       state.success = false;
       state.error = payload;
     });
 
     builder.addCase(DeleteBoxAction.pending, (state) => {
-      state.loading = true;
+      state.spinner = true;
       state.error = false;
     });
     builder.addCase(DeleteBoxAction.fulfilled, (state, action: any) => {
@@ -84,7 +85,7 @@ const boxReducer = createSlice({
     });
 
     builder.addCase(UpdateBoxAction.pending, (state) => {
-      state.loading = true;
+      state.spinner = true;
       state.error = false;
     });
     builder.addCase(UpdateBoxAction.fulfilled, (state, action: any) => {
@@ -94,10 +95,10 @@ const boxReducer = createSlice({
       );
       state.boxes[index] = updatedBox;
       state.success = true;
-      state.loading = false;
+      state.spinner = false;
     });
     builder.addCase(UpdateBoxAction.rejected, (state, { payload }: any) => {
-      state.loading = false;
+      state.spinner = false;
       state.success = false;
       state.error = payload;
     });

@@ -18,7 +18,7 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import TableContainer from "../../../Components/Common/TableContainer";
 import * as moment from "moment";
 
@@ -31,56 +31,35 @@ import DeleteModal from "../../../Components/Common/DeleteModal";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../Components/Common/Loader";
-import { createSelector } from "reselect";
 import {
-  GetOneBoxGenerationAction,
   AddBoxGenerationAction,
   DeleteBoxGenerationAction,
   GetBoxGenerationsAction,
   UpdateBoxGenerationAction,
-  updateHasOutSideCamera,
-  updateHasInSideCamera,
-  updateHasTablet,
 } from "slices/Box/boxGeneration/thunk";
+import { useAppSelector } from "redux-hooks";
 
 const BoxGenerationsData = () => {
   const dispatch: any = useDispatch();
-  const selectLayoutState = (state: any) => state.BoxGeneration;
-
-  const selectLayoutProperties = createSelector(selectLayoutState, (state) => ({
-    boxGenerationsList: state.data,
-    isBoxGenerationSuccess: state.isBoxGenerationSuccess,
-    error: state.error,
-    loader: state.loading,
-  }));
-
-  // Inside your component
-  const { boxGenerationsList, isBoxGenerationSuccess, error, loader } =
-    useSelector(selectLayoutProperties);
-
-  const updateStatusHasOutsideCamera = (
-    id: string,
-    has_outside_camera: boolean
-  ) => {
-    dispatch(updateHasOutSideCamera({ id, has_outside_camera }));
-    setModal(false);
-  };
-  const updateStatusHasInsideCamera = (
-    id: string,
-    has_inside_camera: boolean
-  ) => {
-    dispatch(updateHasInSideCamera({ id, has_inside_camera }));
-    setModal(false);
-  };
-  const updateStatusHasTablet = (id: string, has_tablet: boolean) => {
-    dispatch(updateHasTablet({ id, has_tablet }));
-    setModal(false);
-  };
+  const { boxGenerations, loading, spinner } = useAppSelector(
+    (state) => state.BoxGeneration
+  );
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [boxGeneration, setBoxGeneration] = useState<any>([]);
+  const [boxGeneration, setBoxGeneration] = useState<any>({
+    id: "",
+    model_name: "",
+    number_of_doors: "",
+    width: "",
+    height: "",
+    color: "",
+    model_image: "",
+    has_outside_camera: false,
+    has_inside_camera: false,
+    has_tablet: false,
+  });
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
+  // const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
 
   const toggle = useCallback(() => {
@@ -101,13 +80,9 @@ const BoxGenerationsData = () => {
       height: boxGeneration.height ? boxGeneration.height : "",
       color: boxGeneration.color ? boxGeneration.color : "",
       model_image: boxGeneration.model_image ? boxGeneration.model_image : "",
-      has_outside_camera: boxGeneration.has_outside_camera
-        ? boxGeneration.has_outside_camera
-        : true,
-      has_inside_camera: boxGeneration.has_inside_camera
-        ? boxGeneration.has_inside_camera
-        : true,
-      has_tablet: boxGeneration.has_tablet ? boxGeneration.has_tablet : true,
+      has_outside_camera: boxGeneration.has_outside_camera,
+      has_inside_camera: boxGeneration.has_inside_camera,
+      has_tablet: boxGeneration.has_tablet,
     },
     validationSchema: Yup.object({
       model_name: Yup.string().required("Model Name is required"),
@@ -116,60 +91,37 @@ const BoxGenerationsData = () => {
       height: Yup.string().required("Height is required"),
       color: Yup.string().required("Color is required"),
       model_image: Yup.string().required("Model Image is required"),
-      // has_outside_camera: Yup.string().required(
-      //   "Has Outside Camera is required"
-      // ),
-      // has_inside_camera: Yup.string().required("Has Inside Camera is required"),
-      // has_tablet: Yup.string().required("Has Tablet is required"),
     }),
     onSubmit: async (values) => {
       if (isEdit) {
         const updateBoxGenerations = {
           id: values.id,
-          model_name: values.model_name || undefined,
-          number_of_doors: values.number_of_doors || undefined,
-          width: values.width || undefined,
-          height: values.height || undefined,
-          color: values.color || undefined,
-          model_image: values.model_image || undefined,
-          has_outside_camera: values.has_outside_camera || undefined,
-          has_inside_camera: values.has_inside_camera || undefined,
-          has_tablet: values.has_tablet || undefined,
+          model_name: values.model_name,
+          number_of_doors: values.number_of_doors,
+          width: values.width,
+          height: values.height,
+          color: values.color,
+          model_image: values.model_image,
+          has_outside_camera: values.has_outside_camera,
+          has_inside_camera: values.has_inside_camera,
+          has_tablet: values.has_tablet,
         };
-        const updatedBoxGenerationObj = Object.keys(updateBoxGenerations)
-          .filter(
-            (key) =>
-              updateBoxGenerations[key as keyof typeof updateBoxGenerations] !==
-              undefined
-          )
-          .reduce((obj: any, key) => {
-            obj[key] =
-              updateBoxGenerations[key as keyof typeof updateBoxGenerations];
-            return obj;
-          }, {});
 
-        if (
-          Object.values(updatedBoxGenerationObj).some(
-            (val) => val !== undefined
-          )
-        ) {
-          const result = await dispatch(
-            UpdateBoxGenerationAction(updatedBoxGenerationObj)
-          );
-          if (result && result.payload) {
-            setBoxGeneration(async (prevUserBoxs: any[]) => {
-              const updatedBoxGeneration = Array.isArray(prevUserBoxs)
-                ? [...prevUserBoxs]
-                : [];
-              const newUserBoxs = result.payload.data;
-              if (Array.isArray(newUserBoxs)) {
-                updatedBoxGeneration.push(...newUserBoxs);
-              }
-
-              return await dispatch(GetBoxGenerationsAction());
-            });
+        dispatch(UpdateBoxGenerationAction(updateBoxGenerations)).then(
+          (result: any) => {
+            if (result.type === "boxGeneration/update/fulfilled") {
+              toast.success("Box Generation Updated Successfully", {
+                autoClose: 3000,
+              });
+              toggle();
+            } else {
+              toast.error(`Error ${result.payload}`, {
+                autoClose: 3000,
+              });
+            }
           }
-        }
+        );
+
         validation.resetForm();
       } else {
         const newBoxGeneration = {
@@ -184,14 +136,23 @@ const BoxGenerationsData = () => {
           has_tablet: values.has_tablet || false,
         };
         // save new boxGeneration
-        const result = await dispatch(AddBoxGenerationAction(newBoxGeneration));
-        if (result && result.payload) {
-          toggle();
-          return await dispatch(GetBoxGenerationsAction());
-        }
+        dispatch(AddBoxGenerationAction(newBoxGeneration)).then(
+          (result: any) => {
+            if (result.type === "boxGeneration/new/fulfilled") {
+              toast.success("Box Generation Added Successfully", {
+                autoClose: 3000,
+              });
+              toggle();
+            } else {
+              toast.error(`Error ${result.payload}`, {
+                autoClose: 3000,
+              });
+            }
+          }
+        );
+
         validation.resetForm();
       }
-      toggle();
     },
   });
 
@@ -201,14 +162,21 @@ const BoxGenerationsData = () => {
     setDeleteModal(true);
   };
 
-  const handleDeleteBoxGeneration = async () => {
+  const handleDeleteBoxGeneration = () => {
     if (boxGeneration) {
-      const result = await dispatch(
-        DeleteBoxGenerationAction(boxGeneration.id)
+      dispatch(DeleteBoxGenerationAction(boxGeneration.id)).then(
+        (result: any) => {
+          if (result.type === "boxGeneration/delete/fulfilled") {
+            toast.success("Box Generation Deleted Successfully", {
+              autoClose: 3000,
+            });
+          } else {
+            toast.error(`Error ${result.payload}`, {
+              autoClose: 3000,
+            });
+          }
+        }
       );
-      if (result && result.payload) {
-        await dispatch(GetBoxGenerationsAction());
-      }
       setDeleteModal(false);
     }
   };
@@ -240,89 +208,80 @@ const BoxGenerationsData = () => {
     dispatch(GetBoxGenerationsAction());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (boxGeneration) {
-      validation.setValues({
-        id: boxGeneration.id || "",
-        model_name: boxGeneration.model_name || "",
-        number_of_doors: boxGeneration.number_of_doors || "",
-        width: boxGeneration.width || "",
-        height: boxGeneration.height || "",
-        color: boxGeneration.color || "",
-        model_image: boxGeneration.model_image || "",
-        has_outside_camera: boxGeneration.has_outside_camera || "",
-        has_inside_camera: boxGeneration.has_inside_camera || "",
-        has_tablet: boxGeneration.has_tablet || "",
-      });
-    }
-  }, [boxGeneration]);
-
   // Checked All
-  const checkedAll = useCallback(() => {
-    const checkall: any = document.getElementById("checkBoxGenerationAll");
-    const ele = document.querySelectorAll(".boxGenerationCheckBoxGeneration");
+  // const checkedAll = useCallback(() => {
+  //   const checkall: any = document.getElementById("checkBoxGenerationAll");
+  //   const ele = document.querySelectorAll(".boxGenerationCheckBoxGeneration");
 
-    if (checkall.checked) {
-      ele.forEach((ele: any) => {
-        ele.checked = true;
-      });
-    } else {
-      ele.forEach((ele: any) => {
-        ele.checked = false;
-      });
-    }
-    deleteCheckboxGeneration();
-  }, []);
+  //   if (checkall.checked) {
+  //     ele.forEach((ele: any) => {
+  //       ele.checked = true;
+  //     });
+  //   } else {
+  //     ele.forEach((ele: any) => {
+  //       ele.checked = false;
+  //     });
+  //   }
+  //   deleteCheckboxGeneration();
+  // }, []);
 
   // Delete Multiple
-  const [
-    selectedCheckBoxGenerationDelete,
-    setSelectedCheckBoxGenerationDelete,
-  ] = useState<any>([]);
-  const [isMultiDeleteButton, setIsMultiDeleteButton] =
-    useState<boolean>(false);
+  // const [
+  //   selectedCheckBoxGenerationDelete,
+  //   setSelectedCheckBoxGenerationDelete,
+  // ] = useState<any>([]);
+  // const [isMultiDeleteButton, setIsMultiDeleteButton] =
+  //   useState<boolean>(false);
 
-  const deleteMultiple = () => {
-    const checkall: any = document.getElementById("checkBoxGenerationAll");
-    selectedCheckBoxGenerationDelete.forEach((element: any) => {
-      //   dispatch(deleteBoxGeneration(element.value));
-      setTimeout(() => {
-        toast.clearWaitingQueue();
-      }, 3000);
-    });
-    setIsMultiDeleteButton(false);
-    checkall.checked = false;
-  };
+  // const deleteMultiple = () => {
+  //   const checkall: any = document.getElementById("checkBoxGenerationAll");
+  //   selectedCheckBoxGenerationDelete.forEach((element: any) => {
+  //     console.log(element.value, "value");
 
-  const deleteCheckboxGeneration = () => {
-    const ele = document.querySelectorAll(
-      ".boxGenerationCheckBoxGeneration:checked"
-    );
-    ele.length > 0
-      ? setIsMultiDeleteButton(true)
-      : setIsMultiDeleteButton(false);
-    setSelectedCheckBoxGenerationDelete(ele);
-  };
+  //     dispatch(DeleteBoxGenerationAction(element.value));
+  //     setTimeout(() => {
+  //       toast.clearWaitingQueue();
+  //     }, 3000);
+  //   });
+  //   setIsMultiDeleteButton(false);
+  //   checkall.checked = false;
+  // };
+
+  // const deleteCheckboxGeneration = () => {
+  //   const ele = document.querySelectorAll(
+  //     ".boxGenerationCheckBoxGeneration:checked"
+  //   );
+  //   console.log(ele, "ele");
+
+  //   ele.length > 0
+  //     ? setIsMultiDeleteButton(true)
+  //     : setIsMultiDeleteButton(false);
+  //   setSelectedCheckBoxGenerationDelete(ele);
+  // };
 
   const columns = useMemo(
     () => [
       {
-        header: (
-          <input
-            type="checkboxGeneration"
-            id="checkBoxGenerationAll"
-            className="form-check-input"
-            onClick={() => checkedAll()}
-          />
-        ),
-        cell: (cell: any) => (
-          <input
-            type="checkboxGeneration"
-            className="boxGenerationCheckBoxGeneration form-check-input"
-            value={cell.getValue()}
-            onChange={() => deleteCheckboxGeneration()}
-          />
-        ),
+        // header: (
+        //   <input
+        //     type="checkbox"
+        //     id="checkBoxGenerationAll"
+        //     className="form-check-input"
+        //     onClick={() => checkedAll()}
+        //   />
+        // ),
+        // cell: (cell: any) => {
+        //   console.log(cell.getValue(), "ceelkl");
+
+        //   return (
+        //     <input
+        //       type="checkbox"
+        //       className="boxGenerationCheckBoxGeneration form-check-input"
+        //       value={cell.getValue()}
+        //       onChange={() => deleteCheckboxGeneration()}
+        //     />
+        //   );
+        // },
         id: "#",
         accessorKey: "",
         enableColumnFilter: false,
@@ -382,12 +341,7 @@ const BoxGenerationsData = () => {
                 type="switch"
                 value={cellProps.getValue() === true ? "Active" : "Block"}
                 className="form-check-input"
-                onChange={(e) => {
-                  updateStatusHasOutsideCamera(
-                    cellProps.row.original.id,
-                    e.target.checked
-                  );
-                }}
+                disabled={true}
                 defaultChecked={cellProps.getValue() === true ? true : false}
               ></Input>
             </div>
@@ -408,12 +362,7 @@ const BoxGenerationsData = () => {
                 type="switch"
                 value={cellProps.getValue() === true ? "Active" : "Block"}
                 className="form-check-input"
-                onChange={(e) => {
-                  updateStatusHasInsideCamera(
-                    cellProps.row.original.id,
-                    e.target.checked
-                  );
-                }}
+                disabled={true}
                 defaultChecked={cellProps.getValue() === true ? true : false}
               ></Input>
             </div>
@@ -434,12 +383,7 @@ const BoxGenerationsData = () => {
                 type="switch"
                 value={cellProps.getValue() === true ? "Active" : "Block"}
                 className="form-check-input"
-                onChange={(e) => {
-                  updateStatusHasTablet(
-                    cellProps.row.original.id,
-                    e.target.checked
-                  );
-                }}
+                disabled={true}
                 defaultChecked={cellProps.getValue() === true ? true : false}
               ></Input>
             </div>
@@ -486,8 +430,7 @@ const BoxGenerationsData = () => {
                   data-bs-toggle="modal"
                   href="#deleteOrder"
                   onClick={() => {
-                    const boxGenerationData = cell.row.original;
-                    onClickDelete(boxGenerationData);
+                    onClickDelete(cell.row.original);
                   }}
                 >
                   <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
@@ -499,10 +442,8 @@ const BoxGenerationsData = () => {
         ),
       },
     ],
-    [checkedAll]
+    [handleBoxGenerationsClick]
   );
-
-  console.log(boxGenerationsList, "boxGenerationsList");
 
   return (
     <React.Fragment>
@@ -512,14 +453,14 @@ const BoxGenerationsData = () => {
           onDeleteClick={handleDeleteBoxGeneration}
           onCloseClick={() => setDeleteModal(false)}
         />
-        <DeleteModal
+        {/* <DeleteModal
           show={deleteModalMulti}
           onDeleteClick={() => {
             deleteMultiple();
             setDeleteModalMulti(false);
           }}
           onCloseClick={() => setDeleteModalMulti(false)}
-        />
+        /> */}
         <Col lg={12}>
           <Card>
             <CardHeader className="border-0">
@@ -537,25 +478,25 @@ const BoxGenerationsData = () => {
                       <i className="ri-add-line align-bottom"></i> Create Box
                       Generation
                     </button>{" "}
-                    {isMultiDeleteButton && (
+                    {/* {isMultiDeleteButton && (
                       <button
                         className="btn btn-soft-danger"
                         onClick={() => setDeleteModalMulti(true)}
                       >
                         <i className="ri-delete-bin-2-line"></i>
                       </button>
-                    )}
+                    )} */}
                   </div>
                 </div>
               </div>
             </CardHeader>
             <CardBody className="pt-0">
-              {loader ? (
-                <Loader error={error} />
+              {loading ? (
+                <Loader error={spinner} />
               ) : (
                 <TableContainer
                   columns={columns}
-                  data={boxGenerationsList}
+                  data={boxGenerations}
                   isGlobalFilter={true}
                   customPageSize={10}
                   divClass="table-responsive table-card mb-3"
@@ -748,7 +689,9 @@ const BoxGenerationsData = () => {
                 <Label htmlFor="has_outside_camera">Has Outside Camera?</Label>
                 <Input
                   type="checkbox"
-                  value="true"
+                  defaultChecked={
+                    boxGeneration.has_outside_camera ? true : false
+                  }
                   name="has_outside_camera"
                   className="form-check-input mx-3"
                   id="has_outside_camera"
@@ -772,7 +715,7 @@ const BoxGenerationsData = () => {
                 <Label htmlFor="has_inside_camera">Has Inside Camera?</Label>
                 <Input
                   type="checkbox"
-                  value="true"
+                  defaultChecked={boxGeneration.has_inside_camera}
                   name="has_inside_camera"
                   className="form-check-input mx-3"
                   id="has_inside_camera"
@@ -796,7 +739,7 @@ const BoxGenerationsData = () => {
                 <Label htmlFor="has_tablet">Has Tablet?</Label>
                 <Input
                   type="checkbox"
-                  value="true"
+                  defaultChecked={boxGeneration.has_tablet}
                   name="has_tablet"
                   className="form-check-input mx-3"
                   id="has_tablet"

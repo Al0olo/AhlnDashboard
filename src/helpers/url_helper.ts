@@ -54,13 +54,7 @@ export const GET_ONE_BOX_GENERATION = "/box-generation/get-one";
 export const ADD_BOX_GENERATION = "/box-generation/new";
 export const UPDATE_BOX_GENERATION = "/box-generation/update";
 export const DELETE_BOX_GENERATION = "/box-generation/delete";
-export const UPDATE_HAS_OUTSIDE_CAMERA =
-  "/box-generation/update-has-outside-camera-status";
-export const UPDATE_HAS_INSIDE_CAMERA =
-  "/box-generation/update-has-inside-camera-status";
-export const UPDATE_HAS_TABLET = "/box-generation/update-has-tablet-status";
 
-// ADDRESS
 export const GET_ADDRESS = "/address/get-all";
 export const GET_ONE_ADDRESS = "/address/get-one";
 export const ADD_ADDRESS = "/address/new";
