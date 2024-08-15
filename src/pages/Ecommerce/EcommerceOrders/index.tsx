@@ -660,7 +660,7 @@ const EcommerceOrders = () => {
                       columns={columns}
                       data={orderList || []}
                       isGlobalFilter={true}
-                      customPageSize={8}
+                      customPageSize={10}
                       divClass="table-responsive table-card mb-1 mt-0"
                       tableClass="align-middle table-nowrap"
                       theadClass="table-light text-muted text-uppercase"

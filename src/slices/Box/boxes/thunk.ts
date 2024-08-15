@@ -6,7 +6,6 @@ import {
   updateBox,
   getOneBox,
 } from "../../../helpers/fakebackend_helper";
-import { toast } from "react-toastify";
 
 export const GetBoxesAction = createAsyncThunk(
   "box/get-all",
@@ -15,7 +14,7 @@ export const GetBoxesAction = createAsyncThunk(
       const response = await getBoxes();
       return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );
@@ -27,7 +26,7 @@ export const GetOneBoxAction = createAsyncThunk(
       const response = await getOneBox(box);
       return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );
@@ -37,11 +36,9 @@ export const AddBoxAction = createAsyncThunk(
   async (box: any, thunkApi) => {
     try {
       const response = await addBox(box);
-      const data = await response;
-      toast.success("Box Added Successfully", { autoClose: 3000 });
-      return data;
+      return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );
@@ -51,11 +48,9 @@ export const UpdateBoxAction = createAsyncThunk(
   async (box: any, thunkApi) => {
     try {
       const response = await updateBox(box);
-      const data = await response;
-      toast.success("Box Updated Successfully", { autoClose: 3000 });
-      return data;
+      return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );
@@ -65,11 +60,9 @@ export const DeleteBoxAction = createAsyncThunk(
   async (box: string, thunkApi) => {
     try {
       const response = await deleteBox(box);
-      const data = await response;
-      toast.success("Box Deleted Successfully", { autoClose: 3000 });
-      return data;
+      return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );

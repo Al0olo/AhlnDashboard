@@ -178,12 +178,6 @@ import TermsCondition from "../pages/Pages/TermsCondition";
 
 // User Profilez
 import UserProfile from "../pages/Authentication/user-profile";
-
-import BoxView from "pages/Boxes/Box/BoxView";
-import TabletView from "pages/Boxes/Tablets/TabletView";
-import AddressView from "pages/Boxes/Address/AddressView";
-import DeliveryView from "pages/Delivery/DeliveryPackage/DeliveryPackageView";
-import ShippingCompaniesView from "pages/Delivery/ShippingCompany/ShippingCompaniesView";
 import UILink from "../pages/BaseUi/UiLink/Index";
 import FunnelCharts from "../pages/Charts/ApexCharts/FunnelCharts/Index";
 import RangeArea from "../pages/Charts/ApexCharts/RangeAreaCharts/Index";
@@ -191,6 +185,20 @@ import ToDoList from "../pages/ToDo";
 import EcommerceEditProduct from "pages/Ecommerce/EcommerceModels/EcommerceEditModel";
 import EcommerceCustomerInfo from "pages/Ecommerce/EcommerceCustomers/CustomerInfo";
 import EcommerceCustomerDetail from "pages/Ecommerce/EcommerceCustomers/CustomerDetail";
+
+import BoxView from "pages/Boxes/Box/BoxView";
+import TabletView from "pages/Boxes/Tablets";
+import AddressView from "pages/Boxes/Address";
+import DeliveryView from "pages/Delivery/DeliveryPackage/DeliveryPackageView";
+import ShippingCompaniesView from "pages/Delivery/ShippingCompany/ShippingCompaniesView";
+import RolesView from "pages/Admin/Role";
+import UserBoxesView from "pages/Boxes/UserBoxes";
+import BoxImagesView from "pages/Boxes/BoxImages";
+import RelativeCustomerView from "pages/Boxes/RelativeCustomer";
+import ContactUsView from "pages/Admin/ContactUs";
+import AuditTrailView from "pages/Admin/AuditTrail";
+import SystemLogView from "pages/Admin/SystemLog";
+import BoxGenerationView from "pages/Boxes/BoxGeneration";
 
 const authProtectedRoutes = [
   { path: "/dashboard-analytics", component: <DashboardAnalytics /> },
@@ -280,12 +288,21 @@ const authProtectedRoutes = [
 
   //Boxes
   { path: "/boxes", component: <BoxView /> },
+  { path: "/box-generation", component: <BoxGenerationView /> },
   { path: "/tablets", component: <TabletView /> },
   { path: "/addresses", component: <AddressView /> },
+  { path: "/user-boxes", component: <UserBoxesView /> },
+  { path: "/boxes-images", component: <BoxImagesView /> },
 
   // Delivery Packages
   { path: "/delivery-packages", component: <DeliveryView /> },
   { path: "/shipping-companies", component: <ShippingCompaniesView /> },
+
+  // Admin
+  { path: "/role", component: <RolesView /> },
+  { path: "/contact-us", component: <ContactUsView /> },
+  { path: "/audit-trail", component: <AuditTrailView /> },
+  { path: "/system-log", component: <SystemLogView /> },
 
   //charts
   { path: "/charts-apex-line", component: <LineCharts /> },
