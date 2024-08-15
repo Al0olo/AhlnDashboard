@@ -41,8 +41,9 @@ import DeleteModal from "../../../../Components/Common/DeleteModal";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../../Components/Common/Loader";
+import { createSelector } from "reselect";
+import { Link } from "react-router-dom";
 import { useAppSelector } from "redux-hooks";
-
 const BoxesData = () => {
   const dispatch: any = useDispatch();
 
@@ -281,22 +282,6 @@ const BoxesData = () => {
   const columns = useMemo(
     () => [
       {
-        // header: (
-        //   <input
-        //     type="checkbox"
-        //     id="checkBoxAll"
-        //     className="form-check-input"
-        //     onClick={() => checkedAll()}
-        //   />
-        // ),
-        // cell: (cell: any) => (
-        //   <input
-        //     type="checkbox"
-        //     className="boxCheckBox form-check-input"
-        //     value={cell.getValue()}
-        //     onChange={() => deleteCheckbox()}
-        //   />
-        // ),
         id: "#",
         accessorKey: "",
         enableColumnFilter: false,
@@ -341,47 +326,70 @@ const BoxesData = () => {
       {
         header: "Actions",
         cell: (cell: any) => (
-          <UncontrolledDropdown>
-            <DropdownToggle tag="a" className="btn btn-soft-secondary btn-sm">
-              <i className="ri-more-fill align-middle"></i>
-            </DropdownToggle>
-            <DropdownMenu className="dropdown-menu-end">
-              <li>
-                <DropdownItem href="/apps-boxs-details">
-                  <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
-                  View
-                </DropdownItem>
-              </li>
-              <li>
-                <DropdownItem
-                  className="edit-item-btn"
-                  href="#showModal"
-                  data-bs-toggle="modal"
-                  onClick={() => {
-                    const BoxData = cell.row.original;
-                    handleBoxesClick(BoxData);
-                  }}
-                >
-                  <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>{" "}
-                  Edit
-                </DropdownItem>
-              </li>
-              <li>
-                <DropdownItem
-                  className="remove-item-btn"
-                  data-bs-toggle="modal"
-                  href="#deleteOrder"
-                  onClick={() => {
-                    const boxData = cell.row.original;
-                    onClickDelete(boxData);
-                  }}
-                >
-                  <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
-                  Delete
-                </DropdownItem>
-              </li>
-            </DropdownMenu>
-          </UncontrolledDropdown>
+          <>
+            <Link to={`/apps-boxs-details`} className="text-muted">
+              <i className="ri-edit-box-line "></i>{" "}
+            </Link>
+            <a href="#showModal"
+                    data-bs-toggle="modal"
+                    onClick={(e:any) => {
+                      e.preventDefault()
+                      const BoxData = cell.row.original;
+                      handleBoxesClick(BoxData);
+                    }} className="text-muted">
+              <i className="ri-pencil-fill "></i>{" "}
+            </a>
+            <a data-bs-toggle="modal"
+                    href="#deleteOrder"
+                    onClick={(e:any) => {
+                      e.preventDefault()
+                      const boxData = cell.row.original;
+                      onClickDelete(boxData);
+                    }} className="text-muted">
+              <i className="ri-close-circle-line "></i>{" "}
+            </a>
+            {/* <UncontrolledDropdown>
+              <DropdownToggle tag="a" className="btn btn-soft-secondary btn-sm">
+                <i className="ri-more-fill align-middle"></i>
+              </DropdownToggle>
+              <DropdownMenu className="dropdown-menu-end"> */}
+                {/* <li>
+                  <DropdownItem href="/apps-boxs-details">
+                    <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
+                    View
+                  </DropdownItem>
+                </li> */}
+                {/* <li>
+                  <DropdownItem
+                    className="edit-item-btn"
+                    href="#showModal"
+                    data-bs-toggle="modal"
+                    onClick={() => {
+                      const BoxData = cell.row.original;
+                      handleBoxesClick(BoxData);
+                    }}
+                  >
+                    <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>{" "}
+                    Edit
+                  </DropdownItem>
+                </li> */}
+                {/* <li>
+                  <DropdownItem
+                    className="remove-item-btn"
+                    data-bs-toggle="modal"
+                    href="#deleteOrder"
+                    onClick={() => {
+                      const boxData = cell.row.original;
+                      onClickDelete(boxData);
+                    }}
+                  >
+                    <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
+                    Delete
+                  </DropdownItem>
+              </li> */}
+           {/* </DropdownMenu>
+          </UncontrolledDropdown> */}
+          </>
         ),
       },
     ],
@@ -406,14 +414,16 @@ const BoxesData = () => {
           onCloseClick={() => setDeleteModalMulti(false)}
         /> */}
         <Col lg={12}>
-          <Card>
-            <CardHeader className="border-0">
+          <Card className="" >
+            <CardHeader className="card-round" >
               <div className="d-flex align-items-center">
-                <h5 className="card-title mb-0 flex-grow-1">Boxes</h5>
+                <h5 className="card-title mb-0 flex-grow-1 ahln-module-title">
+                  Boxes
+                </h5>
                 <div className="flex-shrink-0">
                   <div className="d-flex flex-wrap gap-2">
-                    <Form
-                      className="btn btn-primary add-btn"
+                    <button
+                      className="btn btn-primary add-btn ahln-btn-module"
                       onClick={() => {
                         setIsEdit(false);
                         toggle();
@@ -450,6 +460,23 @@ const BoxesData = () => {
               <ToastContainer closeButton={false} limit={1} />
             </CardBody>
           </Card>
+          {/* <CardBody className="pt-0"> */}
+          {loader ? (
+            <Loader error={error} />
+          ) : (
+            <TableContainer
+              modelName={`boxes`}
+              columns={columns}
+              data={boxsList}
+              isGlobalFilter={true}
+              customPageSize={8}
+              divClass="table-responsive table-card mb-3"
+              tableClass="align-middle table-nowrap mb-0"
+              SearchPlaceholder="Search for box details or something..."
+            />
+          )}
+          <ToastContainer closeButton={false} limit={1} />
+          {/* </CardBody> */}
         </Col>
       </Row>
 
@@ -458,10 +485,10 @@ const BoxesData = () => {
         toggle={toggle}
         centered
         size="lg"
-        className="border-0"
+        className="ahl-modal border-0"
         modalClassName="zoomIn"
       >
-        <ModalHeader toggle={toggle} className="p-3 bg-info-subtle">
+        <ModalHeader toggle={toggle} className="p-3 bg-img text-light">
           {!!isEdit ? "Edit Box" : "Add Box"}
         </ModalHeader>
         <Form
@@ -710,11 +737,12 @@ const BoxesData = () => {
           </ModalBody>
           <div className="modal-footer">
             <div className="hstack gap-2 justify-content-end">
-              <button onClick={toggle} type="button" className="btn btn-light">
-                Close
-              </button>
-              <button type="submit" className="btn btn-success" id="add-btn">
+              
+              <button type="submit" className="btn btn-success btn-lg ahln-btn-module" id="add-btn">
                 {!!isEdit ? "Update" : "Add Box"}
+              </button>
+              <button onClick={toggle} type="button" className="btn btn-light ahln-btn-muted text-center">
+                Close
               </button>
             </div>
           </div>

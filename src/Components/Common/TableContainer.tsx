@@ -248,8 +248,8 @@ const TableContainer = ({
         </Row>
       )}
 
-      <Card id={modelName} className="p-0">
-        <div className="card-body p-0 w-100 tbl-card">
+      <Card id={modelName} className="">
+        <div className="card-body  w-100 tbl-card">
           <div>
             <div className={divClass +"  tbl-light"}>
               <Table hover className={tableClass +" tbl-ahln round-3 mb-0"}>
