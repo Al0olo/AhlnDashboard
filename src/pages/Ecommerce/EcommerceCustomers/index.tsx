@@ -14,6 +14,7 @@ import {
   Input,
   FormFeedback,
   Button,
+  Alert,
 } from "reactstrap";
 import { Link, useParams } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
@@ -47,6 +48,7 @@ import Loader from "../../../Components/Common/Loader";
 // Export Modal
 import ExportCSVModal from "../../../Components/Common/ExportCSVModal";
 import { createSelector } from "reselect";
+import noImg from "../../../assets/images/custormes/No_Image_Available.jpg";
 
 const EcommerceCustomers = () => {
   const dispatch: any = useDispatch();
@@ -226,7 +228,6 @@ const EcommerceCustomers = () => {
   //     dispatch(onGetCustomers());
   //   }
   // }, [dispatch, isCustomerCreated]);
-
   const handleValidDate = (date: any) => {
     const date1 = moment(new Date(date)).format("DD MMM Y");
     return date1;
@@ -287,7 +288,7 @@ const EcommerceCustomers = () => {
           <input
             type="checkbox"
             id="checkBoxAll"
-            className="form-check-input"
+            className="form-check-input  ahln-check"
             onClick={() => checkedAll()}
           />
         ),
@@ -295,7 +296,7 @@ const EcommerceCustomers = () => {
           return (
             <Input
               type="checkbox"
-              className="customerCheckBox form-check-input"
+              className="customerCheckBox form-check-input ahln-check"
               value={cell.getValue()}
               onChange={() => deleteCheckbox()}
             />
@@ -368,7 +369,7 @@ const EcommerceCustomers = () => {
               <li className="list-inline-item edit" title="Edit">
                 <Link
                   to="#"
-                  className="text-primary d-inline-block edit-item-btn"
+                  className="text-primary d-inline-block edit-item-btn text-muted"
                   onClick={() => {
                     const customerData = cellProps.row.original;
                     handleCustomerClick(customerData);
@@ -380,7 +381,7 @@ const EcommerceCustomers = () => {
               <li className="list-inline-item" title="Remove">
                 <Link
                   to="#"
-                  className="text-danger d-inline-block remove-item-btn"
+                  className="text-danger d-inline-block remove-item-btn text-muted"
                   onClick={() => {
                     const customerData = cellProps.row.original;
                     onClickDelete(customerData);
@@ -428,10 +429,16 @@ const EcommerceCustomers = () => {
             <Col lg={12}>
               <Card id="customerList">
                 <CardHeader className="border-0">
+                  <BreadCrumb title="Customers" pageTitle="Ecommerce" />
                   <Row className="g-4 align-items-center">
                     <div className="col-sm">
-                      <div>
-                        <h5 className="card-title mb-0">Customer List</h5>
+                      <div className="row d-flex justify-content-start">
+                        <h5 className="card-title mb-0 ahln-module-title col-md-3 ">
+                          Customer List{" "}
+                        </h5>
+                        <Alert className="col-md-3 alert alert-success ahln-alert-success mt-1">
+                          +20 Customers
+                        </Alert>
                       </div>
                     </div>
                     <div className="col-sm-auto">
@@ -446,7 +453,15 @@ const EcommerceCustomers = () => {
                         )}
                         <button
                           type="button"
-                          className="btn btn-success add-btn me-1"
+                          className="btn btn-secondary ahln-btn-muted me-3"
+                          onClick={() => setIsExportCSV(true)}
+                        >
+                          <i className="ri-file-download-line align-bottom me-1"></i>{" "}
+                          Export
+                        </button>{" "}
+                        <button
+                          type="button"
+                          className="btn btn-success add-btn me-1 ahln-btn-module"
                           id="create-btn"
                           onClick={() => {
                             setIsEdit(false);
@@ -497,6 +512,46 @@ const EcommerceCustomers = () => {
                       <ModalBody>
                         <input type="hidden" id="id-field" />
 
+              {isCustomerSuccess && customers.length ? (
+                <TableContainer
+                  modelName={`customerList`}
+                  columns={columns}
+                  data={customers || []}
+                  isGlobalFilter={true}
+                  customPageSize={10}
+                  isCustomerFilter={true}
+                  theadClass="table-light text-muted"
+                  SearchPlaceholder="Search for customer, email, phone, status or something..."
+                />
+              ) : (
+                <Loader error={error} />
+              )}
+
+              <Modal
+                id="showModal"
+                className="ahl-modal modal-lg"
+                isOpen={modal}
+                toggle={toggle}
+                centered
+              >
+                <ModalHeader
+                  className="bg-danger p-3 bg-img text-light"
+                  toggle={toggle}
+                >
+                  {!!isEdit ? "Edit Customer" : "Add Customer"}
+                </ModalHeader>
+                <Form
+                  className="tablelist-form"
+                  onSubmit={(e: any) => {
+                    e.preventDefault();
+                    validation.handleSubmit();
+                    return false;
+                  }}
+                >
+                  <ModalBody>
+                    <input type="hidden" id="id-field" />
+                    <Row>
+                      <Col lg={6}>
                         <div
                           className="mb-3"
                           id="modal-id"
@@ -513,7 +568,41 @@ const EcommerceCustomers = () => {
                             readOnly
                           />
                         </div>
-
+                        <div className="mb-3">
+                          <Label
+                            htmlFor="customername-field"
+                            className="form-label"
+                          >
+                            Title:
+                          </Label>
+                          <Input
+                            name="title"
+                            id="title-field"
+                            className="form-control"
+                            placeholder="Enter title"
+                            type="text"
+                            tabIndex={1}
+                            validate={{
+                              required: { value: true },
+                            }}
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            value={validation.values.customer || ""}
+                            invalid={
+                              validation.touched.customer &&
+                              validation.errors.customer
+                                ? true
+                                : false
+                            }
+                            autoFocus
+                          />
+                          {validation.touched.customer &&
+                          validation.errors.customer ? (
+                            <FormFeedback type="invalid">
+                              {validation.errors.customer}
+                            </FormFeedback>
+                          ) : null}
+                        </div>
                         <div className="mb-3">
                           <Label htmlFor="user_name" className="form-label">
                             User Name
@@ -524,6 +613,7 @@ const EcommerceCustomers = () => {
                             className="form-control"
                             placeholder="Enter Name"
                             type="text"
+                            tabIndex={2}
                             validate={{
                               required: { value: true },
                             }}
@@ -544,7 +634,6 @@ const EcommerceCustomers = () => {
                             </FormFeedback>
                           ) : null}
                         </div>
-
                         {!isEdit && (
                           <div className="mb-3">
                             <Label htmlFor="email-field" className="form-label">
@@ -612,7 +701,6 @@ const EcommerceCustomers = () => {
                             ) : null}
                           </div>
                         }
-
                         <div className="mb-3">
                           <Label htmlFor="phone_number" className="form-label">
                             Phone
@@ -620,6 +708,7 @@ const EcommerceCustomers = () => {
                           <Input
                             name="phone_number"
                             type="text"
+                            tabIndex={4}
                             id="phone_number"
                             placeholder="Enter Phone no."
                             onChange={validation.handleChange}
@@ -657,12 +746,58 @@ const EcommerceCustomers = () => {
                             {!!isEdit ? "Update" : "Add Customer"}{" "}
                           </button>
                         </div>
-                      </ModalFooter>
-                    </Form>
-                  </Modal>
-                  <ToastContainer closeButton={false} limit={1} />
-                </div>
-              </Card>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col lg={6}>
+                        <img
+                          id="current-image"
+                          src={noImg}
+                          width={100}
+                          height={100}
+                          className="rounded-circle me-5"
+                        />
+                        <label
+                          htmlFor="inputField"
+                          className="btn btn-info ahln-btn-module position-relative"
+                          style={{ top: "20px" }}
+                        >
+                          Select customer image
+                        </label>
+                        <input
+                          type="file"
+                          tabIndex={7}
+                          id="inputField"
+                          style={{ display: "none" }}
+                        />
+                      </Col>
+                    </Row>
+                  </ModalBody>
+                  <ModalFooter>
+                    <div className="hstack gap-2 justify-content-end">
+                      <button
+                        type="submit"
+                        className="btn btn-success btn-lg ahln-btn-module "
+                      >
+                        {" "}
+                        {!!isEdit ? "Update" : "Add "}{" "}
+                      </button>
+
+                      <button
+                        type="button"
+                        className="btn btn-light ahln-btn-muted text-center"
+                        onClick={() => {
+                          setModal(false);
+                        }}
+                      >
+                        {" "}
+                        Close{" "}
+                      </button>
+                    </div>
+                  </ModalFooter>
+                </Form>
+              </Modal>
+              <ToastContainer closeButton={false} limit={1} />
             </Col>
           </Row>
         </Container>
