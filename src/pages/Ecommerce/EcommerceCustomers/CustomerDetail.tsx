@@ -48,10 +48,14 @@ import Loader from "../../../Components/Common/Loader";
 import ExportCSVModal from "../../../Components/Common/ExportCSVModal";
 import { createSelector } from "reselect";
 import avatar from "../../../assets/images/custormes/avatar2.jpg";
+import { BasicInfo } from "./includes/BasicInfo";
+import { BoxesInfo } from "./includes/BoxesInfo";
+import { ChangePassword } from "./includes/ChangePassword";
+import { ShipmentDetails } from "./includes/ShipmentDetails";
 
 const EcommerceCustomerDetail = () => {
   const dispatch: any = useDispatch();
-
+  const [includes, setIncludes] = useState(<BasicInfo />);
   const ecomCustomerProperties = createSelector(
     (state: any) => state.Ecommerce,
     (ecom) => ({
@@ -178,55 +182,45 @@ const EcommerceCustomerDetail = () => {
       : setIsMultiDeleteButton(false);
     setSelectedCheckBoxDelete(ele);
   };
-
-  document.title = "Customers | Ahln - React Admin & Dashboard";
+  const changePage = (comp: any, currentId: string) => {
+    setIncludes(comp);
+    const current = document.getElementById(currentId);
+    const elements = document.querySelectorAll(".side-details");
+    elements.forEach((element) => {
+      element.classList.remove("side-details-active");
+    });
+    current?.classList.add("side-details-active");
+  };
+  document.title = "Customers | Ahln Dashboard";
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-        <Col lg={12} className="rounded p-2  mb-5 pb-0">
+          <Row>
+            <Col lg={12} className="rounded p-2  mb-5 pb-0">
               <Card id="customerList" className="rounded">
-                <CardHeader className="border-0">
+                <CardHeader className="border-0 bg-img">
                   <BreadCrumb title="Customers" pageTitle="Ecommerce" />
                   <Row className="g-4 align-items-center">
                     <div className="col-sm">
                       <div className="row d-flex justify-content-start">
                         <h5 className="card-title mb-0 ahln-module-title col-md-3 ">
-                          User Information {" "}
+                          Customer's Details{" "}
                         </h5>
-                        <Alert className="col-md-3 alert alert-success ahln-alert-success mt-1">
-                          Active
-                        </Alert>
-                      </div>
-                    </div>
-                    <div className="col-sm-auto">
-                      <div>
-                        {isMultiDeleteButton && (
-                          <Button
-                            className="btn btn-soft-danger me-1"
-                            onClick={() => setDeleteModalMulti(true)}
-                          >
-                            <i className="ri-delete-bin-2-line"></i>
-                          </Button>
-                        )}
-                        <button
-                          type="button"
-                          className="btn btn-secondary ahln-btn-muted "
-                        >
-                          <i className="ri-file-download-line align-bottom me-1"></i>{" "}
-                          Edit
-                        </button>{" "}
                       </div>
                     </div>
                   </Row>
                 </CardHeader>
               </Card>
             </Col>
-          <Row>
-            <Card lg={12} className="rounded p-3 pb-0">
-              <Card lg={10} className="border border-light">
-                <CardBody className="rounded" >
-                  <Row>
+            <Row>
+              <Col
+                lg={11}
+                className="row bg-white rounded-4 "
+                id="customer-name"
+              >
+                <Row>
+                  <Card>
                     <Col md={1} className="me-0 ">
                       <img
                         src={avatar}
@@ -239,50 +233,54 @@ const EcommerceCustomerDetail = () => {
                     <Col md={3}>
                       <p className="ahl-module-title fs-4 m-0">Jack Bryan</p>
                       <p className="text-muted p-0">sarajackson@gmail.com</p>
-                      <Alert className="col-md-3 alert alert-success ahln-alert-success mt-1">
-                        Active
-                      </Alert>
                     </Col>
-                  </Row>
-                  <Row>
-                    <Col lg={9} className="row">
-                      <Col lg={4}>
-                        <p className="text-muted user-details-title">Name</p>
-                        <p className="ahln-title-module user-details-info">Sara Jackson</p>
-                      </Col>
-                      <Col lg={4}>
-                        <p className="text-muted user-details-title">Phone Number</p>
-                        <p className="ahln-title-module user-details-info">+971507686191</p>
-                      </Col>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col lg={9} className="row">
-                      <Col lg={4}>
-                        <p className="text-muted user-details-title">Country</p>
-                        <p className="ahln-title-module user-details-info">United Arab Emirates</p>
-                      </Col>
-                      <Col lg={4}>
-                        <p className="text-muted user-details-title">City</p>
-                        <p className="ahln-title-module user-details-info">Sharga</p>
-                      </Col>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col lg={9} className="row">
-                      <Col lg={4}>
-                        <p className="text-muted user-details-title">Email</p>
-                        <p className="ahln-title-module user-details-info">Osama.fathi1@gmail.com</p>
-                      </Col>
-                      <Col lg={4}>
-                        <p className="text-muted user-details-title">No. of Boxes</p>
-                        <p className="ahln-title-module .user-details-info ">5 Boxes</p>
-                      </Col>
-                    </Col>
-                  </Row>
-                </CardBody>
+                  </Card>
+                </Row>
+              </Col>
+            </Row>
+          </Row>
+
+          <Row
+            className="d-flex justify-content-center text-center  mt-0 "
+            id="content-info"
+          >
+            <Col lg={2} className="round-4">
+              <Card className="p-2 d-flex justify-content-center">
+                <p
+                  className="side-details side-details-active"
+                  id="basic-info"
+                  onClick={() => changePage(<BasicInfo />, "basic-info")}
+                >
+                  Personal Details
+                </p>
+                <p
+                  className="side-details"
+                  id="boxes-info"
+                  onClick={() => changePage(<BoxesInfo />, "boxes-info")}
+                >
+                  Boxes Details
+                </p>
+                <p
+                  className="side-details"
+                  id="shipment-details"
+                  onClick={() =>
+                    changePage(<ShipmentDetails />, "shipment-details")
+                  }
+                >
+                  Shipments Details
+                </p>
+                <p
+                  className="side-details"
+                  id="change-password"
+                  onClick={() =>
+                    changePage(<ChangePassword />, "change-password")
+                  }
+                >
+                  Change Password
+                </p>
               </Card>
-            </Card>
+            </Col>
+            {includes}
           </Row>
         </Container>
       </div>

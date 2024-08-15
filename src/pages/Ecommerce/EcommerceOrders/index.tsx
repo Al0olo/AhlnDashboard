@@ -322,7 +322,7 @@ const EcommerceOrders = () => {
           <input
             type="checkbox"
             id="checkBoxAll"
-            className="form-check-input"
+            className="form-check-input ahln-check"
             onClick={() => checkedAll()}
           />
         ),
@@ -330,7 +330,7 @@ const EcommerceOrders = () => {
           return (
             <input
               type="checkbox"
-              className="orderCheckBox form-check-input"
+              className="orderCheckBox form-check-input ahln-check"
               value={cell.getValue()}
               onChange={() => deleteCheckbox()}
             />
