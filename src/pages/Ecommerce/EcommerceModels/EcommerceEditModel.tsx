@@ -1,33 +1,27 @@
-import React, { useEffect, useState } from "react";
-import BreadCrumb from "../../../Components/Common/BreadCrumb";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardBody,
+  CardHeader,
   Col,
   Container,
-  CardHeader,
-  Nav,
-  NavItem,
-  NavLink,
-  Row,
-  TabContent,
-  TabPane,
+  Form,
+  FormFeedback,
   Input,
   Label,
-  FormFeedback,
-  Form,
-  Spinner,
+  Row,
+  Spinner
 } from "reactstrap";
+import BreadCrumb from "../../../Components/Common/BreadCrumb";
 
 // Redux
 import { useDispatch } from "react-redux";
 import {
-  updateModel as onUpdateModel,
   getModel as onGetModel,
+  updateModel as onUpdateModel,
 } from "../../../slices/thunks";
 
-import Dropzone from "react-dropzone";
-import { Link, redirect, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 //formik
 import { useFormik } from "formik";
@@ -36,12 +30,12 @@ import * as Yup from "yup";
 // Import React FilePond
 import { registerPlugin } from "react-filepond";
 // Import FilePond styles
-import "filepond/dist/filepond.min.css";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
-import { createSelector } from "reselect";
+import "filepond/dist/filepond.min.css";
 import { useSelector } from "react-redux";
+import { createSelector } from "reselect";
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
@@ -121,17 +115,13 @@ const EcommerceEditProduct = (props: any) => {
       console.log("values", values);
       const model = {
         id: id,
-        model_name: values.model_name
-          ? values.model_name
-          : model_data.model.model_name,
-        number_of_doors: values.number_of_doors
-          ? values.number_of_doors
-          : model_data.model.number_of_doors,
+        model_name: values.model_name,
+        number_of_doors: values.number_of_doors,
         width: values.width ? values.width : model_data.model.width,
         height: values.height ? values.height : model_data.model.height,
-        model_image: values.model_image
-          ? values.model_image
-          : model_data.model.model_image,
+        model_image: values.model_image,
+
+        // check
         has_outside_camera: values.has_outside_camera
           ? values.has_outside_camera
           : false,
@@ -203,83 +193,26 @@ const EcommerceEditProduct = (props: any) => {
     <div className="page-content">
       <Container fluid>
         <BreadCrumb title="Edit Model" pageTitle="Ecommerce" />
-        <Form
-          encType="multipart/form-data"
-          onSubmit={(e) => {
-            e.preventDefault();
-            validation.handleSubmit();
-            return false;
-          }}
-        >
-          <Row>
-            <Col lg={8}>
-              {/* model_name */}
-              <Card>
-                <CardBody>
-                  <div className="mb-3">
-                    <Label className="form-label" htmlFor="model-title-input">
-                      Model Title
-                    </Label>
-
-                    <Input
-                      type="text"
-                      className="form-control"
-                      id="model-title-input"
-                      placeholder="Enter model title"
-                      name="model_name"
-                      value={validation.values.model_name}
-                      onBlur={validation.handleBlur}
-                      onChange={validation.handleChange}
-                      invalid={
-                        validation.errors.model_name &&
-                        validation.touched.model_name
-                          ? true
-                          : false
-                      }
-                    />
-                    {validation.errors.model_name &&
-                    validation.touched.model_name ? (
-                      <FormFeedback type="invalid">
-                        {validation.errors.model_name}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </CardBody>
-              </Card>
-              {/* /model_name */}
-              {/* model_image */}
-              <Card>
-                <CardBody>
-                  <div className="mb-3">
-                    <Label className="form-label" htmlFor="model-title-input">
-                      Model Image
-                    </Label>
-                    <Input
-                      type="text"
-                      className="form-control"
-                      id="model-title-input"
-                      placeholder="Enter model image link"
-                      name="model_image"
-                      value={validation.values.model_image}
-                      onBlur={validation.handleBlur}
-                      onChange={validation.handleChange}
-                      invalid={
-                        validation.errors.model_image &&
-                        validation.touched.model_image
-                          ? true
-                          : false
-                      }
-                    />
-                    {validation.errors.model_image &&
-                    validation.touched.model_image ? (
-                      <FormFeedback type="invalid">
-                        {validation.errors.model_image}
-                      </FormFeedback>
-                    ) : null}
-                  </div>
-                </CardBody>
-              </Card>
-              {/* /model_image */}
+        {modelLoading.modelLoading ? (
+          <Spinner />
+        ) : (
+          <Form
+            encType="multipart/form-data"
+            onSubmit={(e) => {
+              e.preventDefault();
+              validation.handleSubmit();
+              return false;
+            }}
+          >
+            <Row>
+              <Col lg={8}>
+                {/* model_name */}
+                <Card>
+                  <CardBody>
+                    <div className="mb-3">
+                      <Label className="form-label" htmlFor="model-title-input">
+                        Model Title
+                      </Label>
 
                       <Input
                         type="text"
@@ -292,13 +225,13 @@ const EcommerceEditProduct = (props: any) => {
                         onChange={validation.handleChange}
                         invalid={
                           validation.errors.model_name &&
-                          validation.touched.model_name
+                            validation.touched.model_name
                             ? true
                             : false
                         }
                       />
                       {validation.errors.model_name &&
-                      validation.touched.model_name ? (
+                        validation.touched.model_name ? (
                         <FormFeedback type="invalid">
                           {validation.errors.model_name}
                         </FormFeedback>
@@ -325,13 +258,13 @@ const EcommerceEditProduct = (props: any) => {
                         onChange={validation.handleChange}
                         invalid={
                           validation.errors.model_image &&
-                          validation.touched.model_image
+                            validation.touched.model_image
                             ? true
                             : false
                         }
                       />
                       {validation.errors.model_image &&
-                      validation.touched.model_image ? (
+                        validation.touched.model_image ? (
                         <FormFeedback type="invalid">
                           {validation.errors.model_image}
                         </FormFeedback>
@@ -362,13 +295,13 @@ const EcommerceEditProduct = (props: any) => {
                             onChange={validation.handleChange}
                             invalid={
                               validation.errors.width &&
-                              validation.touched.width
+                                validation.touched.width
                                 ? true
                                 : false
                             }
                           />
                           {validation.errors.width &&
-                          validation.touched.width ? (
+                            validation.touched.width ? (
                             <FormFeedback type="invalid">
                               {validation.errors.width}
                             </FormFeedback>
@@ -395,13 +328,13 @@ const EcommerceEditProduct = (props: any) => {
                             onChange={validation.handleChange}
                             invalid={
                               validation.errors.height &&
-                              validation.touched.height
+                                validation.touched.height
                                 ? true
                                 : false
                             }
                           />
                           {validation.errors.height &&
-                          validation.touched.height ? (
+                            validation.touched.height ? (
                             <FormFeedback type="invalid">
                               {validation.errors.height}
                             </FormFeedback>
@@ -437,13 +370,13 @@ const EcommerceEditProduct = (props: any) => {
                           onChange={validation.handleChange}
                           invalid={
                             validation.errors.number_of_doors &&
-                            validation.touched.number_of_doors
+                              validation.touched.number_of_doors
                               ? true
                               : false
                           }
                         />
                         {validation.errors.number_of_doors &&
-                        validation.touched.number_of_doors ? (
+                          validation.touched.number_of_doors ? (
                           <FormFeedback type="invalid">
                             {validation.errors.number_of_doors}
                           </FormFeedback>
@@ -473,45 +406,23 @@ const EcommerceEditProduct = (props: any) => {
                           onChange={validation.handleChange}
                           invalid={
                             validation.errors.has_outside_camera &&
-                            validation.touched.has_outside_camera
+                              validation.touched.has_outside_camera
                               ? true
                               : false
                           }
                         />
                       </div>
-            <Col lg={4}>
-              <Card>
-                <CardHeader>
-                  <h5 className="card-title mb-3 ">Number of doors</h5>
-                </CardHeader>
-                <CardBody>
-                  <CardBody>
-                    <div className="mb-1">
-                      <Input
-                        type="text"
-                        className="form-control"
-                        id="model-no_of_doors-input"
-                        placeholder="Enter number of doors"
-                        name="number_of_doors"
-                        value={validation.values.number_of_doors}
-                        onBlur={validation.handleBlur}
-                        onChange={validation.handleChange}
-                        invalid={
-                          validation.errors.number_of_doors &&
-                          validation.touched.number_of_doors
-                            ? true
-                            : false
-                        }
-                      />
-                      {validation.errors.number_of_doors &&
-                      validation.touched.number_of_doors ? (
+
+                      {validation.errors.has_outside_camera &&
+                        validation.touched.has_outside_camera ? (
                         <FormFeedback type="invalid">
                           {validation.errors.has_outside_camera}
                         </FormFeedback>
                       ) : null}
                     </div>
                   </CardBody>
-                 </Card>
+                </Card>
+
                 <Card>
                   <CardHeader>
                     <h5 className="card-title mb-0">Has Inside Camera</h5>
@@ -533,7 +444,7 @@ const EcommerceEditProduct = (props: any) => {
                           onChange={validation.handleChange}
                           invalid={
                             validation.errors.has_inside_camera &&
-                            validation.touched.has_inside_camera
+                              validation.touched.has_inside_camera
                               ? true
                               : false
                           }
@@ -541,7 +452,7 @@ const EcommerceEditProduct = (props: any) => {
                       </div>
 
                       {validation.errors.has_inside_camera &&
-                      validation.touched.has_inside_camera ? (
+                        validation.touched.has_inside_camera ? (
                         <FormFeedback type="invalid">
                           {validation.errors.has_inside_camera}
                         </FormFeedback>
