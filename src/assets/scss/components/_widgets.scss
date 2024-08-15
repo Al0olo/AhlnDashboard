@@ -2,21 +2,20 @@
 // Widgets.scss
 //
 
-// Ahln 
+// Ahln
 a {
-    text-decoration: none !important;
+  text-decoration: none !important;
 }
-.ahln-widget-container{
-    padding: 10px 1px 1px;
-    background-color:white ;
-    h6{
-        color: #118AB1;
-    }
-    h3{
-        color: #2B3674;
-
-    }
-
+.ahln-widget-container {
+  padding: 10px 1px 1px;
+  font-size: 24px;
+  background-color: white;
+  h6 {
+    color: #118ab1;
+  }
+  h3 {
+    color: #2b3674;
+  }
 }
 .widget-number {
   position: relative !important;
@@ -29,12 +28,33 @@ a {
   right: 3px;
   border-radius: 50% !important;
   padding: 0;
-  span{
+  span {
     border-radius: 50%;
   }
-
 }
-// Ahln-end 
+#ahln-muted {
+  font-family: "SF Pro Display" !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: 23.15px !important;
+  text-align: left !important;
+}
+#ahln-widget-dark {
+  color:#1D1F2C !important;
+  font-family:"SF Pro Display" !important;
+  font-size: 20px !important;
+  font-weight: 500 !important;
+  line-height: 23.15px !important;
+  text-align: left !important;
+}
+
+// Ahln-end
+
+// Ahln-charts
+.ahln-charts-container {
+  padding: 10px 1px 1px;
+}
+// ahln-charts-end
 .main-chart {
   .chart-border-left {
     border-left: 1.4px solid var(--#{$prefix}border-color);

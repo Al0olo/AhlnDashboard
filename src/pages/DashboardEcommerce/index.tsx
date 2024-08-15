@@ -33,7 +33,7 @@ const DashboardEcommerce = () => {
                   <Widget />
                 </Row>
                 <Row>
-                  <Col>
+                  <Col  className="ahln-charts-container mt-3">
                     <LineCharts />
                     {/* <Revenue /> */}
                   </Col>
