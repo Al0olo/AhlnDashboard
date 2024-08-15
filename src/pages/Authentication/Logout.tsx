@@ -27,7 +27,7 @@ const Logout: React.FC = () => {
           toastId: "",
         });
 
-        sessionStorage.removeItem("authUser");
+        localStorage.removeItem("authUser");
         navigate("/login")
       } else {
         toast.error("Logout failed. Please try again.");

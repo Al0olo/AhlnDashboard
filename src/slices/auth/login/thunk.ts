@@ -4,7 +4,7 @@ import { postLogin } from "../../../helpers/fakebackend_helper";
 export const LoginAction = createAsyncThunk("auth/login", async (user: any, thunkApi: any) => {
   try {
     let response = await postLogin(user);
-    sessionStorage.setItem("authUser", JSON.stringify(response))
+    localStorage.setItem("authUser", JSON.stringify(response))
 
     return response;
   } catch (error: any) {

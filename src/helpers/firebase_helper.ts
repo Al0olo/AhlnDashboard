@@ -5,15 +5,15 @@ import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
 class FirebaseAuthBackend {
-  constructor(firebaseConfig : any) {
+  constructor(firebaseConfig: any) {
     if (firebaseConfig) {
       // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
-          sessionStorage.setItem("authUser", JSON.stringify(user));
+          localStorage.setItem("authUser", JSON.stringify(user));
         } else {
-          sessionStorage.removeItem("authUser");
+          localStorage.removeItem("authUser");
         }
       });
     }
@@ -22,7 +22,7 @@ class FirebaseAuthBackend {
   /**
    * Registers the user with given details
    */
-  registerUser = (email : any, password : any) => {
+  registerUser = (email: any, password: any) => {
     return new Promise((resolve, reject) => {
       firebase
         .auth()
@@ -41,7 +41,7 @@ class FirebaseAuthBackend {
   /**
    * Registers the user with given details
    */
-  editProfileAPI = (email : any, password : any) => {
+  editProfileAPI = (email: any, password: any) => {
     return new Promise((resolve, reject) => {
       firebase
         .auth()
@@ -60,7 +60,7 @@ class FirebaseAuthBackend {
   /**
    * Login user with given details
    */
-  loginUser = (email : any, password : any) => {
+  loginUser = (email: any, password: any) => {
     return new Promise((resolve, reject) => {
       firebase
         .auth()
@@ -79,7 +79,7 @@ class FirebaseAuthBackend {
   /**
    * forget Password user with given details
    */
-  forgetPassword = (email :any) => {
+  forgetPassword = (email: any) => {
     return new Promise((resolve, reject) => {
       firebase
         .auth()
@@ -126,14 +126,14 @@ class FirebaseAuthBackend {
         const result = await firebase.auth().signInWithPopup(provider);
         const user = result.user;
         return user;
-      } catch (error : any) {
+      } catch (error: any) {
         throw this._handleError(error);
       }
     }
     throw new Error(`Invalid social login type: ${type}`);
   };
 
-  addNewUserToFirestore = (user : any) => {
+  addNewUserToFirestore = (user: any) => {
     const collection = firebase.firestore().collection("users");
     const { profile } = user.additionalUserInfo;
     const details = {
@@ -149,15 +149,15 @@ class FirebaseAuthBackend {
     return { user, details };
   };
 
-  setLoggeedInUser = (user: firebase.User)  => {
-    sessionStorage.setItem("authUser", JSON.stringify(user));
+  setLoggeedInUser = (user: firebase.User) => {
+    localStorage.setItem("authUser", JSON.stringify(user));
   };
 
   /**
    * Returns the authenticated user
    */
   getAuthenticatedUser = (): firebase.User | null => {
-    const authUser = sessionStorage.getItem("authUser");
+    const authUser = localStorage.getItem("authUser");
     if (!authUser) return null;
     return JSON.parse(authUser);
   };
@@ -170,7 +170,7 @@ class FirebaseAuthBackend {
     return error.message;
   }
 }
-  
+
 
 let _fireBaseBackend: FirebaseAuthBackend | null = null;
 
@@ -185,4 +185,5 @@ const getFirebaseBackend = (): FirebaseAuthBackend | null => {
   return _fireBaseBackend;
 };
 
-export { initFirebaseBackend, getFirebaseBackend };
+export { getFirebaseBackend, initFirebaseBackend };
+

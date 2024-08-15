@@ -1,8 +1,6 @@
 import React from "react";
 import {
   Button,
-  Card,
-  CardBody,
   Col,
   Container,
   Form,
@@ -10,7 +8,7 @@ import {
   Input,
   Label,
   Row,
-  Spinner,
+  Spinner
 } from "reactstrap";
 
 // Formik Validation
@@ -30,9 +28,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 //import images
 import { useAppSelector } from "redux-hooks";
-import logoLight from "../../assets/images/login/login.png";
 import logoLogin from "../../assets/images/login/logorotate.png";
-import ParticlesAuth from "../AuthenticationInner/ParticlesAuth";
 
 const Login = (props: any) => {
   let { loading } = useAppSelector((state) => state.Login);
@@ -63,7 +59,7 @@ const Login = (props: any) => {
             toastId: "",
           });
 
-          sessionStorage.setItem("token", res.payload.token);
+          localStorage.setItem("token", res.payload.token);
           history("/dashboard");
         } else if (res.type === "auth/login/rejected") {
           toast(res.payload, {
@@ -162,13 +158,13 @@ const Login = (props: any) => {
                       value={validation.values.password || ""}
                       invalid={
                         validation.touched.password &&
-                        validation.errors.password
+                          validation.errors.password
                           ? true
                           : false
                       }
                     />
                     {validation.touched.password &&
-                    validation.errors.password ? (
+                      validation.errors.password ? (
                       <FormFeedback type="invalid">
                         <div>{validation.errors.password}</div>
                       </FormFeedback>
@@ -176,28 +172,28 @@ const Login = (props: any) => {
                   </div>
                   <Row >
                     <Col md={12} className="remeeber-div">
-                    <Col md={4} className="remeber">
-                      <div className="auth-form-check w-100">
-                        <Input
-                          className="form-control"
-                          type="checkbox"
-                          value=""
-                          id="auth-remember-check"
-                        />
-                        <label htmlFor="">Remember me</label>
-                      </div>
-                    </Col>
+                      <Col md={4} className="remeber">
+                        <div className="auth-form-check w-100">
+                          <Input
+                            className="form-control"
+                            type="checkbox"
+                            value=""
+                            id="auth-remember-check"
+                          />
+                          <label htmlFor="">Remember me</label>
+                        </div>
+                      </Col>
 
-                    <Col md={4} className="remeber">
-                      <div className="mt-3 w-100">
-                        <Link
-                          className="text-muted fs-13 a-forget"
-                          to="/forgot-password"
-                        >
-                          Forgot password?
-                        </Link>
-                      </div>
-                    </Col></Col>
+                      <Col md={4} className="remeber">
+                        <div className="mt-3 w-100">
+                          <Link
+                            className="text-muted fs-13 a-forget"
+                            to="/forgot-password"
+                          >
+                            Forgot password?
+                          </Link>
+                        </div>
+                      </Col></Col>
                   </Row>
                   <div className="">
                     <Button

@@ -26,7 +26,7 @@ const ProfileDropdown = () => {
   const [userName, setUserName] = useState("Admin");
 
   useEffect(() => {
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
   }, [user]);
 
   // Dropdown Toggle
@@ -47,7 +47,7 @@ const ProfileDropdown = () => {
           progress: undefined,
           toastId: "",
         });
-        sessionStorage.removeItem("authUser");
+        localStorage.removeItem("authUser");
       } else {
         toast.error("Logout failed. Please try again.");
       }

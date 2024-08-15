@@ -19,7 +19,7 @@ AxiosInstance.defaults.headers.post["Content-Type"] = "application/json";
 // Request interceptor to include the token
 AxiosInstance.interceptors.request.use(
   (config: any) => {
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -64,11 +64,11 @@ AxiosInstance.interceptors.response.use(
  */
 const setAuthorization = (token: string) => {
   if (token) {
-    // sessionStorage.setItem("token", token);
+    // localStorage.setItem("token", token);
     AxiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   } else {
     delete AxiosInstance.defaults.headers.common["Authorization"];
-    sessionStorage.removeItem("authUser");
+    localStorage.removeItem("authUser");
   }
 };
 
@@ -77,7 +77,7 @@ const setAuthorization = (token: string) => {
  */
 const removeAuthorization = () => {
   delete AxiosInstance.defaults.headers.common["Authorization"];
-  sessionStorage.removeItem("authUser");
+  localStorage.removeItem("authUser");
 };
 
 class APIClient {
@@ -111,8 +111,9 @@ class APIClient {
 }
 
 const getLoggedinUser = () => {
-  const user = sessionStorage.getItem("authUser");
+  const user = localStorage.getItem("authUser");
   return user ? JSON.parse(user) : null;
 };
 
 export { APIClient, getLoggedinUser, removeAuthorization, setAuthorization };
+
