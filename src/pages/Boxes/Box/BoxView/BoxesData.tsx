@@ -13,6 +13,7 @@ import {
   Label,
   Modal,
   ModalBody,
+  ModalFooter,
   ModalHeader,
   Row,
   UncontrolledDropdown,
@@ -430,7 +431,7 @@ const BoxesData = () => {
                       }}
                     >
                       <i className="ri-add-line align-bottom"></i> Create Box
-                    </Form>{" "}
+                    </button>{" "}
                     {/* {isMultiDeleteButton && (
                       <button
                         className="btn btn-soft-danger"
@@ -461,21 +462,7 @@ const BoxesData = () => {
             </CardBody>
           </Card>
           {/* <CardBody className="pt-0"> */}
-          {loader ? (
-            <Loader error={error} />
-          ) : (
-            <TableContainer
-              modelName={`boxes`}
-              columns={columns}
-              data={boxsList}
-              isGlobalFilter={true}
-              customPageSize={8}
-              divClass="table-responsive table-card mb-3"
-              tableClass="align-middle table-nowrap mb-0"
-              SearchPlaceholder="Search for box details or something..."
-            />
-          )}
-          <ToastContainer closeButton={false} limit={1} />
+          
           {/* </CardBody> */}
         </Col>
       </Row>
@@ -735,7 +722,7 @@ const BoxesData = () => {
               </Col>
             </Row>
           </ModalBody>
-          <div className="modal-footer">
+          <ModalFooter>
             <div className="hstack gap-2 justify-content-end">
               
               <button type="submit" className="btn btn-success btn-lg ahln-btn-module" id="add-btn">
@@ -745,7 +732,7 @@ const BoxesData = () => {
                 Close
               </button>
             </div>
-          </div>
+          </ModalFooter>
         </Form>
       </Modal>
     </React.Fragment>
