@@ -23,12 +23,26 @@ AxiosInstance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+    // Log request details to Reactotron
+    console?.tron.display({
+      name: 'API Request',
+      preview: `${config.method?.toUpperCase()} ${config.url}`,
+      value: {
+        url: config.url,
+        method: config.method,
+        headers: config.headers,
+        data: config.data,
+      },
+    });
+
     return config;
   },
   (error) => {
     return Promise.reject(error);
   }
 );
+
 
 // Enhanced response interceptor to handle errors
 AxiosInstance.interceptors.response.use(

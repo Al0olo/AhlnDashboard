@@ -3727,6 +3727,13 @@ apexcharts@^3.44.2:
     svg.resize.js "^1.4.3"
     svg.select.js "^3.0.1"
 
+apisauce@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/apisauce/-/apisauce-3.0.1.tgz#ecee5276f6c3528f28cd635834fc6b8be0519c61"
+  integrity sha512-4HEmETv0skPW+bFS4TzB5nQ5y2TdafbUpnAjp83MW8Re9lHwngao2hpnk7aIaxExJqSTxkpWl+ThgZbqjx2bpQ==
+  dependencies:
+    axios "^1.4.0"
+
 arg@^5.0.2:
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/arg/-/arg-5.0.2.tgz#c81433cc427c92c4dcf4865142dbca6f15acd59c"
@@ -3941,6 +3948,15 @@ axios-mock-adapter@^1.22.0:
   dependencies:
     fast-deep-equal "^3.1.3"
     is-buffer "^2.0.5"
+
+axios@^1.4.0:
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.7.4.tgz#4c8ded1b43683c8dd362973c393f3ede24052aa2"
+  integrity sha512-DukmaFRnY6AzAALSH4J2M3k6PkaC+MfaAGdEERRWcC9q3/TWQwLpHR8ZRLKTdQ3aBDL64EdluRDjJqKw+BPZEw==
+  dependencies:
+    follow-redirects "^1.15.6"
+    form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
 
 axios@^1.6.2:
   version "1.7.2"
@@ -10197,6 +10213,13 @@ reactcss@^1.2.0:
   integrity sha512-KiwVUcFu1RErkI97ywr8nvx8dNOpT03rbnma0SSalTYjkrPYaEajR4a/MRt6DZ46K6arDRbWMNHF+xH7G7n/8A==
   dependencies:
     lodash "^4.0.1"
+
+reactotron-apisauce@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/reactotron-apisauce/-/reactotron-apisauce-3.0.4.tgz#89bfa9b00961feeb62acb85fd938ae1a1f245873"
+  integrity sha512-oDwim1IYLl1xXe55F7hUuKfxgmEuFxUeOq3Z2box5lG5O9KfiMJID8hWstNJizGUQ+5z/24hhT9X3jF+j6odrA==
+  dependencies:
+    apisauce "^3.0.1"
 
 reactotron-core-client@2.9.3:
   version "2.9.3"
