@@ -10,7 +10,7 @@ import {
   Spinner
 } from "reactstrap";
 
-import { LogoSVG } from "common/icons";
+import { AuthLogo } from "Components/Common/auth-logo";
 import { useFormik } from "formik";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -21,7 +21,7 @@ import * as Yup from "yup";
 import logoLogin from "../../assets/images/login/logorotate.png";
 import { LoginAction } from "../../slices/thunks";
 
-const Login = (props: any) => {
+const Login = () => {
 
 
   let { loading } = useAppSelector((state) => state.Login);
@@ -39,10 +39,8 @@ const Login = (props: any) => {
       password: Yup.string().required("Please enter your password"),
     }),
     onSubmit: (values) => {
-      console.log(values);
       dispatch(LoginAction(values)).then((res: { payload: any; type: any }) => {
         if (res.type === "auth/login/fulfilled") {
-
           toast("Login successful", {
             position: "top-right",
             hideProgressBar: false,
@@ -93,7 +91,7 @@ const Login = (props: any) => {
                       Enter your email and password to sign in
                     </p>
                   </div>
-                  <div className="mb-3">
+                  <div className="mt-4 mb-3">
                     <Label
                       htmlFor="useremail"
                       className="form-label auth-text-primary lbl"
@@ -173,7 +171,9 @@ const Login = (props: any) => {
                             Forgot password?
                           </Link>
                         </div>
-                      </Col></Col>
+                      </Col>
+
+                    </Col>
                   </Row>
                   <div className="">
                     <Button
@@ -192,14 +192,7 @@ const Login = (props: any) => {
           </Row>
         </Col>
 
-        <Col
-          md={4}
-          className="auth-login-ahln flex-d justify-content-center align-content-center"
-        >
-          <div className="align-self-center align-items-center justify-content-center d-flex">
-            <LogoSVG />
-          </div>
-        </Col>
+        <AuthLogo />
       </Row>
     </Container>
 
