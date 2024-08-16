@@ -22,6 +22,8 @@ import logoLogin from "../../assets/images/login/logorotate.png";
 import { LoginAction } from "../../slices/thunks";
 
 const Login = (props: any) => {
+
+
   let { loading } = useAppSelector((state) => state.Login);
   const history = useNavigate();
   const dispatch: any = useDispatch();
@@ -29,8 +31,8 @@ const Login = (props: any) => {
   const validation = useFormik({
     enableReinitialize: true,
     initialValues: {
-      email: process.env.NODE_ENV === 'development' && "abdelrahmanaosman99@gmail.com",
-      password: process.env.NODE_ENV === 'development' && "adminadmin",
+      email: process.env.NODE_ENV === 'development' ? "abdelrahmanaosman99@gmail.com" : "",
+      password: process.env.NODE_ENV === 'development' ? "adminadmin" : "",
     },
     validationSchema: Yup.object({
       email: Yup.string().required("Please Enter Your Email"),

@@ -4,11 +4,25 @@ import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import reactotron from "../src/ReactotronConfig";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import rootReducer from "./slices";
 
-const store = configureStore({ reducer: rootReducer, devTools: true });
+const store = configureStore({
+  reducer: rootReducer,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({ serializableCheck: false }),
+  devTools: process.env.NODE_ENV != 'production',
+  enhancers: getDefaultEnhancers =>
+    getDefaultEnhancers({
+      autoBatch: false,
+    })
+      .concat(reactotron.createEnhancer()),
+})
+
+
+
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
 export type AppThunk<ReturnType = void> = ThunkAction<
