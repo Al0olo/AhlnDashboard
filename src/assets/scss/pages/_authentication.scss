@@ -78,6 +78,16 @@
   padding-right: 0 !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
+}.wrap-form{
+ @media (max-width: 575.98px) {
+    text-align: center !important;
+  width: 100% !important;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
+
+    
+  }
 }
 .ahln-auth-form {
   background-repeat: no-repeat;

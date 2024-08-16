@@ -68,12 +68,12 @@ const Login = (props: any) => {
       <Row className="ahln-auth-form">
         <Col
           lg={8}
-          className="login-form-ahln d-flex justify-content-center align-content-center "
+          className="login-form-ahln d-block justify-content-center align-content-center "
         >
           <Row>
             <div className="p-2 mt-4 d-flex justify-content-center align-items-center w-100">
               <img src={logoLogin} alt="" />
-              <div className="d-block justify-content-center align-items-center w-100">
+              <div className="wrap-form d-block justify-content-center align-items-center w-50">
                 <Form
                   onSubmit={(e) => {
                     e.preventDefault();
@@ -84,9 +84,9 @@ const Login = (props: any) => {
                   action="#"
                 >
                   <div className="mb-3 auth-title">
-                    <h3 className="text-primary auth-text-primary auth-text-bold">
+                    <h1 className="text-primary auth-text-primary auth-text-bold">
                       Sign In:
-                    </h3>
+                    </h1>
                     <p className="text-muted">
                       Enter your email and password to sign in
                     </p>
