@@ -6,7 +6,7 @@ const api = new APIClient();
 
 // Gets the logged in user data from local session
 export const getLoggedInUser = () => {
-  const user = sessionStorage.getItem("authUser");
+  const user = localStorage.getItem("authUser");
   if (user) return JSON.parse(user).data;
   return null;
 };
@@ -359,7 +359,7 @@ export const deleteModels = (model: any) => {
   return api.delete(url.DELETE_MODEL + model);
 };
 // add Models
-export const addNewModel = (model: any) =>{
+export const addNewModel = (model: any) => {
   return api.create(url.ADD_NEW_MODEL, model);
 }
 // update Models

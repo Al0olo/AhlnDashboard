@@ -22,7 +22,6 @@ import TicketsDetails from "../pages/SupportTickets/TicketsDetails";
 import EcommerceAddModel from "../pages/Ecommerce/EcommerceModels/EcommerceAddModel";
 import EcommerceModelDetail from "../pages/Ecommerce/EcommerceModels/EcommerceModelDetail";
 import EcommerceModels from "../pages/Ecommerce/EcommerceModels/index";
-import EcommerceEditModel from "../pages/Ecommerce/EcommerceModels/EcommerceEditModel";
 
 //Products
 import EcommerceAddProduct from "../pages/Ecommerce/EcommerceProducts/EcommerceAddProduct";
@@ -177,28 +176,28 @@ import PrivecyPolicy from "../pages/Pages/PrivacyPolicy";
 import TermsCondition from "../pages/Pages/TermsCondition";
 
 // User Profilez
+import EcommerceCustomerDetail from "pages/Ecommerce/EcommerceCustomers/CustomerDetail";
+import EcommerceCustomerInfo from "pages/Ecommerce/EcommerceCustomers/CustomerInfo";
+import EcommerceEditProduct from "pages/Ecommerce/EcommerceModels/EcommerceEditModel";
 import UserProfile from "../pages/Authentication/user-profile";
 import UILink from "../pages/BaseUi/UiLink/Index";
 import FunnelCharts from "../pages/Charts/ApexCharts/FunnelCharts/Index";
 import RangeArea from "../pages/Charts/ApexCharts/RangeAreaCharts/Index";
 import ToDoList from "../pages/ToDo";
-import EcommerceEditProduct from "pages/Ecommerce/EcommerceModels/EcommerceEditModel";
-import EcommerceCustomerInfo from "pages/Ecommerce/EcommerceCustomers/CustomerInfo";
-import EcommerceCustomerDetail from "pages/Ecommerce/EcommerceCustomers/CustomerDetail";
 
-import BoxView from "pages/Boxes/Box/BoxView";
-import TabletView from "pages/Boxes/Tablets";
-import AddressView from "pages/Boxes/Address";
-import DeliveryView from "pages/Delivery/DeliveryPackage/DeliveryPackageView";
-import ShippingCompaniesView from "pages/Delivery/ShippingCompany/ShippingCompaniesView";
+import AuditTrailView from "pages/Admin/AuditTrail";
+import ContactUsView from "pages/Admin/ContactUs";
 import RolesView from "pages/Admin/Role";
-import UserBoxesView from "pages/Boxes/UserBoxes";
+import SystemLogView from "pages/Admin/SystemLog";
+import AddressView from "pages/Boxes/Address";
+import BoxView from "pages/Boxes/Box/BoxView";
+import BoxGenerationView from "pages/Boxes/BoxGeneration";
 import BoxImagesView from "pages/Boxes/BoxImages";
 import RelativeCustomerView from "pages/Boxes/RelativeCustomer";
-import ContactUsView from "pages/Admin/ContactUs";
-import AuditTrailView from "pages/Admin/AuditTrail";
-import SystemLogView from "pages/Admin/SystemLog";
-import BoxGenerationView from "pages/Boxes/BoxGeneration";
+import TabletView from "pages/Boxes/Tablets";
+import UserBoxesView from "pages/Boxes/UserBoxes";
+import DeliveryView from "pages/Delivery/DeliveryPackage/DeliveryPackageView";
+import ShippingCompaniesView from "pages/Delivery/ShippingCompany/ShippingCompaniesView";
 
 const authProtectedRoutes = [
   { path: "/dashboard-analytics", component: <DashboardAnalytics /> },
@@ -418,6 +417,10 @@ const authProtectedRoutes = [
     exact: true,
     component: <Navigate to="/dashboard" />,
   },
+  {
+    path: "/apps-ecommerce-relative-customers",
+    component: <RelativeCustomerView />,
+  },
   { path: "*", component: <Navigate to="/dashboard" /> },
 ];
 
@@ -462,3 +465,4 @@ const publicRoutes: any = [
 ];
 
 export { authProtectedRoutes, publicRoutes };
+

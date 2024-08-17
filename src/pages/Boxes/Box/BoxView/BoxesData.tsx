@@ -1,12 +1,9 @@
-import React, { useEffect, useMemo, useState, useCallback } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Card,
   CardBody,
   CardHeader,
   Col,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
   Form,
   FormFeedback,
   Input,
@@ -15,36 +12,34 @@ import {
   ModalBody,
   ModalFooter,
   ModalHeader,
-  Row,
-  UncontrolledDropdown,
+  Row
 } from "reactstrap";
 //redux
 import { useDispatch } from "react-redux";
 import TableContainer from "../../../../Components/Common/TableContainer";
 import {
-  GetBoxesAction,
   AddBoxAction,
   DeleteBoxAction,
-  UpdateBoxAction,
+  GetAddressesAction,
+  GetBoxesAction,
   GetBoxGenerationsAction,
   GetTabletsAction,
-  GetAddressesAction,
+  UpdateBoxAction,
 } from "../../../../slices/thunks";
 
 import * as moment from "moment";
 
 // Formik
-import * as Yup from "yup";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 
 import DeleteModal from "../../../../Components/Common/DeleteModal";
 
+import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Loader from "../../../../Components/Common/Loader";
-import { createSelector } from "reselect";
-import { Link } from "react-router-dom";
 import { useAppSelector } from "redux-hooks";
+import Loader from "../../../../Components/Common/Loader";
 const BoxesData = () => {
   const dispatch: any = useDispatch();
 
@@ -332,21 +327,21 @@ const BoxesData = () => {
               <i className="ri-edit-box-line "></i>{" "}
             </Link>
             <a href="#showModal"
-                    data-bs-toggle="modal"
-                    onClick={(e:any) => {
-                      e.preventDefault()
-                      const BoxData = cell.row.original;
-                      handleBoxesClick(BoxData);
-                    }} className="text-muted">
+              data-bs-toggle="modal"
+              onClick={(e: any) => {
+                e.preventDefault()
+                const BoxData = cell.row.original;
+                handleBoxesClick(BoxData);
+              }} className="text-muted">
               <i className="ri-pencil-fill "></i>{" "}
             </a>
             <a data-bs-toggle="modal"
-                    href="#deleteOrder"
-                    onClick={(e:any) => {
-                      e.preventDefault()
-                      const boxData = cell.row.original;
-                      onClickDelete(boxData);
-                    }} className="text-muted">
+              href="#deleteOrder"
+              onClick={(e: any) => {
+                e.preventDefault()
+                const boxData = cell.row.original;
+                onClickDelete(boxData);
+              }} className="text-muted">
               <i className="ri-close-circle-line "></i>{" "}
             </a>
             {/* <UncontrolledDropdown>
@@ -354,13 +349,13 @@ const BoxesData = () => {
                 <i className="ri-more-fill align-middle"></i>
               </DropdownToggle>
               <DropdownMenu className="dropdown-menu-end"> */}
-                {/* <li>
+            {/* <li>
                   <DropdownItem href="/apps-boxs-details">
                     <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
                     View
                   </DropdownItem>
                 </li> */}
-                {/* <li>
+            {/* <li>
                   <DropdownItem
                     className="edit-item-btn"
                     href="#showModal"
@@ -374,7 +369,7 @@ const BoxesData = () => {
                     Edit
                   </DropdownItem>
                 </li> */}
-                {/* <li>
+            {/* <li>
                   <DropdownItem
                     className="remove-item-btn"
                     data-bs-toggle="modal"
@@ -388,7 +383,7 @@ const BoxesData = () => {
                     Delete
                   </DropdownItem>
               </li> */}
-           {/* </DropdownMenu>
+            {/* </DropdownMenu>
           </UncontrolledDropdown> */}
           </>
         ),
@@ -423,7 +418,7 @@ const BoxesData = () => {
                 </h5>
                 <div className="flex-shrink-0">
                   <div className="d-flex flex-wrap gap-2">
-                    <button
+                    <Form
                       className="btn btn-primary add-btn ahln-btn-module"
                       onClick={() => {
                         setIsEdit(false);
@@ -431,7 +426,7 @@ const BoxesData = () => {
                       }}
                     >
                       <i className="ri-add-line align-bottom"></i> Create Box
-                    </button>{" "}
+                    </Form>{" "}
                     {/* {isMultiDeleteButton && (
                       <button
                         className="btn btn-soft-danger"
@@ -462,7 +457,21 @@ const BoxesData = () => {
             </CardBody>
           </Card>
           {/* <CardBody className="pt-0"> */}
-          
+          {loader ? (
+            <Loader error={error} />
+          ) : (
+            <TableContainer
+              modelName={`boxes`}
+              columns={columns}
+              data={boxsList}
+              isGlobalFilter={true}
+              customPageSize={8}
+              divClass="table-responsive table-card mb-3"
+              tableClass="align-middle table-nowrap mb-0"
+              SearchPlaceholder="Search for box details or something..."
+            />
+          )}
+          <ToastContainer closeButton={false} limit={1} />
           {/* </CardBody> */}
         </Col>
       </Row>
@@ -504,13 +513,13 @@ const BoxesData = () => {
                     onChange={validation.handleChange}
                     invalid={
                       validation.errors.serial_number &&
-                      validation.touched.serial_number
+                        validation.touched.serial_number
                         ? true
                         : false
                     }
                   />
                   {validation.errors.serial_number &&
-                  validation.touched.serial_number ? (
+                    validation.touched.serial_number ? (
                     <FormFeedback type="invalid">
                       {validation.errors.serial_number}
                     </FormFeedback>
@@ -532,13 +541,13 @@ const BoxesData = () => {
                     value={validation.values.box_label || ""}
                     invalid={
                       validation.touched.box_label &&
-                      validation.errors.box_label
+                        validation.errors.box_label
                         ? true
                         : false
                     }
                   />
                   {validation.touched.box_label &&
-                  validation.errors.box_label ? (
+                    validation.errors.box_label ? (
                     <FormFeedback type="invalid">
                       {validation.errors.box_label}
                     </FormFeedback>
@@ -586,7 +595,7 @@ const BoxesData = () => {
                     value={validation.values.current_tablet_id}
                     invalid={
                       validation.touched.current_tablet_id &&
-                      validation.errors.current_tablet_id
+                        validation.errors.current_tablet_id
                         ? true
                         : false
                     }
@@ -609,7 +618,7 @@ const BoxesData = () => {
                       ))}
                   </Input>
                   {validation.touched.current_tablet_id &&
-                  validation.errors.current_tablet_id ? (
+                    validation.errors.current_tablet_id ? (
                     <FormFeedback type="invalid">
                       {validation.errors.current_tablet_id}
                     </FormFeedback>
@@ -630,7 +639,7 @@ const BoxesData = () => {
                     value={validation.values.address_id}
                     invalid={
                       validation.touched.address_id &&
-                      validation.errors.address_id
+                        validation.errors.address_id
                         ? true
                         : false
                     }
@@ -649,7 +658,7 @@ const BoxesData = () => {
                       ))}
                   </Input>
                   {validation.touched.address_id &&
-                  validation.errors.address_id ? (
+                    validation.errors.address_id ? (
                     <FormFeedback type="invalid">
                       {validation.errors.address_id}
                     </FormFeedback>
@@ -670,7 +679,7 @@ const BoxesData = () => {
                     value={validation.values.box_model_id}
                     invalid={
                       validation.touched.box_model_id &&
-                      validation.errors.box_model_id
+                        validation.errors.box_model_id
                         ? true
                         : false
                     }
@@ -689,7 +698,7 @@ const BoxesData = () => {
                       ))}
                   </Input>
                   {validation.touched.box_model_id &&
-                  validation.errors.box_model_id ? (
+                    validation.errors.box_model_id ? (
                     <FormFeedback type="invalid">
                       {validation.errors.box_model_id}
                     </FormFeedback>
@@ -708,13 +717,13 @@ const BoxesData = () => {
                   onChange={validation.handleChange}
                   invalid={
                     validation.touched.has_empty_lockers &&
-                    validation.errors.has_empty_lockers
+                      validation.errors.has_empty_lockers
                       ? true
                       : false
                   }
                 />
                 {validation.touched.has_empty_lockers &&
-                validation.errors.has_empty_lockers ? (
+                  validation.errors.has_empty_lockers ? (
                   <FormFeedback type="invalid">
                     {validation.errors.has_empty_lockers}
                   </FormFeedback>
@@ -724,7 +733,7 @@ const BoxesData = () => {
           </ModalBody>
           <ModalFooter>
             <div className="hstack gap-2 justify-content-end">
-              
+
               <button type="submit" className="btn btn-success btn-lg ahln-btn-module" id="add-btn">
                 {!!isEdit ? "Update" : "Add Box"}
               </button>

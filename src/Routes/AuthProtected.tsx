@@ -8,7 +8,6 @@ import { LogoutAction } from "../slices/auth/logout/thunk";
 const AuthProtected = ({ children }: any) => {
   const dispatch = useAppDispatch();
   const { userProfile, loading, token } = useProfile();
-  console.log("userProfile", userProfile, loading, token);
 
   useEffect(() => {
     if (userProfile && token) {
@@ -22,9 +21,7 @@ const AuthProtected = ({ children }: any) => {
     return <Navigate to={{ pathname: "/login" }} />;
   }
 
-  // if (loading) {
-  //   return <div>Loading...</div>; // Optionally show a loading indicator while checking the auth status
-  // }
+
 
   return <>{children}</>;
 };

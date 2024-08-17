@@ -50,8 +50,8 @@ const UserProfile = () => {
 
 
   useEffect(() => {
-    if (sessionStorage.getItem("authUser")) {
-      const storedUser = sessionStorage.getItem("authUser");
+    if (localStorage.getItem("authUser")) {
+      const storedUser = localStorage.getItem("authUser");
       if (storedUser) {
         const obj = JSON.parse(storedUser);
 
@@ -66,8 +66,8 @@ const UserProfile = () => {
         ) {
           if (!isEmpty(user)) {
             obj.data.first_name = user.first_name;
-            sessionStorage.removeItem("authUser");
-            sessionStorage.setItem("authUser", JSON.stringify(obj));
+            localStorage.removeItem("authUser");
+            localStorage.setItem("authUser", JSON.stringify(obj));
           }
 
           setUserName(obj.data.first_name || "Admin");
