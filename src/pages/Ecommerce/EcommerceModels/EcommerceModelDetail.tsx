@@ -14,7 +14,7 @@ import {
   TabContent,
   TabPane,
 } from "reactstrap";
-import { getModel as onGetModel } from "../../../slices/thunks";
+// import { getModel as onGetModel } from "../../../slices/thunks";
 //Simple bar
 import SimpleBar from "simplebar-react";
 
@@ -107,7 +107,7 @@ function EcommerceProductDetail(props: any) {
   );
   const modelData = useSelector(selectModelData);
   useEffect(() => {
-    dispatch(onGetModel(id));
+    // dispatch(onGetModel(id));
   }, []);
   useEffect(() => {
     if (modelData.model) {
@@ -198,7 +198,7 @@ function EcommerceProductDetail(props: any) {
                                 />
                               </div>
                             </SwiperSlide> */}
-                           {/* <SwiperSlide>
+                            {/* <SwiperSlide>
                               <div className="nav-slide-item">
                                 <img
                                   src={product6}
@@ -235,7 +235,9 @@ function EcommerceProductDetail(props: any) {
                     <div className="mt-xl-0 mt-5">
                       <div className="d-flex">
                         <div className="flex-grow-1">
-                          <h5 className="text-capitalize">{modelData.model.model_name}</h5>
+                          <h5 className="text-capitalize">
+                            {modelData.model.model_name}
+                          </h5>
                           <div className="hstack gap-3 flex-wrap">
                             <div className="vr"></div>
                             <div className="text-muted">

@@ -20,7 +20,7 @@ import {
 
 // Redux
 import { useDispatch } from "react-redux";
-import { addNewModel as onAddNewModel } from "../../../slices/thunks";
+// import { addNewModel as onAddNewModel } from "../../../slices/thunks";
 
 import Dropzone from "react-dropzone";
 import { Link, useNavigate } from "react-router-dom";
@@ -131,7 +131,7 @@ const EcommerceAddProduct = (props: any) => {
         has_tablet: values.has_tablet ? values.has_tablet : false,
       };
       // save new product
-      dispatch(onAddNewModel(newModel));
+      // dispatch(onAddNewModel(newModel));
       history("/apps-ecommerce-models");
       validation.resetForm();
     },
@@ -218,8 +218,8 @@ const EcommerceAddProduct = (props: any) => {
               </Card>
               {/* /model_image */}
 
-             {/* Dimension */}
-             <Row>
+              {/* Dimension */}
+              <Row>
                 <Col lg={6}>
                   <Card>
                     <CardHeader>
@@ -286,16 +286,16 @@ const EcommerceAddProduct = (props: any) => {
                   </Card>
                 </Col>
               </Row>
-             {/* /Dimension */}
+              {/* /Dimension */}
               <div className="text-end mb-3 ">
                 <button type="submit" className="btn btn-success w-sm">
                   Save
                 </button>
               </div>
             </Col>
-{/* Features */}
+            {/* Features */}
 
-<Col lg={4}>
+            <Col lg={4}>
               <Card>
                 <CardHeader>
                   <h5 className="card-title mb-3 ">Number of doors</h5>
@@ -439,7 +439,7 @@ const EcommerceAddProduct = (props: any) => {
                 </CardBody>
               </Card>
             </Col>
-{/* /Features */}
+            {/* /Features */}
           </Row>
         </Form>
       </Container>

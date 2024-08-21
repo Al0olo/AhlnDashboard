@@ -16,14 +16,14 @@ export * from "./admin/constactUs/thunk";
 export * from "./admin/auditTrail/thunk";
 export * from "./admin/systemLog/thunk";
 
+// Users
+export * from "./users/thunk";
+
 //Boxes
 export * from "./Box/boxes/thunk";
 
 // Box Generation
 export * from "./Box/boxGeneration/thunk";
-
-// Relative Customer
-export * from "./Box/RelativeCustomer/thunk";
 
 // User Boxes
 export * from "./Box/UserBoxes/thunk";
@@ -47,8 +47,6 @@ export * from "./delivery/shippingCompany/thunk";
 export * from "./calendar/thunk";
 //Chat
 export * from "./chat/thunk";
-//Ecommerce
-export * from "./ecommerce/thunk";
 
 //Project
 export * from "./projects/thunk";

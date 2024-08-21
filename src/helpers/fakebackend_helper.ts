@@ -104,15 +104,6 @@ export const getBoxImages = () => {
   return api.get(url.GET_BOX_IMAGES);
 };
 
-// Get All Relative Customer
-export const getRelativeCustomer = () => {
-  return api.get(url.GET_RELATIVE_CUSTOMER);
-};
-
-// Update Relative Customer Status
-export const updateRelativeCustomerStatusApi = (data: any) => {
-  return api.update(url.UPDATE_RELATIVE_CUSTOMER_STATUS, data);
-};
 
 // DELIVERY PACKAGE
 // Get Delivery Packages
@@ -177,6 +168,7 @@ export const deleteShippingCompany = (data: any) => {
 };
 
 // ADMINSTRATION
+
 
 // CONTACT US
 // Fetch All Contact Us
@@ -361,7 +353,7 @@ export const deleteModels = (model: any) => {
 // add Models
 export const addNewModel = (model: any) => {
   return api.create(url.ADD_NEW_MODEL, model);
-}
+};
 // update Models
 export const updateModel = (model: any) => {
   api.update(url.UPDATE_MODEL + model.id, model);
@@ -402,23 +394,6 @@ export const updateOrder = (order: any) => api.update(url.UPDATE_ORDER, order);
 export const deleteOrder = (order: any) =>
   api.delete(url.DELETE_ORDER, { headers: { order } });
 
-// get Customers
-export const getCustomers = () => api.get(url.GET_CUSTOMERS);
-
-// add Customers
-export const addNewCustomer = (customer: any) =>
-  api.create(url.ADD_NEW_CUSTOMER, customer);
-
-// update Customers
-export const updateCustomer = (customer: any) =>
-  api.update(url.UPDATE_CUSTOMER + `/${customer.id}`, customer);
-
-// update user status
-export const updateUserStatusApi = (data: any) =>
-  api.update(url.UPDATE_USER_STATUS, data);
-// delete Customers
-export const deleteCustomer = (customer: any) =>
-  api.delete(url.DELETE_CUSTOMER + `/${customer}`);
 
 // get Sellers
 export const getSellers = () => api.get(url.GET_SELLERS);

@@ -10,16 +10,16 @@ import {
   Input,
   Label,
   Row,
-  Spinner
+  Spinner,
 } from "reactstrap";
 import BreadCrumb from "../../../Components/Common/BreadCrumb";
 
 // Redux
 import { useDispatch } from "react-redux";
-import {
-  getModel as onGetModel,
-  updateModel as onUpdateModel,
-} from "../../../slices/thunks";
+// import {
+//   getModel as onGetModel,
+//   updateModel as onUpdateModel,
+// } from "../../../slices/thunks";
 
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -71,7 +71,7 @@ const EcommerceEditProduct = (props: any) => {
   );
   const modelData = useSelector(selectModelData);
   useEffect(() => {
-    dispatch(onGetModel(id));
+    // dispatch(onGetModel(id));
   }, []);
   useEffect(() => {
     if (modelData.model) {
@@ -132,7 +132,7 @@ const EcommerceEditProduct = (props: any) => {
       };
       // save new product
       console.log("model", model);
-      dispatch(onUpdateModel(model));
+      // dispatch(onUpdateModel(model));
       history("/apps-ecommerce-models");
       validation.resetForm();
     },
@@ -225,13 +225,13 @@ const EcommerceEditProduct = (props: any) => {
                         onChange={validation.handleChange}
                         invalid={
                           validation.errors.model_name &&
-                            validation.touched.model_name
+                          validation.touched.model_name
                             ? true
                             : false
                         }
                       />
                       {validation.errors.model_name &&
-                        validation.touched.model_name ? (
+                      validation.touched.model_name ? (
                         <FormFeedback type="invalid">
                           {validation.errors.model_name}
                         </FormFeedback>
@@ -258,13 +258,13 @@ const EcommerceEditProduct = (props: any) => {
                         onChange={validation.handleChange}
                         invalid={
                           validation.errors.model_image &&
-                            validation.touched.model_image
+                          validation.touched.model_image
                             ? true
                             : false
                         }
                       />
                       {validation.errors.model_image &&
-                        validation.touched.model_image ? (
+                      validation.touched.model_image ? (
                         <FormFeedback type="invalid">
                           {validation.errors.model_image}
                         </FormFeedback>
@@ -295,13 +295,13 @@ const EcommerceEditProduct = (props: any) => {
                             onChange={validation.handleChange}
                             invalid={
                               validation.errors.width &&
-                                validation.touched.width
+                              validation.touched.width
                                 ? true
                                 : false
                             }
                           />
                           {validation.errors.width &&
-                            validation.touched.width ? (
+                          validation.touched.width ? (
                             <FormFeedback type="invalid">
                               {validation.errors.width}
                             </FormFeedback>
@@ -328,13 +328,13 @@ const EcommerceEditProduct = (props: any) => {
                             onChange={validation.handleChange}
                             invalid={
                               validation.errors.height &&
-                                validation.touched.height
+                              validation.touched.height
                                 ? true
                                 : false
                             }
                           />
                           {validation.errors.height &&
-                            validation.touched.height ? (
+                          validation.touched.height ? (
                             <FormFeedback type="invalid">
                               {validation.errors.height}
                             </FormFeedback>
@@ -370,13 +370,13 @@ const EcommerceEditProduct = (props: any) => {
                           onChange={validation.handleChange}
                           invalid={
                             validation.errors.number_of_doors &&
-                              validation.touched.number_of_doors
+                            validation.touched.number_of_doors
                               ? true
                               : false
                           }
                         />
                         {validation.errors.number_of_doors &&
-                          validation.touched.number_of_doors ? (
+                        validation.touched.number_of_doors ? (
                           <FormFeedback type="invalid">
                             {validation.errors.number_of_doors}
                           </FormFeedback>
@@ -406,7 +406,7 @@ const EcommerceEditProduct = (props: any) => {
                           onChange={validation.handleChange}
                           invalid={
                             validation.errors.has_outside_camera &&
-                              validation.touched.has_outside_camera
+                            validation.touched.has_outside_camera
                               ? true
                               : false
                           }
@@ -414,7 +414,7 @@ const EcommerceEditProduct = (props: any) => {
                       </div>
 
                       {validation.errors.has_outside_camera &&
-                        validation.touched.has_outside_camera ? (
+                      validation.touched.has_outside_camera ? (
                         <FormFeedback type="invalid">
                           {validation.errors.has_outside_camera}
                         </FormFeedback>
@@ -444,7 +444,7 @@ const EcommerceEditProduct = (props: any) => {
                           onChange={validation.handleChange}
                           invalid={
                             validation.errors.has_inside_camera &&
-                              validation.touched.has_inside_camera
+                            validation.touched.has_inside_camera
                               ? true
                               : false
                           }
@@ -452,7 +452,7 @@ const EcommerceEditProduct = (props: any) => {
                       </div>
 
                       {validation.errors.has_inside_camera &&
-                        validation.touched.has_inside_camera ? (
+                      validation.touched.has_inside_camera ? (
                         <FormFeedback type="invalid">
                           {validation.errors.has_inside_camera}
                         </FormFeedback>

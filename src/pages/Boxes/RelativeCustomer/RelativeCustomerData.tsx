@@ -4,8 +4,8 @@ import { Card, CardBody, CardHeader, Col, Input, Row } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import TableContainer from "../../../Components/Common/TableContainer";
 import {
-  GetRelativeCustomerAction,
-  updateRelativeCustomerStatus,
+  getRelativeCustomers,
+  // updateRelativeCustomerStatus,
 } from "../../../slices/thunks";
 
 import { ToastContainer } from "react-toastify";
@@ -13,29 +13,15 @@ import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../Components/Common/Loader";
 import { createSelector } from "reselect";
 import moment from "moment";
+import { useAppSelector } from "redux-hooks";
 
 const RelativeCustomerData = () => {
   const dispatch: any = useDispatch();
 
-  const selectLayoutState = (state: any) => state.RelativeCustomer;
-
-  const selectLayoutProperties = createSelector(selectLayoutState, (state) => ({
-    relativeCustomerList: state.data,
-    isuserBoxSuccess: state.isuserBoxSuccess,
-    error: state.error,
-    loader: state.loading,
-  }));
-
-  const updateStatusRelativeCustomer = (id: string, status: boolean) => {
-    dispatch(updateRelativeCustomerStatus({ id, status }));
-  };
-  // Inside your component
-  const { relativeCustomerList, error, loader } = useSelector(
-    selectLayoutProperties
-  );
+  const { users, loading, spinner } = useAppSelector((state) => state.Users);
 
   useEffect(() => {
-    dispatch(GetRelativeCustomerAction());
+    dispatch(getRelativeCustomers());
   }, [dispatch]);
 
   const columns = useMemo(
@@ -106,12 +92,12 @@ const RelativeCustomerData = () => {
                 type="switch"
                 value={cellProps.getValue() === true ? "Active" : "Block"}
                 className="form-check-input"
-                onChange={(e) => {
-                  updateStatusRelativeCustomer(
-                    cellProps.row.original.id,
-                    e.target.checked
-                  );
-                }}
+                // onChange={(e) => {
+                //   updateStatusRelativeCustomer(
+                //     cellProps.row.original.id,
+                //     e.target.checked
+                //   );
+                // }}
                 defaultChecked={cellProps.getValue() === true ? true : false}
               ></Input>
             </div>
@@ -135,12 +121,12 @@ const RelativeCustomerData = () => {
               </div>
             </CardHeader>
             <CardBody className="pt-0">
-              {loader ? (
-                <Loader error={error} />
+              {loading ? (
+                <Loader error={loading} />
               ) : (
                 <TableContainer
                   columns={columns}
-                  data={relativeCustomerList}
+                  data={users}
                   isGlobalFilter={true}
                   customPageSize={10}
                   divClass="table-responsive table-card mb-3"

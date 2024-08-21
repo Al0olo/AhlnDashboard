@@ -11,7 +11,7 @@ import {
   Modal,
   ModalBody,
   ModalHeader,
-  Row
+  Row,
 } from "reactstrap";
 //redux
 import { useDispatch } from "react-redux";
@@ -325,22 +325,28 @@ const BoxesData = () => {
             <Link to={`/apps-boxs-details`} className="text-muted">
               <i className="ri-edit-box-line "></i>{" "}
             </Link>
-            <a href="#showModal"
+            <a
+              href="#showModal"
               data-bs-toggle="modal"
               onClick={(e: any) => {
-                e.preventDefault()
+                e.preventDefault();
                 const BoxData = cell.row.original;
                 handleBoxesClick(BoxData);
-              }} className="text-muted">
+              }}
+              className="text-muted"
+            >
               <i className="ri-pencil-fill "></i>{" "}
             </a>
-            <a data-bs-toggle="modal"
+            <a
+              data-bs-toggle="modal"
               href="#deleteOrder"
               onClick={(e: any) => {
-                e.preventDefault()
+                e.preventDefault();
                 const boxData = cell.row.original;
                 onClickDelete(boxData);
-              }} className="text-muted">
+              }}
+              className="text-muted"
+            >
               <i className="ri-close-circle-line "></i>{" "}
             </a>
             {/* <UncontrolledDropdown>
@@ -390,7 +396,6 @@ const BoxesData = () => {
     ],
     [handleBoxesClick]
   );
-  console.log(validation.values, "validation values");
 
   return (
     <React.Fragment>
@@ -409,8 +414,8 @@ const BoxesData = () => {
           onCloseClick={() => setDeleteModalMulti(false)}
         /> */}
         <Col lg={12}>
-          <Card className="" >
-            <CardHeader className="card-round" >
+          <Card className="">
+            <CardHeader className="card-round">
               <div className="d-flex align-items-center">
                 <h5 className="card-title mb-0 flex-grow-1 ahln-module-title">
                   Boxes
@@ -426,7 +431,6 @@ const BoxesData = () => {
                     >
                       <i className="ri-add-line align-bottom"></i> Create Box
                     </Form>
-
                   </div>
                 </div>
               </div>
@@ -448,23 +452,8 @@ const BoxesData = () => {
               <ToastContainer closeButton={false} limit={1} />
             </CardBody>
           </Card>
-          {/* <CardBody className="pt-0"> */}
-          {loading ? (
-            <Loader error={spinner} />
-          ) : (
-            <TableContainer
-              modelName={`boxes`}
-              columns={columns}
-              data={boxes}
-              isGlobalFilter={true}
-              customPageSize={8}
-              divClass="table-responsive table-card mb-3"
-              tableClass="align-middle table-nowrap mb-0"
-              SearchPlaceholder="Search for box details or something..."
-            />
-          )}
+
           <ToastContainer closeButton={false} limit={1} />
-          {/* </CardBody> */}
         </Col>
       </Row>
 
@@ -505,13 +494,13 @@ const BoxesData = () => {
                     onChange={validation.handleChange}
                     invalid={
                       validation.errors.serial_number &&
-                        validation.touched.serial_number
+                      validation.touched.serial_number
                         ? true
                         : false
                     }
                   />
                   {validation.errors.serial_number &&
-                    validation.touched.serial_number ? (
+                  validation.touched.serial_number ? (
                     <FormFeedback type="invalid">
                       {validation.errors.serial_number}
                     </FormFeedback>
@@ -533,13 +522,13 @@ const BoxesData = () => {
                     value={validation.values.box_label || ""}
                     invalid={
                       validation.touched.box_label &&
-                        validation.errors.box_label
+                      validation.errors.box_label
                         ? true
                         : false
                     }
                   />
                   {validation.touched.box_label &&
-                    validation.errors.box_label ? (
+                  validation.errors.box_label ? (
                     <FormFeedback type="invalid">
                       {validation.errors.box_label}
                     </FormFeedback>
@@ -587,7 +576,7 @@ const BoxesData = () => {
                     value={validation.values.current_tablet_id}
                     invalid={
                       validation.touched.current_tablet_id &&
-                        validation.errors.current_tablet_id
+                      validation.errors.current_tablet_id
                         ? true
                         : false
                     }
@@ -610,7 +599,7 @@ const BoxesData = () => {
                       ))}
                   </Input>
                   {validation.touched.current_tablet_id &&
-                    validation.errors.current_tablet_id ? (
+                  validation.errors.current_tablet_id ? (
                     <FormFeedback type="invalid">
                       {validation.errors.current_tablet_id}
                     </FormFeedback>
@@ -631,7 +620,7 @@ const BoxesData = () => {
                     value={validation.values.address_id}
                     invalid={
                       validation.touched.address_id &&
-                        validation.errors.address_id
+                      validation.errors.address_id
                         ? true
                         : false
                     }
@@ -650,7 +639,7 @@ const BoxesData = () => {
                       ))}
                   </Input>
                   {validation.touched.address_id &&
-                    validation.errors.address_id ? (
+                  validation.errors.address_id ? (
                     <FormFeedback type="invalid">
                       {validation.errors.address_id}
                     </FormFeedback>
@@ -671,7 +660,7 @@ const BoxesData = () => {
                     value={validation.values.box_model_id}
                     invalid={
                       validation.touched.box_model_id &&
-                        validation.errors.box_model_id
+                      validation.errors.box_model_id
                         ? true
                         : false
                     }
@@ -690,7 +679,7 @@ const BoxesData = () => {
                       ))}
                   </Input>
                   {validation.touched.box_model_id &&
-                    validation.errors.box_model_id ? (
+                  validation.errors.box_model_id ? (
                     <FormFeedback type="invalid">
                       {validation.errors.box_model_id}
                     </FormFeedback>
@@ -709,13 +698,13 @@ const BoxesData = () => {
                   onChange={validation.handleChange}
                   invalid={
                     validation.touched.has_empty_lockers &&
-                      validation.errors.has_empty_lockers
+                    validation.errors.has_empty_lockers
                       ? true
                       : false
                   }
                 />
                 {validation.touched.has_empty_lockers &&
-                  validation.errors.has_empty_lockers ? (
+                validation.errors.has_empty_lockers ? (
                   <FormFeedback type="invalid">
                     {validation.errors.has_empty_lockers}
                   </FormFeedback>
@@ -725,11 +714,18 @@ const BoxesData = () => {
           </ModalBody>
           <div className="modal-footer">
             <div className="hstack gap-2 justify-content-end">
-
-              <button type="submit" className="btn btn-success btn-lg ahln-btn-module" id="add-btn">
+              <button
+                type="submit"
+                className="btn btn-success btn-lg ahln-btn-module"
+                id="add-btn"
+              >
                 {!!isEdit ? "Update" : "Add Box"}
               </button>
-              <button onClick={toggle} type="button" className="btn btn-light ahln-btn-muted text-center">
+              <button
+                onClick={toggle}
+                type="button"
+                className="btn btn-light ahln-btn-muted text-center"
+              >
                 Close
               </button>
             </div>

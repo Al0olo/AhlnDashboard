@@ -283,14 +283,9 @@ const BoxGenerationsData = () => {
         //   );
         // },
         id: "#",
-        accessorKey: "",
-        enableColumnFilter: false,
-        enableSorting: false,
-      },
-      {
-        header: "Box Generation ID",
         accessorKey: "id",
         enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Model Name",
@@ -442,7 +437,7 @@ const BoxGenerationsData = () => {
         ),
       },
     ],
-    [handleBoxGenerationsClick]
+    [boxGenerations]
   );
 
   return (
@@ -799,7 +794,7 @@ const BoxGenerationsData = () => {
                 Close
               </button>
               <button type="submit" className="btn btn-success" id="add-btn">
-                {!!isEdit ? "Update" : "Add BoxGeneration"}
+                {!!isEdit ? "Update" : "Add Box Generation"}
               </button>
             </div>
           </div>

@@ -8,13 +8,14 @@ import {
 } from "./thunk";
 
 export const initialState: any = {
-  roleError: null,
   message: null,
   loading: true,
+  spinner: false,
   data: null,
   success: false,
   error: false,
   roles: [],
+  role: {},
 };
 
 const roleReducer = createSlice({
@@ -27,7 +28,7 @@ const roleReducer = createSlice({
       state.error = false;
     });
     builder.addCase(GetRolesAction.fulfilled, (state, action: any) => {
-      state.data = action?.payload;
+      state.roles = action?.payload;
       state.success = true;
       state.loading = false;
     });
@@ -38,22 +39,22 @@ const roleReducer = createSlice({
     });
 
     builder.addCase(AddRoleAction.pending, (state) => {
-      state.loading = true;
+      state.spinner = true;
       state.error = false;
     });
     builder.addCase(AddRoleAction.fulfilled, (state, action: any) => {
       state.roles.push(action.payload);
       state.success = true;
-      state.loading = false;
+      state.spinner = false;
     });
     builder.addCase(AddRoleAction.rejected, (state, { payload }: any) => {
-      state.loading = false;
+      state.spinner = false;
       state.success = false;
       state.error = payload;
     });
 
     builder.addCase(DeleteRoleAction.pending, (state) => {
-      state.loading = true;
+      state.spinner = true;
       state.error = false;
     });
     builder.addCase(DeleteRoleAction.fulfilled, (state, action: any) => {
@@ -62,10 +63,10 @@ const roleReducer = createSlice({
         (role: any) => role.id !== deletedRoleId
       );
       state.success = true;
-      state.loading = false;
+      state.spinner = false;
     });
     builder.addCase(DeleteRoleAction.rejected, (state, { payload }: any) => {
-      state.loading = false;
+      state.spinner = false;
       state.success = false;
       state.error = payload;
     });
@@ -86,7 +87,7 @@ const roleReducer = createSlice({
     });
 
     builder.addCase(UpdateRoleAction.pending, (state) => {
-      state.loading = true;
+      state.spinner = true;
       state.error = false;
     });
     builder.addCase(UpdateRoleAction.fulfilled, (state, action: any) => {
@@ -95,7 +96,7 @@ const roleReducer = createSlice({
       );
     });
     builder.addCase(UpdateRoleAction.rejected, (state, { payload }: any) => {
-      state.loading = false;
+      state.spinner = false;
       state.success = false;
       state.error = payload;
     });

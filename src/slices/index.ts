@@ -40,8 +40,6 @@ import { shippingCompaniesSlices } from "./delivery/shippingCompany/reducer";
 import CalendarReducer from "./calendar/reducer";
 //Chat
 import chatReducer from "./chat/reducer";
-//Ecommerce
-import EcommerceReducer from "./ecommerce/reducer";
 
 //Project
 import ProjectsReducer from "./projects/reducer";
@@ -95,13 +93,14 @@ import JobReducer from "./jobs/reducer";
 
 // API Key
 import APIKeyReducer from "./apiKey/reducer";
-import { relativeCustomerSlices } from "./Box/RelativeCustomer/reducer";
 import { contactUsSlices } from "./admin/constactUs/reducer";
 import { auditTrailSlices } from "./admin/auditTrail/reducer";
 import { systemLogSlices } from "./admin/systemLog/reducer";
 import { boxGenerationSlices } from "./Box/boxGeneration/reducer";
+import { usersSlices } from "./users/reducer";
 
 const rootReducer = combineReducers({
+  Users: usersSlices,
   Role: roleSlices,
   ContactUs: contactUsSlices,
   AuditTrail: auditTrailSlices,
@@ -112,7 +111,6 @@ const rootReducer = combineReducers({
   Logout: authSlices,
   Boxes: boxSlices,
   BoxImages: boxImgesSlices,
-  RelativeCustomer: relativeCustomerSlices,
   Tablets: tabletSlices,
   Address: addressSlices,
   UserBox: userBoxSlices,
@@ -125,7 +123,6 @@ const rootReducer = combineReducers({
   Calendar: CalendarReducer,
   Chat: chatReducer,
   Projects: ProjectsReducer,
-  Ecommerce: EcommerceReducer,
   Tasks: TasksReducer,
   Crypto: CryptoReducer,
   Tickets: TicketsReducer,

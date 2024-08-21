@@ -213,7 +213,6 @@ const Navdata = () => {
           parentId: "apps",
           stateVariables: isEcommerce,
           childItems: [
-
             // {
             //   id: 1,
             //   label: "Models",
@@ -400,10 +399,10 @@ const Navdata = () => {
           parentId: "apps",
           stateVariables: isAdmin,
           childItems: [
-            // Routes needs to be adjusted
             { id: 1, label: "Roles", link: "/role" },
             { id: 2, label: "Audit Trail", link: "/audit-trail" },
             { id: 3, label: "System Log", link: "/system-log" },
+            { id: 4, label: "Users", link: "/users" },
           ],
         },
       ],
