@@ -1,24 +1,23 @@
 import React, { useEffect, useMemo } from "react";
 import { Card, CardBody, CardHeader, Col, Input, Row } from "reactstrap";
 //redux
-import { useSelector, useDispatch } from "react-redux";
-import TableContainer from "../../../Components/Common/TableContainer";
+import { useDispatch } from "react-redux";
+import TableContainer from "../../../../Components/Common/TableContainer";
 import {
   getRelativeCustomers,
   // updateRelativeCustomerStatus,
-} from "../../../slices/thunks";
+} from "../../../../slices/thunks";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Loader from "../../../Components/Common/Loader";
-import { createSelector } from "reselect";
+import Loader from "../../../../Components/Common/Loader";
 import moment from "moment";
 import { useAppSelector } from "redux-hooks";
 
 const RelativeCustomerData = () => {
   const dispatch: any = useDispatch();
 
-  const { users, loading, spinner } = useAppSelector((state) => state.Users);
+  const { users, loading, error } = useAppSelector((state) => state.Users);
 
   useEffect(() => {
     dispatch(getRelativeCustomers());
@@ -74,7 +73,7 @@ const RelativeCustomerData = () => {
         enableColumnFilter: false,
       },
       {
-        header: "Email",
+        header: "Main User Email",
         accessorKey: "email",
         enableColumnFilter: false,
       },
@@ -92,12 +91,7 @@ const RelativeCustomerData = () => {
                 type="switch"
                 value={cellProps.getValue() === true ? "Active" : "Block"}
                 className="form-check-input"
-                // onChange={(e) => {
-                //   updateStatusRelativeCustomer(
-                //     cellProps.row.original.id,
-                //     e.target.checked
-                //   );
-                // }}
+                disabled={true}
                 defaultChecked={cellProps.getValue() === true ? true : false}
               ></Input>
             </div>
@@ -122,7 +116,7 @@ const RelativeCustomerData = () => {
             </CardHeader>
             <CardBody className="pt-0">
               {loading ? (
-                <Loader error={loading} />
+                <Loader error={error} />
               ) : (
                 <TableContainer
                   columns={columns}

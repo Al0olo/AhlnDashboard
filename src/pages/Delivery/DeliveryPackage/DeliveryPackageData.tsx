@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useCallback } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   Card,
   CardBody,
@@ -7,44 +7,29 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
-  Form,
-  FormFeedback,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalHeader,
   Row,
   UncontrolledDropdown,
 } from "reactstrap";
 //redux
-import { useSelector, useDispatch } from "react-redux";
-import TableContainer from "../../../../Components/Common/TableContainer";
-import { GetDeliveryPackagesAction } from "../../../../slices/thunks";
+import { useDispatch } from "react-redux";
+import TableContainer from "../../../Components/Common/TableContainer";
+import { getDeliveryPackages } from "../../../slices/thunks";
 
 import * as moment from "moment";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Loader from "../../../../Components/Common/Loader";
-import { createSelector } from "reselect";
+import Loader from "../../../Components/Common/Loader";
+import { useAppSelector } from "redux-hooks";
 
 const DeliveryData = () => {
   const dispatch: any = useDispatch();
-  const selectLayoutState = (state: any) => state.Delivery;
-
-  const selectLayoutProperties = createSelector(selectLayoutState, (state) => ({
-    deliveryList: state.data,
-    isDeliverySuccess: state.isDeliverySuccess,
-    error: state.error,
-    loader: state.loading,
-  }));
-
-  // Inside your component
-  const { deliveryList, error, loader } = useSelector(selectLayoutProperties);
+  const { deliveryPackages, loadingDeliveryPackage, error } = useAppSelector(
+    (state) => state.Delivery
+  );
 
   useEffect(() => {
-    dispatch(GetDeliveryPackagesAction());
+    dispatch(getDeliveryPackages());
   }, [dispatch]);
 
   const columns = useMemo(
@@ -65,16 +50,6 @@ const DeliveryData = () => {
         accessorKey: "customer_id",
         enableColumnFilter: false,
       },
-      // {
-      //   header: "Vendor ID",
-      //   accessorKey: "vendor_id",
-      //   enableColumnFilter: false,
-      // },
-      // {
-      //   header: "Delivery ID",
-      //   accessorKey: "delivery_id",
-      //   enableColumnFilter: false,
-      // },
       {
         header: "Tracking Number",
         accessorKey: "tracking_number",
@@ -161,12 +136,12 @@ const DeliveryData = () => {
               </div>
             </CardHeader>
             <CardBody className="pt-0">
-              {loader ? (
+              {loadingDeliveryPackage ? (
                 <Loader error={error} />
               ) : (
                 <TableContainer
                   columns={columns}
-                  data={deliveryList}
+                  data={deliveryPackages}
                   isGlobalFilter={true}
                   customPageSize={50}
                   divClass="table-responsive table-card mb-3"

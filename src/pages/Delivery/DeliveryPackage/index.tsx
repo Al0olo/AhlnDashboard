@@ -1,23 +1,24 @@
 import React from "react";
 import { Container } from "reactstrap";
 import BreadCrumb from "../../../Components/Common/BreadCrumb";
-import RelativeCustomerData from "./RelativeCustomerData";
+import DeliveryPackageData from "./DeliveryPackageData";
 
-const RelativeCustomerView = () => {
-  document.title = "Relative Customer List | Ahln - Admin & Dashboard";
+const DeliveryPackageView = () => {
+  document.title = "Delivery Package List | Ahln - React Admin & Dashboard";
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
           <BreadCrumb
-            title="Relative Customer List"
-            pageTitle="Relative Customer"
+            title="Delivery Package List"
+            pageTitle="Delivery Package"
           />
-          <RelativeCustomerData />
+
+          <DeliveryPackageData />
         </Container>
       </div>
     </React.Fragment>
   );
 };
 
-export default RelativeCustomerView;
+export default DeliveryPackageView;

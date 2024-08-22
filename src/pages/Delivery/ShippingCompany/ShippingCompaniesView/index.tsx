@@ -1,7 +1,6 @@
 import React from "react";
-import { Container, Row } from "reactstrap";
+import { Container } from "reactstrap";
 import BreadCrumb from "../../../../Components/Common/BreadCrumb";
-import Widgets from "./Widgets";
 import ShippingCompaniesData from "./ShippingCompaniesData";
 
 const ShippingCompaniesView = () => {
@@ -14,9 +13,6 @@ const ShippingCompaniesView = () => {
             title="Shipping Companies List"
             pageTitle="Shipping Companies"
           />
-          <Row>
-            <Widgets />
-          </Row>
           <ShippingCompaniesData />
         </Container>
       </div>

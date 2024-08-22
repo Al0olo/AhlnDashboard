@@ -31,10 +31,7 @@ import { userBoxSlices } from "./Box/UserBoxes/reducer";
 import { boxImgesSlices } from "./Box/BoxImages/reducer";
 
 // Delivery Packages
-import { deliverySlices } from "./delivery/deliveryPackage/reducer";
-
-// Shipping Companies
-import { shippingCompaniesSlices } from "./delivery/shippingCompany/reducer";
+import { deliverySlices } from "./delivery/reducer";
 
 //Calendar
 import CalendarReducer from "./calendar/reducer";
@@ -115,7 +112,6 @@ const rootReducer = combineReducers({
   Address: addressSlices,
   UserBox: userBoxSlices,
   Delivery: deliverySlices,
-  ShippingCompanies: shippingCompaniesSlices,
   Account: registerSlices,
   ForgetPassword: forgotPasswordSlices,
   VerifyPasswordOtp: verifySlices,

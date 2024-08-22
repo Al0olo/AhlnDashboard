@@ -105,15 +105,6 @@ export const getBoxImages = () => {
 };
 
 
-// DELIVERY PACKAGE
-// Get Delivery Packages
-export const getDeliveryPackages = () => {
-  return api.get(url.GET_DELIVERY_ALL);
-};
-// Get One Delivery Package
-export const getOneDeliveryPackage = (data: any) => {
-  return api.get(`${url.GET_ONE_DELIVERY}/${data}`);
-};
 
 // USER_BOX
 // Fetches user boxes for admin
@@ -146,26 +137,6 @@ export const deleteUserBox = (data: any) => {
   return api.delete(`${url.DELETE_USER_BOX}/${data}`);
 };
 
-// Fetches shippingcompanies for a given user
-export const getShippingCompanies = () => {
-  return api.get(url.GET_SHIPPING_COMPANIES);
-};
-// Get One shippingcompani
-export const getOneShippingCompany = (data: any) => {
-  return api.get(url.GET_ONE_SHIPPING_COMPANY);
-};
-// Add shippingcompani
-export const addShippingCompany = (data: any) => {
-  return api.get(url.ADD_SHIPPING_COMPANY, data);
-};
-// Update Exsiting shippingcompani
-export const updateShippingCompany = (data: any) => {
-  return api.get(url.UPDATE_SHIPPING_COMPANY, data);
-};
-// Delete shippingcompani
-export const deleteShippingCompany = (data: any) => {
-  return api.delete(`${url.DELETE_SHIPPING_COMPANY}/${data}`);
-};
 
 // ADMINSTRATION
 

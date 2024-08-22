@@ -18,28 +18,15 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import TableContainer from "../../../../Components/Common/TableContainer";
 import {
-  GetShippingCompaniesAction,
-  AddShippingCompanyAction,
-  UpdateShippingCompanyAction,
-  DeleteShippingCompanyAction,
-  GetOneShippingCompanyAction,
+  getShippingCompanies,
+  addShippingCompany,
+  updateShippingCompany,
+  deleteShippingCompany,
 } from "../../../../slices/thunks";
 
-// import {
-//   ShippingCompanysId,
-//   Title,
-//   Client,
-//   AssignedTo,
-//   CreateDate,
-//   DueDate,
-//   Status,
-//   Priority,
-// } from "./TicketCol";
-//Import Flatepicker
-import Flatpickr from "react-flatpickr";
 import * as moment from "moment";
 
 // Formik
@@ -51,29 +38,19 @@ import DeleteModal from "../../../../Components/Common/DeleteModal";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../../Components/Common/Loader";
-import { createSelector } from "reselect";
+import { useAppSelector } from "redux-hooks";
 
 const ShippingCompaniesData = () => {
   const dispatch: any = useDispatch();
-  const selectLayoutState = (state: any) => state.ShippingCompanies;
-
-  const selectLayoutProperties = createSelector(selectLayoutState, (state) => ({
-    shippingCompanysList: state.data,
-    isShippingCompanySuccess: state.isShippingCompanySuccess,
-    error: state.error,
-    loader: state.loading,
-  }));
-
-  // Inside your component
-  const { shippingCompanysList, isShippingCompanySuccess, error, loader } =
-    useSelector(selectLayoutProperties);
+  const { shippingCompanies, error, loadingShippingCompany } = useAppSelector(
+    (state) => state.Delivery
+  );
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [shippingCompany, setShippingCompany] = useState<any>([]);
 
   // Delete ShippingCompanies
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
 
   const toggle = useCallback(() => {
@@ -127,7 +104,7 @@ const ShippingCompaniesData = () => {
           address_id: values.address_id,
         };
         // update shippingCompany
-        dispatch(UpdateShippingCompanyAction(updateShippingCompanies));
+        dispatch(updateShippingCompany(updateShippingCompanies));
         validation.resetForm();
       } else {
         const newShippingCompany = {
@@ -136,10 +113,9 @@ const ShippingCompaniesData = () => {
           has_empty_lockers: values["has_empty_lockers"],
           shippingCompany_model_id: values["shippingCompany_model_id"],
         };
-        console.log("RRRRRRRRRRRRRRR");
 
         // save new shippingCompany
-        dispatch(AddShippingCompanyAction(newShippingCompany));
+        dispatch(addShippingCompany(newShippingCompany));
         validation.resetForm();
       }
       toggle();
@@ -156,7 +132,7 @@ const ShippingCompaniesData = () => {
     console.log("shippingCompany", shippingCompany);
 
     if (shippingCompany) {
-      dispatch(DeleteShippingCompanyAction(shippingCompany.id));
+      dispatch(deleteShippingCompany(shippingCompany.id));
       setDeleteModal(false);
     }
   };
@@ -180,77 +156,12 @@ const ShippingCompaniesData = () => {
   // Get Data
 
   useEffect(() => {
-    dispatch(GetShippingCompaniesAction());
+    dispatch(getShippingCompanies());
   }, [dispatch]);
-
-  // Checked All
-  const checkedAll = useCallback(() => {
-    const checkall: any = document.getElementById("checkShippingCompanyAll");
-    const ele = document.querySelectorAll(
-      ".shippingCompanyCheckShippingCompany"
-    );
-
-    if (checkall.checked) {
-      ele.forEach((ele: any) => {
-        ele.checked = true;
-      });
-    } else {
-      ele.forEach((ele: any) => {
-        ele.checked = false;
-      });
-    }
-    deleteCheckshippingCompany();
-  }, []);
-
-  // Delete Multiple
-  const [
-    selectedCheckShippingCompanyDelete,
-    setSelectedCheckShippingCompanyDelete,
-  ] = useState<any>([]);
-  const [isMultiDeleteButton, setIsMultiDeleteButton] =
-    useState<boolean>(false);
-
-  const deleteMultiple = () => {
-    const checkall: any = document.getElementById("checkShippingCompanyAll");
-    selectedCheckShippingCompanyDelete.forEach((element: any) => {
-      dispatch(DeleteShippingCompanyAction(element.id));
-      setTimeout(() => {
-        toast.clearWaitingQueue();
-      }, 3000);
-    });
-    setIsMultiDeleteButton(false);
-    checkall.checked = false;
-  };
-
-  const deleteCheckshippingCompany = () => {
-    const ele = document.querySelectorAll(
-      ".shippingCompanyCheckShippingCompany:checked"
-    );
-    ele?.length > 0
-      ? setIsMultiDeleteButton(true)
-      : setIsMultiDeleteButton(false);
-    setSelectedCheckShippingCompanyDelete(ele);
-  };
 
   const columns = useMemo(
     () => [
       {
-        header: (
-          <input
-            type="checkshippingCompany"
-            id="checkShippingCompanyAll"
-            className="form-check-input"
-            onClick={() => checkedAll()}
-          />
-        ),
-        cell: (cell: any) => (
-          <input
-            type="checkshippingCompany"
-            className="shippingCompanyCheckShippingCompany form-check-input"
-            value={cell.getValue()}
-            onChange={() => deleteCheckshippingCompany()}
-          />
-        ),
         id: "#",
         accessorKey: "",
         enableColumnFilter: false,
@@ -329,7 +240,7 @@ const ShippingCompaniesData = () => {
         ),
       },
     ],
-    [checkedAll]
+    []
   );
 
   return (
@@ -340,14 +251,7 @@ const ShippingCompaniesData = () => {
           onDeleteClick={handleDeleteShippingCompany}
           onCloseClick={() => setDeleteModal(false)}
         />
-        <DeleteModal
-          show={deleteModalMulti}
-          onDeleteClick={() => {
-            deleteMultiple();
-            setDeleteModalMulti(false);
-          }}
-          onCloseClick={() => setDeleteModalMulti(false)}
-        />
+
         <Col lg={12}>
           <Card>
             <CardHeader className="border-0">
@@ -367,25 +271,17 @@ const ShippingCompaniesData = () => {
                       <i className="ri-add-line align-bottom"></i> Create
                       Shipping Company
                     </button>{" "}
-                    {isMultiDeleteButton && (
-                      <button
-                        className="btn btn-soft-danger"
-                        onClick={() => setDeleteModalMulti(true)}
-                      >
-                        <i className="ri-delete-bin-2-line"></i>
-                      </button>
-                    )}
                   </div>
                 </div>
               </div>
             </CardHeader>
             <CardBody className="pt-0">
-              {loader ? (
+              {loadingShippingCompany ? (
                 <Loader error={error} />
               ) : (
                 <TableContainer
                   columns={columns}
-                  data={shippingCompanysList}
+                  data={shippingCompanies}
                   isGlobalFilter={true}
                   customPageSize={10}
                   divClass="table-responsive table-card mb-3"

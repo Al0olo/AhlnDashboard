@@ -16,7 +16,6 @@ export const initialState: any = {
   loadingUser: true,
   loadingCustomer: true,
   loadingRelativeCustomer: true,
-
   error: {},
 };
 
@@ -31,9 +30,7 @@ const usersReducer = createSlice({
       state.error = false;
     });
     builder.addCase(getUsers.fulfilled, (state: any, action: any) => {
-      state.users = action?.payload?.filter(
-        (obj: any) => obj?.role_id !== 2 && obj?.role_id !== 3
-      ); // filter out customers and relative customers
+      state.users = action?.payload;
       state.loadingUser = false;
     });
     builder.addCase(getUsers.rejected, (state: any, { payload }: any) => {
@@ -79,7 +76,7 @@ const usersReducer = createSlice({
       state.error = false;
     });
     builder.addCase(getCustomers.fulfilled, (state: any, action: any) => {
-      state.users = action?.payload.filter((obj: any) => obj?.role_id === 2); // filter get customers only
+      state.users = action?.payload;
       state.loadingCustomer = false;
     });
     builder.addCase(getCustomers.rejected, (state: any, { payload }: any) => {
@@ -89,7 +86,7 @@ const usersReducer = createSlice({
 
     // add new user
     builder.addCase(addCustomer.fulfilled, (state: any, action: any) => {
-      state.users.push(action.payload);
+      state.users.unshift(action.payload);
       state.error = false;
     });
     builder.addCase(addCustomer.rejected, (state: any, { payload }: any) => {
@@ -129,7 +126,7 @@ const usersReducer = createSlice({
     builder.addCase(
       getRelativeCustomers.fulfilled,
       (state: any, action: any) => {
-        state.users = action?.payload.filter((obj: any) => obj?.role_id === 3); // filter get relative customers only
+        state.users = action?.payload;
         state.loadingRelativeCustomer = false;
       }
     );

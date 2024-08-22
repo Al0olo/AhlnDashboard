@@ -7,7 +7,7 @@ const api = new APIClient();
 // RELATIVE CUSTOMER
 // Get All Relative Customer
 export const getRelativeCustomers = () => {
-  return api.get(url.GET_RELATIVE_CUSTOMER);
+  return api.get(url.GET_RELATIVE_CUSTOMERS);
 };
 
 // Update Relative Customer Status
@@ -17,7 +17,7 @@ export const updateRelativeCustomerStatusApi = (data: any) => {
 
 // USER
 // get User
-export const getUsers = () => api.get(url.GET_CUSTOMERS);
+export const getUsers = () => api.get(url.GET_USERS);
 
 // update User
 export const getOneUser = (customer: any) =>
@@ -36,7 +36,7 @@ export const deleteUser = (customer: any) =>
   api.delete(url.DELETE_CUSTOMER + `/${customer}`);
 
 // get Customers
-export const getCustomers = () => api.get(url.GET_CUSTOMERS);
+export const getCustomers = () => api.get(url.GET_CUSTOMERS_LIST);
 
 // add Customers
 export const addCustomer = (customer: any) =>

@@ -34,7 +34,6 @@ import EcommerceCustomers from "../pages/Ecommerce/EcommerceCustomers/Customers/
 import EcommerceOrderDetail from "../pages/Ecommerce/EcommerceOrders/EcommerceOrderDetail";
 import EcommerceOrders from "../pages/Ecommerce/EcommerceOrders/index";
 
-
 // Base Ui
 import UiAccordions from "../pages/BaseUi/UiAccordion&Collapse/UiAccordion&Collapse";
 import UiAlerts from "../pages/BaseUi/UiAlerts/UiAlerts";
@@ -191,10 +190,10 @@ import AddressView from "pages/Boxes/Address";
 import BoxView from "pages/Boxes/Box/BoxView";
 import BoxGenerationView from "pages/Boxes/BoxGeneration";
 import BoxImagesView from "pages/Boxes/BoxImages";
-import RelativeCustomerView from "pages/Boxes/RelativeCustomer";
+import RelativeCustomerView from "pages/Ecommerce/EcommerceCustomers/RelativeCustomers";
 import TabletView from "pages/Boxes/Tablets";
 import UserBoxesView from "pages/Boxes/UserBoxes";
-import DeliveryView from "pages/Delivery/DeliveryPackage/DeliveryPackageView";
+import DeliveryView from "pages/Delivery/DeliveryPackage";
 import ShippingCompaniesView from "pages/Delivery/ShippingCompany/ShippingCompaniesView";
 import UserView from "pages/Admin/User";
 import CustomersView from "../pages/Ecommerce/EcommerceCustomers/Customers/index";

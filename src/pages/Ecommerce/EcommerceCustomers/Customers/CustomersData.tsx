@@ -38,12 +38,12 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../../Components/Common/Loader";
 import { useAppSelector } from "redux-hooks";
+import moment from "moment";
 
 const CustomersData = () => {
   const dispatch: any = useDispatch();
 
-  const { users, loading, spinner } = useAppSelector((state) => state.Users);
-  const { roles } = useAppSelector((state) => state.Role);
+  const { users, loading, error } = useAppSelector((state) => state.Users);
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [user, setUser] = useState<any>({
@@ -69,15 +69,15 @@ const CustomersData = () => {
       email: isEdit ? user?.email : "",
       phone_number: isEdit ? user?.phone_number : "",
       user_name: isEdit ? user?.user_name : "",
-      is_active: user?.is_active,
-      role_id: isEdit ? user?.role_id : "",
+      is_active: isEdit ? user?.is_active : true,
+      role_id: isEdit ? user?.role_id : 2,
     },
     validationSchema: Yup.object({
       email: Yup.string().required("Please Enter Customer Email"),
       phone_number: Yup.string().required("Please Enter Customer Phone"),
       user_name: Yup.string().required("Please Enter Customer Name"),
       // is_active: Yup.boolean().required("Please Enter Customer Status"),
-      role_id: Yup.number().required("Please Enter Customer Role"),
+      // role_id: Yup.number().required("Please Enter Customer Role"),
     }),
     onSubmit: async (values) => {
       if (isEdit) {
@@ -90,7 +90,7 @@ const CustomersData = () => {
           role_id: values.role_id,
         };
         dispatch(updateCustomer(updateUsers)).then((result: any) => {
-          if (result.type === "user/update/fulfilled") {
+          if (result.type === "users/updateCustomer/fulfilled") {
             toast.success("User Updated Successfully", {
               autoClose: 3000,
             });
@@ -107,11 +107,11 @@ const CustomersData = () => {
           user_name: values.user_name,
           email: values.email,
           phone_number: values.phone_number,
-          is_active: values.is_active,
-          role_id: values.role_id,
+          is_active: true,
+          role_id: 2,
         };
         dispatch(addCustomer(newUser)).then((result: any) => {
-          if (result.type === "user/new/fulfilled") {
+          if (result.type === "users/addCustomer/fulfilled") {
             toast.success("User Added Successfully", {
               autoClose: 3000,
             });
@@ -136,7 +136,7 @@ const CustomersData = () => {
   const handleDeleteuser = async () => {
     if (user) {
       dispatch(deleteCustomer(user.id)).then((result: any) => {
-        if (result.type === "user/delete/fulfilled") {
+        if (result.type === "users/deleteCustomer/fulfilled") {
           toast.success("User Deleted Successfully", {
             autoClose: 3000,
           });
@@ -172,7 +172,6 @@ const CustomersData = () => {
 
   useEffect(() => {
     dispatch(getCustomers());
-    dispatch(GetRolesAction());
   }, [dispatch]);
 
   const columns = useMemo(
@@ -203,14 +202,17 @@ const CustomersData = () => {
         enableColumnFilter: false,
       },
       {
-        header: "Role ID",
-        accessorKey: "role_id",
+        header: "Created At",
+        accessorKey: "createdat",
         enableColumnFilter: false,
+        sortDescFirst: true,
+        cell: (cell: any) => moment(cell.getValue()).format("DD MMMM, YYYY"),
       },
       {
         header: "Status",
         accessorKey: "is_active",
         enableColumnFilter: false,
+
         cell: (cellProps: any) => {
           return (
             <div
@@ -310,7 +312,7 @@ const CustomersData = () => {
             </CardHeader>
             <CardBody className="pt-0">
               {loading ? (
-                <Loader error={spinner} />
+                <Loader error={error} />
               ) : (
                 <TableContainer
                   columns={columns}
@@ -458,44 +460,6 @@ const CustomersData = () => {
                     {validation.errors.is_active}
                   </FormFeedback>
                 ) : null}
-              </Col>
-              <Col lg={6}>
-                <div>
-                  <Label htmlFor="role_id" className="form-label">
-                    Role ID
-                  </Label>
-                  <Input
-                    name="role_id"
-                    type="select"
-                    id="role_id"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.role_id}
-                    invalid={
-                      validation.touched.role_id && validation.errors.role_id
-                        ? true
-                        : false
-                    }
-                  >
-                    <option
-                      value={undefined}
-                      defaultValue={validation.values.role_id}
-                    >
-                      Select Role ID
-                    </option>
-                    {roles &&
-                      roles?.map((role: any) => (
-                        <option key={role.id} value={role.id}>
-                          {role.title}
-                        </option>
-                      ))}
-                  </Input>
-                  {validation.touched.role_id && validation.errors.role_id ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.role_id}
-                    </FormFeedback>
-                  ) : null}
-                </div>
               </Col>
             </Row>
           </ModalBody>
