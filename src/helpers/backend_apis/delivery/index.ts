@@ -25,11 +25,11 @@ export const getOneShippingCompany = (data: any) => {
 };
 // Add shippingcompani
 export const addShippingCompany = (data: any) => {
-  return api.get(url.ADD_SHIPPING_COMPANY, data);
+  return api.create(url.ADD_SHIPPING_COMPANY, data);
 };
 // Update Exsiting shippingcompani
 export const updateShippingCompany = (data: any) => {
-  return api.get(url.UPDATE_SHIPPING_COMPANY, data);
+  return api.update(url.UPDATE_SHIPPING_COMPANY + `/${data.id}`, data);
 };
 // Delete shippingcompani
 export const deleteShippingCompany = (data: any) => {
