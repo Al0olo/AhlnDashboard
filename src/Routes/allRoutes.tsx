@@ -184,7 +184,7 @@ import ToDoList from "../pages/ToDo";
 
 import AuditTrailView from "pages/Admin/AuditTrail";
 import ContactUsView from "pages/Admin/ContactUs";
-import RolesView from "pages/Admin/Role";
+import RolesView from "pages/UserManagement/Role";
 import SystemLogView from "pages/Admin/SystemLog";
 import AddressView from "pages/Boxes/Address";
 import BoxView from "pages/Boxes/Box/BoxView";
@@ -194,9 +194,12 @@ import RelativeCustomerView from "pages/Ecommerce/EcommerceCustomers/RelativeCus
 import TabletView from "pages/Boxes/Tablets";
 import UserBoxesView from "pages/Boxes/UserBoxes";
 import DeliveryView from "pages/Delivery/DeliveryPackage";
-import ShippingCompaniesView from "pages/Delivery/ShippingCompany/ShippingCompaniesView";
+import ShippingCompaniesView from "pages/Delivery/ShippingCompany";
 import UserView from "pages/Admin/User";
 import CustomersView from "../pages/Ecommerce/EcommerceCustomers/Customers/index";
+import PermissionView from "pages/UserManagement/Permission";
+import RolePermissionView from "pages/UserManagement/RolePermission";
+import UserPermissionView from "pages/UserManagement/UserPermission";
 
 const authProtectedRoutes = [
   { path: "/dashboard-analytics", component: <DashboardAnalytics /> },
@@ -299,6 +302,10 @@ const authProtectedRoutes = [
 
   // Admin
   { path: "/role", component: <RolesView /> },
+  { path: "/permission", component: <PermissionView /> },
+  { path: "/role-permission", component: <RolePermissionView /> },
+  { path: "/user-permission", component: <UserPermissionView /> },
+
   { path: "/contact-us", component: <ContactUsView /> },
   { path: "/audit-trail", component: <AuditTrailView /> },
   { path: "/system-log", component: <SystemLogView /> },

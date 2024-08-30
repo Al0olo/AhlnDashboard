@@ -32,11 +32,6 @@ const RelativeCustomerData = () => {
         enableSorting: false,
       },
       {
-        header: "ID",
-        accessorKey: "id",
-        enableColumnFilter: false,
-      },
-      {
         header: "Main Customer ID",
         accessorKey: "customer_id",
         enableColumnFilter: false,

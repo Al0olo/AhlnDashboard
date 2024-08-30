@@ -12,27 +12,10 @@ export const POST_FAKE_JWT_PASSWORD_FORGET = "/jwt-forget-pwd";
 export const SOCIAL_LOGIN = "/social-login";
 
 // ADMINSTRATION
-// CONTACT US
-export const GET_CONTACT_US = "/contact-us/get-all";
-export const GET_ONE_CONTACT_US = "/contact-us/get-one";
-export const DELETE_CONTACT_US = "/contact-us/delete";
 
-// AUDIT TRAIL
-export const GET_AUDIT_TRAIL = "/audit-trail/get-all";
-export const GET_ONE_AUDIT_TRAIL = "/audit-trail/get-one";
-export const DELETE_AUDIT_TRAIL = "/audit-trail/delete";
 
-// SYSTEM LOG
-export const GET_SYSTEM_LOG = "/system-log/get-all";
-export const GET_ONE_SYSTEM_LOG = "/system-log/get-one";
-export const DELETE_SYSTEM_LOG = "/system-log/delete";
 
-//ROLE
-export const GET_ROLES = "/role/get-all";
-export const GET_ONE_ROLE = "/role/get-one";
-export const ADD_ROLE = "/role/new";
-export const UPDATE_ROLE = "/role/update";
-export const DELETE_ROLE = "/role/delete";
+
 
 //BOX
 export const GET_BOXES = "/box/get-all";
@@ -41,12 +24,7 @@ export const ADD_BOX = "/box/new";
 export const UPDATE_BOX = "/box/update";
 export const DELETE_BOX = "/box/delete";
 
-// TABLETS
-export const GET_TABLETS = "/tablet/get-all";
-export const GET_ONE_TABLET = "/tablet/get-one";
-export const ADD_TABLET = "/tablet/new";
-export const UPDATE_TABLET = "/tablet/update";
-export const DELETE_TABLET = "/tablet/delete";
+
 
 // BOX GENERATION
 export const GET_BOX_GENERATIONS = "/box-generation/get-all";

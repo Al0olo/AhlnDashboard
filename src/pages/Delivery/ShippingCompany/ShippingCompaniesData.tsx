@@ -19,13 +19,13 @@ import {
 } from "reactstrap";
 //redux
 import { useDispatch } from "react-redux";
-import TableContainer from "../../../../Components/Common/TableContainer";
+import TableContainer from "../../../Components/Common/TableContainer";
 import {
   getShippingCompanies,
   addShippingCompany,
   updateShippingCompany,
   deleteShippingCompany,
-} from "../../../../slices/thunks";
+} from "../../../slices/thunks";
 
 import * as moment from "moment";
 
@@ -33,11 +33,11 @@ import * as moment from "moment";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
-import DeleteModal from "../../../../Components/Common/DeleteModal";
+import DeleteModal from "../../../Components/Common/DeleteModal";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Loader from "../../../../Components/Common/Loader";
+import Loader from "../../../Components/Common/Loader";
 import { useAppSelector } from "redux-hooks";
 
 const ShippingCompaniesData = () => {
@@ -47,21 +47,19 @@ const ShippingCompaniesData = () => {
   );
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [shippingCompany, setShippingCompany] = useState<any>([]);
+  const [shippingCompany, setShippingCompany] = useState<any>({
+    title: "",
+    logo: "",
+    tracking_system: "",
+  });
 
   // Delete ShippingCompanies
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
 
   const toggle = useCallback(() => {
-    if (modal) {
-      setModal(false);
-      setShippingCompany(shippingCompany);
-    } else {
-      setModal(true);
-      setShippingCompany(shippingCompany);
-    }
-  }, [modal, shippingCompany]);
+    setModal((prevState) => !prevState);
+  }, [modal]);
 
   // validation
   const validation: any = useFormik({
@@ -69,56 +67,66 @@ const ShippingCompaniesData = () => {
     enableReinitialize: true,
 
     initialValues: {
-      serial_number: (shippingCompany && shippingCompany.serial_number) || "",
-      shippingCompany_label:
-        (shippingCompany && shippingCompany.shippingCompany_label) || "",
-      has_empty_lockers:
-        (shippingCompany && shippingCompany.has_empty_lockers) || "",
-      current_tablet_id:
-        (shippingCompany && shippingCompany.current_tablet_id) || "",
-      previous_tablet_id:
-        (shippingCompany && shippingCompany.previous_tablet_id) || "",
-      shippingCompany_model_id:
-        (shippingCompany && shippingCompany.shippingCompany_model_id) || "",
-      address_id: (shippingCompany && shippingCompany.address_id) || "",
+      title: isEdit ? shippingCompany.title : "",
+      logo: isEdit ? shippingCompany.logo : "",
+      tracking_system: isEdit ? shippingCompany.tracking_system : "",
     },
     validationSchema: Yup.object({
-      serial_number: Yup.string().required("Please Enter Serial Number"),
-      shippingCompany_label: Yup.string().required(
-        "Please Enter ShippingCompany Label"
-      ),
-      current_tablet_id: Yup.number().required("Please Enter Tablet Id"),
-      shippingCompany_model_id: Yup.string().required(
-        "Please Enter ShippingCompany Generation Id"
-      ),
+      title: Yup.string().required("Title is required"),
+      logo: Yup.string().required("Logo is required"),
+      // tracking_system: Yup.string().required("Tracking system is required"),
     }),
     onSubmit: (values) => {
       if (isEdit) {
         const updateShippingCompanies = {
-          serial_number: values.serial_number,
-          shippingCompany_label: values.shippingCompany_label,
-          has_empty_lockers: values.has_empty_lockers,
-          current_tablet_id: values.current_tablet_id,
-          previous_tablet_id: values.previous_tablet_id,
-          shippingCompany_model_id: values.shippingCompany_model_id,
-          address_id: values.address_id,
+          title: values.title,
+          logo: values.logo,
+          tracking_system: values.tracking_system,
+          id: shippingCompany.id,
         };
         // update shippingCompany
-        dispatch(updateShippingCompany(updateShippingCompanies));
+        dispatch(updateShippingCompany(updateShippingCompanies)).then(
+          (result: any) => {
+            if (
+              result.type ===
+              "shippingCompanies/updateShippingCompany/fulfilled"
+            ) {
+              toast.success("Shipping Company Updated Successfully", {
+                autoClose: 3000,
+              });
+              toggle();
+            } else {
+              toast.error(`Error ${result.payload}`, {
+                autoClose: 3000,
+              });
+            }
+          }
+        );
         validation.resetForm();
       } else {
         const newShippingCompany = {
-          serial_number: values["serial_number"],
-          shippingCompany_label: values["shippingCompany_label"],
-          has_empty_lockers: values["has_empty_lockers"],
-          shippingCompany_model_id: values["shippingCompany_model_id"],
+          title: values.title,
+          logo: values.logo,
+          tracking_system: values.tracking_system,
         };
 
         // save new shippingCompany
-        dispatch(addShippingCompany(newShippingCompany));
+        dispatch(addShippingCompany(newShippingCompany)).then((result: any) => {
+          if (
+            result.type === "shippingCompanies/addShippingCompany/fulfilled"
+          ) {
+            toast.success("Shipping Company Added Successfully", {
+              autoClose: 3000,
+            });
+            toggle();
+          } else {
+            toast.error(`Error ${result.payload}`, {
+              autoClose: 3000,
+            });
+          }
+        });
         validation.resetForm();
       }
-      toggle();
     },
   });
 
@@ -129,29 +137,40 @@ const ShippingCompaniesData = () => {
   };
 
   const handleDeleteShippingCompany = () => {
-    console.log("shippingCompany", shippingCompany);
-
     if (shippingCompany) {
-      dispatch(deleteShippingCompany(shippingCompany.id));
+      dispatch(deleteShippingCompany(shippingCompany.id)).then(
+        (result: any) => {
+          if (
+            result.type === "shippingCompanies/deleteShippingCompany/fulfilled"
+          ) {
+            toast.success("Shipping Company Deleted Successfully", {
+              autoClose: 3000,
+            });
+          } else {
+            toast.error(`Error ${result.payload}`, {
+              autoClose: 3000,
+            });
+          }
+        }
+      );
       setDeleteModal(false);
     }
   };
 
   // Update Data
-  const handleShippingCompaniesClick = (arg: any) => {
-    const shippingCompany = arg;
-
-    setShippingCompany({
-      serial_number: shippingCompany.serial_number,
-      shippingCompany_label: shippingCompany.shippingCompany_label,
-      has_empty_lockers: shippingCompany.has_empty_lockers,
-      shippingCompany_model_id: shippingCompany.shippingCompany_model_id,
-      address_id: shippingCompany.address_id,
-    });
-
-    setIsEdit(true);
-    setModal(true);
-  };
+  const handleShippingCompaniesClick = useCallback(
+    (arg: any) => {
+      setIsEdit(true);
+      setShippingCompany({
+        title: arg.title,
+        logo: arg.logo,
+        tracking_system: arg.tracking_system,
+        id: arg.id,
+      });
+      toggle();
+    },
+    [toggle]
+  );
 
   // Get Data
 
@@ -201,12 +220,12 @@ const ShippingCompaniesData = () => {
               <i className="ri-more-fill align-middle"></i>
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-end">
-              <li>
+              {/* <li>
                 <DropdownItem href="/apps-shippingCompanys-details">
                   <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
                   View
                 </DropdownItem>
-              </li>
+              </li> */}
               <li>
                 <DropdownItem
                   className="edit-item-btn"
@@ -240,7 +259,7 @@ const ShippingCompaniesData = () => {
         ),
       },
     ],
-    []
+    [handleShippingCompaniesClick]
   );
 
   return (
@@ -304,7 +323,7 @@ const ShippingCompaniesData = () => {
         modalClassName="zoomIn"
       >
         <ModalHeader toggle={toggle} className="p-3 bg-info-subtle">
-          {!!isEdit ? "Edit ShippingCompany" : "Add ShippingCompany"}
+          {!!isEdit ? "Edit Shipping Company" : "Add Shipping Company"}
         </ModalHeader>
         <Form
           className="tablelist-form"
@@ -318,148 +337,84 @@ const ShippingCompaniesData = () => {
             <Row className="g-3">
               <Col lg={12}>
                 <div>
-                  <Label htmlFor="tasksTitle-field" className="form-label">
-                    Serial Number
+                  <Label htmlFor="title" className="form-label">
+                    Title
                   </Label>
                   <Input
-                    name="serial_number"
-                    id="serial-field"
+                    name="title"
+                    id="title"
                     className="form-control"
-                    placeholder="Enter Serial Number"
+                    placeholder="Enter Title"
                     type="text"
                     validate={{
                       required: { value: true },
                     }}
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.serial_number || ""}
+                    value={validation.values.title || ""}
                     invalid={
-                      validation.touched.serial_number &&
-                      validation.errors.serial_number
+                      validation.touched.title && validation.errors.title
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.serial_number &&
-                  validation.errors.serial_number ? (
+                  {validation.touched.title && validation.errors.title ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.serial_number}
+                      {validation.errors.title}
                     </FormFeedback>
                   ) : null}
                 </div>
               </Col>
               <Col lg={12}>
                 <div>
-                  <Label htmlFor="client_nameName-field" className="form-label">
-                    ShippingCompany Label
+                  <Label htmlFor="logo" className="form-label">
+                    Logo
                   </Label>
                   <Input
-                    name="shippingCompany_label"
+                    name="logo"
                     type="text"
-                    id="shippingCompany_label-field"
-                    placeholder="Enter ShippingCompany Label"
+                    id="logo"
+                    placeholder="Enter Logo Link"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.shippingCompany_label || ""}
+                    value={validation.values.logo || ""}
                     invalid={
-                      validation.touched.shippingCompany_label &&
-                      validation.errors.shippingCompany_label
+                      validation.touched.logo && validation.errors.logo
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.shippingCompany_label &&
-                  validation.errors.shippingCompany_label ? (
+                  {validation.touched.logo && validation.errors.logo ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.shippingCompany_label}
+                      {validation.errors.logo}
                     </FormFeedback>
                   ) : null}
                 </div>
               </Col>
-              {/* <Col lg={6}>
+              <Col lg={12}>
                 <div>
-                  <Label htmlFor="assignedtoName-field" className="form-label">
-                    Assigned To
+                  <Label htmlFor="tracking_system" className="form-label">
+                    Tracking System
                   </Label>
                   <Input
-                    name="assigned"
+                    name="tracking_system"
                     type="text"
-                    id="assignedtoName-field"
-                    placeholder="Enter Assigned Name"
+                    id="tracking_system"
+                    placeholder="Enter Tracking System Api"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.assigned || ""}
+                    value={validation.values.tracking_system || ""}
                     invalid={
-                      validation.touched.assigned && validation.errors.assigned
+                      validation.touched.tracking_system &&
+                      validation.errors.tracking_system
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.assigned && validation.errors.assigned ? (
+                  {validation.touched.tracking_system &&
+                  validation.errors.tracking_system ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.assigned}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-              </Col> */}
-
-              <Col lg={12}>
-                <Label htmlFor="shippingCompany-status" className="form-label">
-                  Has Empty Lockers
-                </Label>
-                <Input
-                  name="status"
-                  type="select"
-                  className="form-select"
-                  id="lockers-field"
-                  onChange={validation.handleChange}
-                  onBlur={validation.handleBlur}
-                  value={validation.values.has_empty_lockers || ""}
-                  invalid={
-                    validation.touched.has_empty_lockers &&
-                    validation.errors.has_empty_lockers
-                      ? true
-                      : false
-                  }
-                >
-                  <option value="true">True</option>
-                  <option value="false">False</option>
-                </Input>
-                {validation.touched.has_empty_lockers &&
-                validation.errors.has_empty_lockers ? (
-                  <FormFeedback type="invalid">
-                    {validation.errors.has_empty_lockers}
-                  </FormFeedback>
-                ) : null}
-              </Col>
-              <Col lg={12}>
-                <div>
-                  <Label htmlFor="tasksTitle-field" className="form-label">
-                    ShippingCompany Generation ID
-                  </Label>
-                  <Input
-                    name="shippingCompany_model_id"
-                    id="serial-field"
-                    className="form-control"
-                    placeholder="Enter ShippingCompany Generation Model"
-                    type="text"
-                    validate={{
-                      required: { value: true },
-                    }}
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.shippingCompany_model_id || ""}
-                    invalid={
-                      validation.touched.shippingCompany_model_id &&
-                      validation.errors.shippingCompany_model_id
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.shippingCompany_model_id &&
-                  validation.errors.shippingCompany_model_id ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.shippingCompany_model_id}
+                      {validation.errors.tracking_system}
                     </FormFeedback>
                   ) : null}
                 </div>
@@ -472,7 +427,7 @@ const ShippingCompaniesData = () => {
                 Close
               </button>
               <button type="submit" className="btn btn-success" id="add-btn">
-                {!!isEdit ? "Update" : "Add ShippingCompany"}
+                {!!isEdit ? "Update" : "Add Shipping Company"}
               </button>
             </div>
           </div>

@@ -6,7 +6,6 @@ import {
   updateAddress,
   getOneAddress,
 } from "../../../helpers/fakebackend_helper";
-import { toast } from "react-toastify";
 
 export const GetAddressesAction = createAsyncThunk(
   "address/get-all",

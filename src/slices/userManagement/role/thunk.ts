@@ -5,7 +5,7 @@ import {
   getRoles,
   deleteRole,
   updateRole,
-} from "../../../helpers/fakebackend_helper";
+} from "../../../helpers/backend_apis/userManagement/role";
 
 export const GetRolesAction = createAsyncThunk(
   "role/get-all",

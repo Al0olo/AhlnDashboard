@@ -5,14 +5,14 @@ import {
   getTablets,
   deleteTablet,
   updateTablet,
-} from "../../../helpers/fakebackend_helper";
+  resetTabletToBox,
+} from "../../../helpers/backend_apis/box/tablet";
 
 export const GetTabletsAction = createAsyncThunk(
   "tablet/get-all",
   async (_, thunkApi) => {
     try {
       const response = await getTablets();
-
       return response.data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error || error.message);
@@ -63,6 +63,18 @@ export const DeleteTabletAction = createAsyncThunk(
   async (tablet: string, thunkApi) => {
     try {
       const response = await deleteTablet(tablet);
+      return response.data;
+    } catch (error: any) {
+      return thunkApi.rejectWithValue(error || error.message);
+    }
+  }
+);
+
+export const resetTabletToBoxAction = createAsyncThunk(
+  "tablet/reset",
+  async (data: any, thunkApi) => {
+    try {
+      const response = await resetTabletToBox(data);
       return response.data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error || error.message);

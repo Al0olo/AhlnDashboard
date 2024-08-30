@@ -3,15 +3,19 @@ import {
   Card,
   CardBody,
   CardHeader,
+  CardText,
   Col,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
+  Modal,
+  ModalBody,
+  ModalHeader,
   Row,
   UncontrolledDropdown,
 } from "reactstrap";
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import TableContainer from "../../../Components/Common/TableContainer";
 import {
   GetContactUsAction,
@@ -20,36 +24,24 @@ import {
 } from "../../../slices/thunks";
 
 // Formik
-import * as Yup from "yup";
-import { useFormik } from "formik";
 
 import DeleteModal from "../../../Components/Common/DeleteModal";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../Components/Common/Loader";
-import { createSelector } from "reselect";
 import moment from "moment";
+import { useAppSelector } from "redux-hooks";
 
 const ContactUsData = () => {
   const dispatch: any = useDispatch();
-  const selectLayoutState = (state: any) => state.ContactUs;
 
-  const selectLayoutProperties = createSelector(selectLayoutState, (state) => ({
-    contactUsList: state.data,
-    iscontactUsSuccess: state.iscontactUsSuccess,
-    error: state.error,
-    loader: state.loading,
-  }));
-
-  // Inside your component
-  const { contactUsList, iscontactUsSuccess, error, loader } = useSelector(
-    selectLayoutProperties
-  );
+  const { contactUsList, loading, error, loadingOne, oneContactUs } =
+    useAppSelector((state) => state.ContactUs);
 
   const [contactUs, setContactUs] = useState<any>([]);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
+  const [modal, setModal] = useState<boolean>(false);
 
   // Delete Data
   const onClickDelete = (contactUs: any) => {
@@ -59,87 +51,40 @@ const ContactUsData = () => {
 
   const handleDeletecontactUs = async () => {
     if (contactUs) {
-      const result = await dispatch(DeleteContactUsAction(contactUs.id));
-      if (result && result.payload) {
-        await dispatch(GetContactUsAction());
-      }
+      dispatch(DeleteContactUsAction(contactUs.id)).then((result: any) => {
+        if (result.type === "contactUs/delete/fulfilled") {
+          toast.success("Contact Us Deleted Successfully", {
+            autoClose: 3000,
+          });
+        } else {
+          toast.error(`Error ${result.payload}`, {
+            autoClose: 3000,
+          });
+        }
+      });
+
       setDeleteModal(false);
     }
   };
-
+  const toggle = useCallback(() => {
+    setModal((prevState) => !prevState);
+  }, [modal]);
   // Get Data
 
   useEffect(() => {
     dispatch(GetContactUsAction());
   }, [dispatch]);
 
-  // Checked All
-  const checkedAll = useCallback(() => {
-    const checkall: any = document.getElementById("checkcontactUsAll");
-    const ele = document.querySelectorAll(".contactUsCheckcontactUs");
-
-    if (checkall.checked) {
-      ele.forEach((ele: any) => {
-        ele.checked = true;
-      });
-    } else {
-      ele.forEach((ele: any) => {
-        ele.checked = false;
-      });
-    }
-    deleteCheckcontactUs();
-  }, []);
-
-  // Delete Multiple
-  const [selectedCheckcontactUsDelete, setSelectedCheckcontactUsDelete] =
-    useState<any>([]);
-  const [isMultiDeleteButton, setIsMultiDeleteButton] =
-    useState<boolean>(false);
-
-  const deleteMultiple = () => {
-    const checkall: any = document.getElementById("checkcontactUsAll");
-    selectedCheckcontactUsDelete.forEach((element: any) => {
-      dispatch(DeleteContactUsAction(element.id));
-      setTimeout(() => {
-        toast.clearWaitingQueue();
-      }, 3000);
-    });
-    setIsMultiDeleteButton(false);
-    checkall.checked = false;
-  };
-
-  const deleteCheckcontactUs = () => {
-    const ele = document.querySelectorAll(".contactUsCheckcontactUs:checked");
-    ele?.length > 0
-      ? setIsMultiDeleteButton(true)
-      : setIsMultiDeleteButton(false);
-    setSelectedCheckcontactUsDelete(ele);
-  };
+  const handleContactUsClick = useCallback(
+    (arg: any) => {
+      dispatch(GetOneContactUsAction(arg.id));
+      toggle();
+    },
+    [toggle]
+  );
 
   const columns = useMemo(
     () => [
-      {
-        header: (
-          <input
-            type="checkcontactUs"
-            id="checkcontactUsAll"
-            className="form-check-input"
-            onClick={() => checkedAll()}
-          />
-        ),
-        cell: (cell: any) => (
-          <input
-            type="checkcontactUs"
-            className="contactUsCheckcontactUs form-check-input"
-            value={cell.getValue()}
-            onChange={() => deleteCheckcontactUs()}
-          />
-        ),
-        id: "#",
-        accessorKey: "",
-        enableColumnFilter: false,
-        enableSorting: false,
-      },
       {
         header: "ID",
         accessorKey: "id",
@@ -180,7 +125,14 @@ const ContactUsData = () => {
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-end">
               <li>
-                <DropdownItem href="/apps-contactUs-details">
+                <DropdownItem
+                  className="edit-item-btn"
+                  href="#showModal"
+                  data-bs-toggle="modal"
+                  onClick={() => {
+                    handleContactUsClick(cell.row.original);
+                  }}
+                >
                   <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
                   View
                 </DropdownItem>
@@ -204,7 +156,7 @@ const ContactUsData = () => {
         ),
       },
     ],
-    [checkedAll]
+    [contactUsList]
   );
 
   return (
@@ -215,35 +167,16 @@ const ContactUsData = () => {
           onDeleteClick={handleDeletecontactUs}
           onCloseClick={() => setDeleteModal(false)}
         />
-        <DeleteModal
-          show={deleteModalMulti}
-          onDeleteClick={() => {
-            deleteMultiple();
-            setDeleteModalMulti(false);
-          }}
-          onCloseClick={() => setDeleteModalMulti(false)}
-        />
+
         <Col lg={12}>
           <Card>
             <CardHeader className="border-0">
               <div className="d-flex align-items-center">
                 <h5 className="card-title mb-0 flex-grow-1">Contact Us</h5>
-                <div className="flex-shrink-0">
-                  <div className="d-flex flex-wrap gap-2">
-                    {isMultiDeleteButton && (
-                      <button
-                        className="btn btn-soft-danger"
-                        onClick={() => setDeleteModalMulti(true)}
-                      >
-                        <i className="ri-delete-bin-2-line"></i>
-                      </button>
-                    )}
-                  </div>
-                </div>
               </div>
             </CardHeader>
             <CardBody className="pt-0">
-              {loader ? (
+              {loading ? (
                 <Loader error={error} />
               ) : (
                 <TableContainer
@@ -261,6 +194,111 @@ const ContactUsData = () => {
           </Card>
         </Col>
       </Row>
+
+      <Modal
+        isOpen={modal}
+        toggle={toggle}
+        centered
+        size="lg"
+        className="border-0"
+        modalClassName="zoomIn"
+      >
+        <ModalHeader toggle={toggle} className="p-3 bg-info-subtle">
+          Contact Us Details
+        </ModalHeader>
+        {loadingOne ? (
+          <Loader error={error} />
+        ) : (
+          <ModalBody>
+            <Row className="g-3">
+              <Col lg={6}>
+                <div>
+                  <CardHeader className="DPCH my-3">ID</CardHeader>
+                  <CardBody>
+                    <CardText className="DPCT my-3">
+                      {oneContactUs?.id}
+                    </CardText>
+                  </CardBody>
+                </div>
+              </Col>
+              <Col lg={6}>
+                <div>
+                  <CardHeader className="DPCH my-3">Email</CardHeader>
+                  <CardBody>
+                    <CardText className="DPCT my-3">
+                      {oneContactUs?.email}
+                    </CardText>
+                  </CardBody>
+                </div>
+              </Col>
+            </Row>
+            <Row className="g-3">
+              <Col lg={6}>
+                <div>
+                  <CardHeader className="DPCH my-3">Created At</CardHeader>
+                  <CardBody>
+                    <CardText className="DPCT my-3">
+                      {moment(oneContactUs?.createdat).format("DD MMMM, YYYY")}
+                    </CardText>
+                  </CardBody>
+                </div>
+              </Col>
+              <Col lg={6}>
+                <div>
+                  <CardHeader className="DPCH my-3">Updated At</CardHeader>
+                  <CardBody>
+                    <CardText className="DPCT my-3">
+                      {moment(oneContactUs?.updatedat).format("DD MMMM, YYYY")}
+                    </CardText>
+                  </CardBody>
+                </div>
+              </Col>
+            </Row>
+
+            <Row className="g-3">
+              <Col lg={6}>
+                <div>
+                  <CardHeader className="DPCH my-3">Mobile Number</CardHeader>
+                  <CardBody>
+                    <CardText className="DPCT my-3">
+                      {oneContactUs?.mobile_number}
+                    </CardText>
+                  </CardBody>
+                </div>
+              </Col>
+              <Col lg={6}>
+                <div>
+                  <CardHeader className="DPCH my-3">Created By</CardHeader>
+                  <CardBody>
+                    <CardText className="DPCT my-3">
+                      {oneContactUs?.created_by}
+                    </CardText>
+                  </CardBody>
+                </div>
+              </Col>
+            </Row>
+            <Row className="g-3">
+              <Col lg={12}>
+                <div>
+                  <CardHeader className="DPCH my-3">Message</CardHeader>
+                  <CardBody>
+                    <CardText className="DPCT my-3">
+                      {oneContactUs?.message}
+                    </CardText>
+                  </CardBody>
+                </div>
+              </Col>
+            </Row>
+          </ModalBody>
+        )}{" "}
+        <div className="modal-footer">
+          <div className="hstack gap-2 justify-content-end">
+            <button onClick={toggle} type="button" className="btn btn-danger">
+              Close
+            </button>
+          </div>
+        </div>
+      </Modal>
     </React.Fragment>
   );
 };

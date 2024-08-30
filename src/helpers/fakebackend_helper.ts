@@ -33,27 +33,7 @@ export const deleteBox = (data: any) => {
   return api.delete(`${url.DELETE_BOX}/${data}`);
 };
 
-// TABLET
-// Get Tablets
-export const getTablets = () => {
-  return api.get(url.GET_TABLETS);
-};
-// Get One Tablet
-export const getOneTablet = (data: any) => {
-  return api.get(url.GET_TABLETS);
-};
-// Add Tablet
-export const addTablet = (data: any) => {
-  return api.create(url.ADD_TABLET, data);
-};
-// Update Exsiting Tablet
-export const updateTablet = (data: any) => {
-  return api.update(`${url.UPDATE_TABLET}/${data.id}`, data);
-};
-// Delete Tablet
-export const deleteTablet = (data: any) => {
-  return api.delete(`${url.DELETE_TABLET}/${data}`);
-};
+
 
 // BOX GENERATION
 // Get BoxGenerations
@@ -141,75 +121,7 @@ export const deleteUserBox = (data: any) => {
 // ADMINSTRATION
 
 
-// CONTACT US
-// Fetch All Contact Us
-export const getContactUsApi = () => {
-  return api.get(url.GET_CONTACT_US);
-};
 
-// Get One Contact Us
-export const getOneContactUsApi = (data: any) => {
-  return api.get(`${url.GET_ONE_CONTACT_US}/${data}`);
-};
-
-// Delete Contact Us
-export const deleteContactUsApi = (data: any) => {
-  return api.delete(`${url.DELETE_CONTACT_US}/${data}`);
-};
-
-// AUDIT TRAIL
-// Fetch All Audit Trails
-export const getAuditTrailApi = () => {
-  return api.get(url.GET_AUDIT_TRAIL);
-};
-
-// Get One Audit Trail
-export const getOneAuditTrailApi = (data: any) => {
-  return api.get(`${url.GET_ONE_AUDIT_TRAIL}/${data}`);
-};
-
-// Delete Audit Trail
-export const deleteAuditTrailApi = (data: any) => {
-  return api.delete(`${url.DELETE_AUDIT_TRAIL}/${data}`);
-};
-
-// SYSTEM LOG
-// Fetch All System Logs
-export const getSystemLogApi = () => {
-  return api.get(url.GET_SYSTEM_LOG);
-};
-
-// Get One System Log
-export const getOneSystemLogApi = (data: any) => {
-  return api.get(`${url.GET_ONE_SYSTEM_LOG}/${data}`);
-};
-
-// Delete System Log
-export const deleteSystemLogApi = (data: any) => {
-  return api.delete(`${url.DELETE_SYSTEM_LOG}/${data}`);
-};
-
-// ROLE
-// Fetches rolees for admin
-export const getRoles = () => {
-  return api.get(url.GET_ROLES);
-};
-// Get One Role
-export const getOneRole = (data: any) => {
-  return api.get(url.GET_ONE_ROLE);
-};
-// Add Role
-export const addRole = (data: any) => {
-  return api.create(url.ADD_ROLE, data);
-};
-// Update Exsiting Role
-export const updateRole = (data: any) => {
-  return api.update(url.UPDATE_ROLE + `/${data.id}`, data);
-};
-// Delete Role
-export const deleteRole = (data: any) => {
-  return api.delete(`${url.DELETE_ROLE}/${data}`);
-};
 
 //is user is logged in
 export const isUserAuthenticated = () => {

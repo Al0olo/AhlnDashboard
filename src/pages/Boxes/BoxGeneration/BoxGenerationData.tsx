@@ -399,12 +399,12 @@ const BoxGenerationsData = () => {
               <i className="ri-more-fill align-middle"></i>
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-end">
-              <li>
+              {/* <li>
                 <DropdownItem href="/apps-boxGenerations-details">
                   <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
                   View
                 </DropdownItem>
-              </li>
+              </li> */}
               <li>
                 <DropdownItem
                   className="edit-item-btn"

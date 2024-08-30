@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useCallback } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Card,
   CardBody,
@@ -11,45 +11,29 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import TableContainer from "../../../Components/Common/TableContainer";
 import {
   GetAuditTrailAction,
   DeleteAuditTrailAction,
-  GetOneAuditTrailAction,
 } from "../../../slices/thunks";
-
-// Formik
-import * as Yup from "yup";
-import { useFormik } from "formik";
 
 import DeleteModal from "../../../Components/Common/DeleteModal";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../Components/Common/Loader";
-import { createSelector } from "reselect";
 import moment from "moment";
+import { useAppSelector } from "redux-hooks";
 
 const AuditTrailData = () => {
   const dispatch: any = useDispatch();
-  const selectLayoutState = (state: any) => state.AuditTrail;
-
-  const selectLayoutProperties = createSelector(selectLayoutState, (state) => ({
-    auditTrailList: state.data,
-    isauditTrailSuccess: state.isauditTrailSuccess,
-    error: state.error,
-    loader: state.loading,
-  }));
-
-  // Inside your component
-  const { auditTrailList, isauditTrailSuccess, error, loader } = useSelector(
-    selectLayoutProperties
+  const { auditTrailList, loading, error } = useAppSelector(
+    (state) => state.AuditTrail
   );
 
   const [auditTrail, setAuditTrail] = useState<any>([]);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
 
   // Delete Data
   const onClickDelete = (auditTrail: any) => {
@@ -59,10 +43,17 @@ const AuditTrailData = () => {
 
   const handleDeleteauditTrail = async () => {
     if (auditTrail) {
-      const result = await dispatch(DeleteAuditTrailAction(auditTrail.id));
-      if (result && result.payload) {
-        await dispatch(GetAuditTrailAction());
-      }
+      await dispatch(DeleteAuditTrailAction(auditTrail.id)).then(
+        (result: any) => {
+          if (result.type === "auditTrail/delete/fulfilled") {
+            toast.success("AuditTrail Deleted Successfully", {
+              autoClose: 3000,
+            });
+          } else {
+            toast.error(`Error ${result.payload}`, { autoClose: 3000 });
+          }
+        }
+      );
       setDeleteModal(false);
     }
   };
@@ -73,73 +64,8 @@ const AuditTrailData = () => {
     dispatch(GetAuditTrailAction());
   }, [dispatch]);
 
-  // Checked All
-  const checkedAll = useCallback(() => {
-    const checkall: any = document.getElementById("checkauditTrailAll");
-    const ele = document.querySelectorAll(".auditTrailCheckauditTrail");
-
-    if (checkall.checked) {
-      ele.forEach((ele: any) => {
-        ele.checked = true;
-      });
-    } else {
-      ele.forEach((ele: any) => {
-        ele.checked = false;
-      });
-    }
-    deleteCheckauditTrail();
-  }, []);
-
-  // Delete Multiple
-  const [selectedCheckauditTrailDelete, setSelectedCheckauditTrailDelete] =
-    useState<any>([]);
-  const [isMultiDeleteButton, setIsMultiDeleteButton] =
-    useState<boolean>(false);
-
-  const deleteMultiple = () => {
-    const checkall: any = document.getElementById("checkauditTrailAll");
-    selectedCheckauditTrailDelete.forEach((element: any) => {
-      dispatch(DeleteAuditTrailAction(element.id));
-      setTimeout(() => {
-        toast.clearWaitingQueue();
-      }, 3000);
-    });
-    setIsMultiDeleteButton(false);
-    checkall.checked = false;
-  };
-
-  const deleteCheckauditTrail = () => {
-    const ele = document.querySelectorAll(".auditTrailCheckauditTrail:checked");
-    ele?.length > 0
-      ? setIsMultiDeleteButton(true)
-      : setIsMultiDeleteButton(false);
-    setSelectedCheckauditTrailDelete(ele);
-  };
-
   const columns = useMemo(
     () => [
-      {
-        header: (
-          <input
-            type="checkauditTrail"
-            id="checkauditTrailAll"
-            className="form-check-input"
-            onClick={() => checkedAll()}
-          />
-        ),
-        cell: (cell: any) => (
-          <input
-            type="checkauditTrail"
-            className="auditTrailCheckauditTrail form-check-input"
-            value={cell.getValue()}
-            onChange={() => deleteCheckauditTrail()}
-          />
-        ),
-        id: "#",
-        accessorKey: "",
-        enableColumnFilter: false,
-        enableSorting: false,
-      },
       {
         header: "ID",
         accessorKey: "id",
@@ -199,7 +125,7 @@ const AuditTrailData = () => {
         ),
       },
     ],
-    [checkedAll]
+    []
   );
 
   return (
@@ -210,35 +136,16 @@ const AuditTrailData = () => {
           onDeleteClick={handleDeleteauditTrail}
           onCloseClick={() => setDeleteModal(false)}
         />
-        <DeleteModal
-          show={deleteModalMulti}
-          onDeleteClick={() => {
-            deleteMultiple();
-            setDeleteModalMulti(false);
-          }}
-          onCloseClick={() => setDeleteModalMulti(false)}
-        />
+
         <Col lg={12}>
           <Card>
             <CardHeader className="border-0">
               <div className="d-flex align-items-center">
                 <h5 className="card-title mb-0 flex-grow-1">Audit Trail</h5>
-                <div className="flex-shrink-0">
-                  <div className="d-flex flex-wrap gap-2">
-                    {isMultiDeleteButton && (
-                      <button
-                        className="btn btn-soft-danger"
-                        onClick={() => setDeleteModalMulti(true)}
-                      >
-                        <i className="ri-delete-bin-2-line"></i>
-                      </button>
-                    )}
-                  </div>
-                </div>
               </div>
             </CardHeader>
             <CardBody className="pt-0">
-              {loader ? (
+              {loading ? (
                 <Loader error={error} />
               ) : (
                 <TableContainer

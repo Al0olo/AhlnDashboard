@@ -1,6 +1,6 @@
 import React from "react";
 import { Container } from "reactstrap";
-import BreadCrumb from "../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../Components/Common/BreadCrumb";
 import ShippingCompaniesData from "./ShippingCompaniesData";
 
 const ShippingCompaniesView = () => {

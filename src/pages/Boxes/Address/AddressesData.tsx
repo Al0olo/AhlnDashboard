@@ -319,7 +319,7 @@ const AddressesData = () => {
         cell: (cell: any) => moment(cell.getValue()).format("DD MMMM, YYYY"),
       },
       {
-        header: "District",
+        header: "Area",
         accessorKey: "district",
         enableColumnFilter: false,
       },

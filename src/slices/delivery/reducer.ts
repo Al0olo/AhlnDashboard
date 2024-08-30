@@ -14,6 +14,8 @@ export const initialState: any = {
   loadingShippingCompany: true,
   loadingDeliveryPackage: true,
   error: {},
+  deliveryPackage: {},
+  loadingOneDeliveryPackage: false,
 };
 
 const deliveryReducer = createSlice({
@@ -58,7 +60,7 @@ const deliveryReducer = createSlice({
       updateShippingCompany.fulfilled,
       (state: any, action: any) => {
         const updatedShippingCompany = action.payload;
-        const index = state.users.findIndex(
+        const index = state.shippingCompanies.findIndex(
           (shippingCompanies: any) =>
             shippingCompanies.id === updatedShippingCompany.id
         );
@@ -112,22 +114,23 @@ const deliveryReducer = createSlice({
       }
     );
 
+    // get one delivery package
     builder.addCase(getOneDeliveryPackage.pending, (state: any) => {
-      state.loadingDeliveryPackage = true;
+      state.loadingOneDeliveryPackage = true;
       state.error = false;
     });
     builder.addCase(
       getOneDeliveryPackage.fulfilled,
       (state: any, action: any) => {
         state.deliveryPackage = action.payload;
-        state.loadingDeliveryPackage = false;
+        state.loadingOneDeliveryPackage = false;
       }
     );
     builder.addCase(
       getOneDeliveryPackage.rejected,
       (state: any, { payload }: any) => {
         state.error = payload;
-        state.loadingDeliveryPackage = false;
+        state.loadingOneDeliveryPackage = false;
       }
     );
   },

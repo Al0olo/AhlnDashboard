@@ -18,14 +18,14 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import TableContainer from "../../../Components/Common/TableContainer";
 import {
-  AddRoleAction,
-  GetRolesAction,
-  DeleteRoleAction,
-  // GetOneRoleAction,
-  UpdateRoleAction,
+  AddPermissionAction,
+  GetPermissionsAction,
+  DeletePermissionAction,
+  // GetOnePermissionAction,
+  UpdatePermissionAction,
 } from "../../../slices/thunks";
 
 // Formik
@@ -37,118 +37,112 @@ import DeleteModal from "../../../Components/Common/DeleteModal";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../Components/Common/Loader";
-import { createSelector } from "reselect";
+import { useAppSelector } from "redux-hooks";
 
-const RolesData = () => {
+const PermissionsData = () => {
   const dispatch: any = useDispatch();
-  const selectLayoutState = (state: any) => state.Role;
-
-  const selectLayoutProperties = createSelector(selectLayoutState, (state) => ({
-    rolesList: state.data,
-    isroleSuccess: state.isroleSuccess,
-    error: state.error,
-    loader: state.loading,
-  }));
-
-  // Inside your component
-  const { rolesList, isroleSuccess, error, loader } = useSelector(
-    selectLayoutProperties
+  const { permissionsList, loading, error } = useAppSelector(
+    (state) => state.Permission
   );
-
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [role, setRole] = useState<any>([]);
+  const [permission, setPermission] = useState<any>([]);
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
 
   const toggle = useCallback(() => {
     setModal((prevState) => !prevState);
-  }, []);
+  }, [modal]);
 
   // validation
   const validation: any = useFormik({
     enableReinitialize: true,
     initialValues: {
-      id: role.id ? role.id : "",
-      title: role.title ? role.title : "",
-      description: role.description ? role.description : "",
+      id: isEdit ? permission.id : "",
+      title: isEdit ? permission.title : "",
+      description: isEdit ? permission.description : "",
     },
     validationSchema: Yup.object({
-      title: Yup.string().required("Please Enter Role Title"),
+      title: Yup.string().required("Please Enter Permission Title"),
+      description: Yup.string().required("Please Enter Permission Description"),
     }),
     onSubmit: async (values) => {
       if (isEdit) {
-        const updateRoles: any = {
+        const updatePermissions = {
           id: values.id,
           title: values.title || undefined,
           description: values.description || undefined,
         };
-        const updatedRoleObj = Object.keys(updateRoles)
-          .filter(
-            (key) => updateRoles[key as keyof typeof updateRoles] !== undefined
-          )
-          .reduce((obj: any, key) => {
-            obj[key] = updateRoles[key as keyof typeof updateRoles];
-            return obj;
-          }, {});
 
-        if (Object.values(updatedRoleObj).some((val) => val !== undefined)) {
-          const result = await dispatch(UpdateRoleAction(updatedRoleObj));
-          if (result && result.payload) {
-            setRole(async (prevRoles: any[]) => {
-              const updatedRoles = Array.isArray(prevRoles)
-                ? [...prevRoles]
-                : [];
-              const newRoles = result.payload.data;
-              if (Array.isArray(newRoles)) {
-                updatedRoles.push(...newRoles);
-              }
-
-              return await dispatch(GetRolesAction());
-            });
+        dispatch(UpdatePermissionAction(updatePermissions)).then(
+          (result: any) => {
+            if (result.type === "permission/update/fulfilled") {
+              toast.success("Permission Updated Successfully", {
+                autoClose: 3000,
+              });
+              toggle();
+            } else {
+              toast.error(`Error ${result.payload}`, {
+                autoClose: 3000,
+              });
+            }
           }
-        }
+        );
+
         validation.resetForm();
       } else {
-        const newRole = {
+        const newPermission = {
           title: values.title,
           description: values.description,
         };
-        const result = await dispatch(AddRoleAction(newRole));
-        if (result && result.payload) {
-          setRole((prevRoles: any[]) => [...prevRoles, result.payload]);
-          toggle();
-          return await dispatch(GetRolesAction());
-        }
+        await dispatch(AddPermissionAction(newPermission)).then(
+          (result: any) => {
+            if (result.type === "permission/add/fulfilled") {
+              toast.success("Permission Added Successfully", {
+                autoClose: 3000,
+              });
+            } else {
+              toast.error(`Error ${result.payload}`, {
+                autoClose: 3000,
+              });
+            }
+          }
+        );
+
         validation.resetForm();
       }
-
-      validation.resetForm(); // Reset form once at the end
-      toggle();
     },
   });
 
   // Delete Data
-  const onClickDelete = (role: any) => {
-    setRole(role);
+  const onClickDelete = (permission: any) => {
+    setPermission(permission);
     setDeleteModal(true);
   };
 
-  const handleDeleterole = async () => {
-    if (role) {
-      const result = await dispatch(DeleteRoleAction(role.id));
-      if (result && result.payload) {
-        await dispatch(GetRolesAction());
-      }
+  const handleDeletepermission = async () => {
+    if (permission) {
+      await dispatch(DeletePermissionAction(permission.id)).then(
+        (result: any) => {
+          if (result.type === "permission/delete/fulfilled") {
+            toast.success("Permission Deleted Successfully", {
+              autoClose: 3000,
+            });
+          } else {
+            toast.error(`Error ${result.payload}`, {
+              autoClose: 3000,
+            });
+          }
+        }
+      );
       setDeleteModal(false);
     }
   };
 
   // update data
-  const handleRolesClick = useCallback(
+  const handlePermissionsClick = useCallback(
     (arg: any) => {
       setIsEdit(true);
-      setRole({
+      setPermission({
         id: arg.id,
         title: arg.title,
         description: arg.description,
@@ -162,87 +156,21 @@ const RolesData = () => {
   // Get Data
 
   useEffect(() => {
-    dispatch(GetRolesAction());
+    dispatch(GetPermissionsAction());
   }, [dispatch]);
 
   useEffect(() => {
-    if (role) {
+    if (permission) {
       validation.setValues({
-        id: role.id || "",
-        title: role.title || "",
-        description: role.description || "",
+        id: permission.id || "",
+        title: permission.title || "",
+        description: permission.description || "",
       });
     }
-  }, [role]);
-
-  // Checked All
-  const checkedAll = useCallback(() => {
-    const checkall: any = document.getElementById("checkroleAll");
-    const ele = document.querySelectorAll(".roleCheckrole");
-
-    if (checkall.checked) {
-      ele.forEach((ele: any) => {
-        ele.checked = true;
-      });
-    } else {
-      ele.forEach((ele: any) => {
-        ele.checked = false;
-      });
-    }
-    deleteCheckrole();
-  }, []);
-
-  // Delete Multiple
-  const [selectedCheckroleDelete, setSelectedCheckroleDelete] = useState<any>(
-    []
-  );
-  const [isMultiDeleteButton, setIsMultiDeleteButton] =
-    useState<boolean>(false);
-
-  const deleteMultiple = () => {
-    const checkall: any = document.getElementById("checkroleAll");
-    selectedCheckroleDelete.forEach((element: any) => {
-      dispatch(DeleteRoleAction(element.id));
-      setTimeout(() => {
-        toast.clearWaitingQueue();
-      }, 3000);
-    });
-    setIsMultiDeleteButton(false);
-    checkall.checked = false;
-  };
-
-  const deleteCheckrole = () => {
-    const ele = document.querySelectorAll(".roleCheckrole:checked");
-    ele?.length > 0
-      ? setIsMultiDeleteButton(true)
-      : setIsMultiDeleteButton(false);
-    setSelectedCheckroleDelete(ele);
-  };
+  }, [permission]);
 
   const columns = useMemo(
     () => [
-      {
-        header: (
-          <input
-            type="checkrole"
-            id="checkroleAll"
-            className="form-check-input"
-            onClick={() => checkedAll()}
-          />
-        ),
-        cell: (cell: any) => (
-          <input
-            type="checkrole"
-            className="roleCheckrole form-check-input"
-            value={cell.getValue()}
-            onChange={() => deleteCheckrole()}
-          />
-        ),
-        id: "#",
-        accessorKey: "",
-        enableColumnFilter: false,
-        enableSorting: false,
-      },
       {
         header: "ID",
         accessorKey: "id",
@@ -267,19 +195,13 @@ const RolesData = () => {
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-end">
               <li>
-                <DropdownItem href="/apps-role-details">
-                  <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
-                  View
-                </DropdownItem>
-              </li>
-              <li>
                 <DropdownItem
                   className="edit-item-btn"
                   href="#showModal"
                   data-bs-toggle="modal"
                   onClick={() => {
-                    const roleData = cell.row.original;
-                    handleRolesClick(roleData);
+                    const permissionData = cell.row.original;
+                    handlePermissionsClick(permissionData);
                   }}
                 >
                   <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>{" "}
@@ -292,8 +214,8 @@ const RolesData = () => {
                   data-bs-toggle="modal"
                   href="#deleteOrder"
                   onClick={() => {
-                    const roleData = cell.row.original;
-                    onClickDelete(roleData);
+                    const permissionData = cell.row.original;
+                    onClickDelete(permissionData);
                   }}
                 >
                   <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
@@ -305,7 +227,7 @@ const RolesData = () => {
         ),
       },
     ],
-    [checkedAll]
+    [handlePermissionsClick]
   );
 
   return (
@@ -313,22 +235,15 @@ const RolesData = () => {
       <Row>
         <DeleteModal
           show={deleteModal}
-          onDeleteClick={handleDeleterole}
+          onDeleteClick={handleDeletepermission}
           onCloseClick={() => setDeleteModal(false)}
         />
-        <DeleteModal
-          show={deleteModalMulti}
-          onDeleteClick={() => {
-            deleteMultiple();
-            setDeleteModalMulti(false);
-          }}
-          onCloseClick={() => setDeleteModalMulti(false)}
-        />
+
         <Col lg={12}>
           <Card>
             <CardHeader className="border-0">
               <div className="d-flex align-items-center">
-                <h5 className="card-title mb-0 flex-grow-1">Roles</h5>
+                <h5 className="card-title mb-0 flex-grow-1">Permissions</h5>
                 <div className="flex-shrink-0">
                   <div className="d-flex flex-wrap gap-2">
                     <button
@@ -339,32 +254,24 @@ const RolesData = () => {
                       }}
                     >
                       <i className="ri-add-line align-bottom"></i> Create New
-                      Role
+                      Permission
                     </button>{" "}
-                    {isMultiDeleteButton && (
-                      <button
-                        className="btn btn-soft-danger"
-                        onClick={() => setDeleteModalMulti(true)}
-                      >
-                        <i className="ri-delete-bin-2-line"></i>
-                      </button>
-                    )}
                   </div>
                 </div>
               </div>
             </CardHeader>
             <CardBody className="pt-0">
-              {loader ? (
+              {loading ? (
                 <Loader error={error} />
               ) : (
                 <TableContainer
                   columns={columns}
-                  data={rolesList}
+                  data={permissionsList}
                   isGlobalFilter={true}
-                  customPageSize={10}
+                  customPageSize={50}
                   divClass="table-responsive table-card mb-3"
                   tableClass="align-middle table-nowrap mb-0"
-                  SearchPlaceholder="Search for role details or something..."
+                  SearchPlaceholder="Search for permission details or something..."
                 />
               )}
               <ToastContainer closeButton={false} limit={1} />
@@ -382,7 +289,7 @@ const RolesData = () => {
         modalClassName="zoomIn"
       >
         <ModalHeader toggle={toggle} className="p-3 bg-info-subtle">
-          {!!isEdit ? "Edit Role" : "Add Role"}
+          {!!isEdit ? "Edit Permission" : "Add Permission"}
         </ModalHeader>
         <Form
           className="tablelist-form"
@@ -403,7 +310,7 @@ const RolesData = () => {
                     name="title"
                     id="title-field"
                     className="form-control"
-                    placeholder="Enter Role Title"
+                    placeholder="Enter Permission Title"
                     type="text"
                     validate={{
                       required: { value: true },
@@ -433,7 +340,7 @@ const RolesData = () => {
                     name="description"
                     type="text"
                     id="description-field"
-                    placeholder="Enter Role Description"
+                    placeholder="Enter Permission Description"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
                     value={validation.values.description || ""}
@@ -460,7 +367,7 @@ const RolesData = () => {
                 Close
               </button>
               <button type="submit" className="btn btn-success" id="add-btn">
-                {!!isEdit ? "Update" : "Add Role"}
+                {!!isEdit ? "Update" : "Add Permission"}
               </button>
             </div>
           </div>
@@ -470,4 +377,4 @@ const RolesData = () => {
   );
 };
 
-export default RolesData;
+export default PermissionsData;

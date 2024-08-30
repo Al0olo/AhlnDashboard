@@ -353,7 +353,7 @@ const Navdata = () => {
           stateVariables: isBox,
           childItems: [
             // Routes needs to be adjusted
-            { id: 1, label: "Boxes List", link: "/boxes" },
+            { id: 1, label: "Boxes", link: "/boxes" },
             { id: 2, label: "Box Generation", link: "/box-generation" },
             { id: 3, label: "Tablets", link: "/tablets" },
             { id: 4, label: "Addresses", link: "/addresses" },
@@ -377,7 +377,7 @@ const Navdata = () => {
             // Routes needs to be adjusted
             {
               id: 1,
-              label: "Delivery Packages List",
+              label: "Delivery Packages",
               link: "/delivery-packages",
             },
             {
@@ -399,10 +399,27 @@ const Navdata = () => {
           parentId: "apps",
           stateVariables: isAdmin,
           childItems: [
+            { id: 1, label: "Audit Trail", link: "/audit-trail" },
+            { id: 2, label: "System Log", link: "/system-log" },
+          ],
+        },
+        {
+          id: "userManagement",
+          label: "User Management",
+          link: "/#",
+          isChildItem: true,
+          click: function (e: any) {
+            e.preventDefault();
+            setIsAdmin(!isAdmin);
+          },
+          parentId: "apps",
+          stateVariables: isAdmin,
+          childItems: [
             { id: 1, label: "Roles", link: "/role" },
-            { id: 2, label: "Audit Trail", link: "/audit-trail" },
-            { id: 3, label: "System Log", link: "/system-log" },
-            { id: 4, label: "Users", link: "/users" },
+            { id: 2, label: "Permissions", link: "/permission" },
+            { id: 3, label: "Role Permissions", link: "/role-permission" },
+            { id: 4, label: "User Permissions", link: "/user-permission" },
+            { id: 5, label: "Users", link: "/users" },
           ],
         },
       ],

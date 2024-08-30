@@ -11,7 +11,10 @@ import { forgotPasswordSlices } from "./auth/forgetpwd/reducer";
 import { verifySlices } from "./auth/verifyOtp/reducer";
 
 // Admin
-import { roleSlices } from "./admin/role/reducer";
+import { roleSlices } from "./userManagement/role/reducer";
+import { permissionSlices } from "./userManagement/permission/reducer";
+
+import { rolePermissionSlices } from "./userManagement/rolePermission/reducer";
 
 import ProfileReducer from "./auth/profile/reducer";
 
@@ -95,10 +98,14 @@ import { auditTrailSlices } from "./admin/auditTrail/reducer";
 import { systemLogSlices } from "./admin/systemLog/reducer";
 import { boxGenerationSlices } from "./Box/boxGeneration/reducer";
 import { usersSlices } from "./users/reducer";
+import { userPermissionSlices } from "./userManagement/userPermission/reducer";
 
 const rootReducer = combineReducers({
   Users: usersSlices,
   Role: roleSlices,
+  Permission: permissionSlices,
+  RolePermission: rolePermissionSlices,
+  UserPermission: userPermissionSlices,
   ContactUs: contactUsSlices,
   AuditTrail: auditTrailSlices,
   SystemLog: systemLogSlices,

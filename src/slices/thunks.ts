@@ -11,7 +11,10 @@ export * from "./auth/verify/thunk";
 export * from "./auth/verifyOtp/thunk";
 
 // Admin
-export * from "./admin/role/thunk";
+export * from "./userManagement/role/thunk";
+export * from "./userManagement/permission/thunk";
+export * from "./userManagement/rolePermission/thunk";
+export * from "./userManagement/userPermission/thunk";
 export * from "./admin/constactUs/thunk";
 export * from "./admin/auditTrail/thunk";
 export * from "./admin/systemLog/thunk";

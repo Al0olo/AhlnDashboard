@@ -37,6 +37,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../Components/Common/Loader";
 import { useAppSelector } from "redux-hooks";
+import moment from "moment";
 
 const UsersData = () => {
   const dispatch: any = useDispatch();
@@ -208,6 +209,12 @@ const UsersData = () => {
         enableColumnFilter: false,
       },
       {
+        header: "Created At",
+        accessorKey: "createdat",
+        enableColumnFilter: false,
+        cell: (cell: any) => moment(cell.getValue()).format("DD MMMM, YYYY"),
+      },
+      {
         header: "Status",
         accessorKey: "is_active",
         enableColumnFilter: false,
@@ -236,12 +243,6 @@ const UsersData = () => {
               <i className="ri-more-fill align-middle"></i>
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-end">
-              <li>
-                <DropdownItem href="/apps-user-details">
-                  <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
-                  View
-                </DropdownItem>
-              </li>
               <li>
                 <DropdownItem
                   className="edit-item-btn"

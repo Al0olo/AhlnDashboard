@@ -18,7 +18,7 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import TableContainer from "../../../Components/Common/TableContainer";
 import * as moment from "moment";
 
@@ -31,50 +31,50 @@ import DeleteModal from "../../../Components/Common/DeleteModal";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../Components/Common/Loader";
-import { createSelector } from "reselect";
 import {
-  GetOneTabletAction,
+  // GetOneTabletAction,
   AddTabletAction,
   DeleteTabletAction,
   GetTabletsAction,
+  resetTabletToBoxAction,
   UpdateTabletAction,
 } from "slices/Box/tablet/thunk";
+import { useAppSelector } from "redux-hooks";
+import { GetBoxesAction } from "slices/thunks";
 
 const TabletsData = () => {
   const dispatch: any = useDispatch();
-  const selectLayoutState = (state: any) => state.Tablets;
-
-  const selectLayoutProperties = createSelector(selectLayoutState, (state) => ({
-    tabletsList: state.data,
-    isTabletSuccess: state.isTabletSuccess,
-    error: state.error,
-    loader: state.loading,
-  }));
-
-  // Inside your component
-  const { tabletsList, isTabletSuccess, error, loader } = useSelector(
-    selectLayoutProperties
-  );
+  const { tablets, loading, error } = useAppSelector((state) => state.Tablets);
+  const { boxes } = useAppSelector((state) => state.Boxes);
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [tablet, setTablet] = useState<any>([]);
+  const [tablet, setTablet] = useState<any>({
+    serial_number: "",
+    android_id: "",
+  });
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
+  const [resetTabletModal, setResetTabletModal] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
+  const [modalReset, setModalReset] = useState<boolean>(false);
 
   const toggle = useCallback(() => {
     setModal((prevState) => !prevState);
   }, [modal]);
+
+  const toggleResetTablet = useCallback(() => {
+    setModalReset((prevState) => !prevState);
+  }, [modalReset]);
 
   // validation
   const validation: any = useFormik({
     enableReinitialize: true,
 
     initialValues: {
-      id: tablet.id ? tablet.id : "",
-      serial_number: tablet.serial_number ? tablet.serial_number : "",
-      android_id: tablet.android_id ? tablet.android_id : "",
+      id: isEdit ? tablet?.id : "",
+      serial_number: isEdit ? tablet?.serial_number : "",
+      android_id: isEdit ? tablet?.android_id : "",
     },
+
     validationSchema: Yup.object({
       serial_number: Yup.string().required("Please Enter Tablet Serial Number"),
       android_id: Yup.string().required("Please Enter Android Number"),
@@ -83,50 +83,48 @@ const TabletsData = () => {
       if (isEdit) {
         const updateTablets = {
           id: values.id,
-          serial_number: values.serial_number || undefined,
-          android_id: values.android_id || undefined,
+          serial_number: values.serial_number,
+          android_id: values.android_id,
         };
-        const updatedTabletObj = Object.keys(updateTablets)
-          .filter(
-            (key) =>
-              updateTablets[key as keyof typeof updateTablets] !== undefined
-          )
-          .reduce((obj: any, key) => {
-            obj[key] = updateTablets[key as keyof typeof updateTablets];
-            return obj;
-          }, {});
-
-        if (Object.values(updatedTabletObj).some((val) => val !== undefined)) {
-          const result = await dispatch(UpdateTabletAction(updatedTabletObj));
-          if (result && result.payload) {
-            setTablet(async (prevUserBoxs: any[]) => {
-              const updatedTablet = Array.isArray(prevUserBoxs)
-                ? [...prevUserBoxs]
-                : [];
-              const newUserBoxs = result.payload.data;
-              if (Array.isArray(newUserBoxs)) {
-                updatedTablet.push(...newUserBoxs);
-              }
-
-              return await dispatch(GetTabletsAction());
-            });
+        dispatch(UpdateTabletAction(updateTablets)).then((result: any) => {
+          if (result.type === "tablet/update/fulfilled") {
+            toast.success("Tablet Updated Successfully", { autoClose: 3000 });
+            toggle();
+          } else {
+            toast.error(`Error ${result.payload}`, { autoClose: 3000 });
           }
-        }
+        });
         validation.resetForm();
-      } else {
+      } else if (!isEdit) {
         const newTablet = {
           serial_number: values.serial_number,
           android_id: values.android_id,
         };
         // save new tablet
-        const result = await dispatch(AddTabletAction(newTablet));
-        if (result && result.payload) {
-          toggle();
-          return await dispatch(GetTabletsAction());
-        }
+        dispatch(AddTabletAction(newTablet)).then((result: any) => {
+          if (result.type === "tablet/new/fulfilled") {
+            toast.success("Tablet Added Successfully", { autoClose: 3000 });
+            toggle();
+          } else {
+            toast.error(`Error ${result.payload}`, { autoClose: 3000 });
+          }
+        });
+        validation.resetForm();
+      } else if (resetTabletModal) {
+        const resetTablet = {
+          boxId: boxes?.id,
+          tabletId: values.id,
+        };
+        dispatch(resetTabletToBoxAction(resetTablet)).then((result: any) => {
+          if (result.type === "tablet/reset/fulfilled") {
+            toast.success("Tablet Reset Successfully", { autoClose: 3000 });
+            toggleResetTablet();
+          } else {
+            toast.error(`Error ${result.payload}`, { autoClose: 3000 });
+          }
+        });
         validation.resetForm();
       }
-      toggle();
     },
   });
 
@@ -138,10 +136,13 @@ const TabletsData = () => {
 
   const handleDeleteTablet = async () => {
     if (tablet) {
-      const result = await dispatch(DeleteTabletAction(tablet.id));
-      if (result && result.payload) {
-        await dispatch(GetTabletsAction());
-      }
+      await dispatch(DeleteTabletAction(tablet.id)).then((result: any) => {
+        if (result.type === "tablet/delete/fulfilled") {
+          toast.success("Tablet Deleted Successfully", { autoClose: 3000 });
+        } else {
+          toast.error(`Error ${result.payload}`, { autoClose: 3000 });
+        }
+      });
       setDeleteModal(false);
     }
   };
@@ -157,92 +158,18 @@ const TabletsData = () => {
       });
       toggle();
     },
-    [toggle]
+    [toggle, isEdit, tablet]
   );
 
   // Get Data
 
   useEffect(() => {
     dispatch(GetTabletsAction());
+    dispatch(GetBoxesAction());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (tablet) {
-      validation.setValues({
-        id: tablet.id || "",
-        serial_number: tablet.serial_number || "",
-        android_id: tablet.android_id || "",
-      });
-    }
-  }, [tablet]);
-
-  // Checked All
-  const checkedAll = useCallback(() => {
-    const checkall: any = document.getElementById("checkTabletAll");
-    const ele = document.querySelectorAll(".tabletCheckTablet");
-
-    if (checkall.checked) {
-      ele.forEach((ele: any) => {
-        ele.checked = true;
-      });
-    } else {
-      ele.forEach((ele: any) => {
-        ele.checked = false;
-      });
-    }
-    deleteChecktablet();
-  }, []);
-
-  // Delete Multiple
-  const [selectedCheckTabletDelete, setSelectedCheckTabletDelete] =
-    useState<any>([]);
-  const [isMultiDeleteButton, setIsMultiDeleteButton] =
-    useState<boolean>(false);
-
-  const deleteMultiple = () => {
-    const checkall: any = document.getElementById("checkTabletAll");
-    selectedCheckTabletDelete.forEach((element: any) => {
-      //   dispatch(deleteTablet(element.value));
-      setTimeout(() => {
-        toast.clearWaitingQueue();
-      }, 3000);
-    });
-    setIsMultiDeleteButton(false);
-    checkall.checked = false;
-  };
-
-  const deleteChecktablet = () => {
-    const ele = document.querySelectorAll(".tabletCheckTablet:checked");
-    ele.length > 0
-      ? setIsMultiDeleteButton(true)
-      : setIsMultiDeleteButton(false);
-    setSelectedCheckTabletDelete(ele);
-  };
 
   const columns = useMemo(
     () => [
-      {
-        header: (
-          <input
-            type="checktablet"
-            id="checkTabletAll"
-            className="form-check-input"
-            onClick={() => checkedAll()}
-          />
-        ),
-        cell: (cell: any) => (
-          <input
-            type="checktablet"
-            className="tabletCheckTablet form-check-input"
-            value={cell.getValue()}
-            onChange={() => deleteChecktablet()}
-          />
-        ),
-        id: "#",
-        accessorKey: "",
-        enableColumnFilter: false,
-        enableSorting: false,
-      },
       {
         header: "Tablet ID",
         accessorKey: "id",
@@ -326,10 +253,8 @@ const TabletsData = () => {
         ),
       },
     ],
-    [checkedAll]
+    [tablets]
   );
-
-  console.log(tabletsList, "tabletsList");
 
   return (
     <React.Fragment>
@@ -338,14 +263,6 @@ const TabletsData = () => {
           show={deleteModal}
           onDeleteClick={handleDeleteTablet}
           onCloseClick={() => setDeleteModal(false)}
-        />
-        <DeleteModal
-          show={deleteModalMulti}
-          onDeleteClick={() => {
-            deleteMultiple();
-            setDeleteModalMulti(false);
-          }}
-          onCloseClick={() => setDeleteModalMulti(false)}
         />
         <Col lg={12}>
           <Card>
@@ -358,30 +275,34 @@ const TabletsData = () => {
                       className="btn btn-primary add-btn"
                       onClick={() => {
                         setIsEdit(false);
+                        setResetTabletModal(false);
                         toggle();
                       }}
                     >
                       <i className="ri-add-line align-bottom"></i> Create Tablet
                     </button>{" "}
-                    {isMultiDeleteButton && (
-                      <button
-                        className="btn btn-soft-danger"
-                        onClick={() => setDeleteModalMulti(true)}
-                      >
-                        <i className="ri-delete-bin-2-line"></i>
-                      </button>
-                    )}
+                    <button
+                      className="btn btn-success"
+                      onClick={() => {
+                        setResetTabletModal(true);
+                        setIsEdit(false);
+                        toggleResetTablet();
+                      }}
+                    >
+                      <i className="ri-pencil-fill align-bottom"></i> Reset
+                      Tablet To Box
+                    </button>{" "}
                   </div>
                 </div>
               </div>
             </CardHeader>
             <CardBody className="pt-0">
-              {loader ? (
+              {loading ? (
                 <Loader error={error} />
               ) : (
                 <TableContainer
                   columns={columns}
-                  data={tabletsList}
+                  data={tablets}
                   isGlobalFilter={true}
                   customPageSize={10}
                   divClass="table-responsive table-card mb-3"
@@ -396,6 +317,134 @@ const TabletsData = () => {
       </Row>
 
       <Modal
+        isOpen={modalReset}
+        toggle={toggleResetTablet}
+        centered
+        size="lg"
+        className="border-0"
+        modalClassName="zoomIn"
+      >
+        <ModalHeader className="p-3 bg-info-subtle" toggle={toggleResetTablet}>
+          Reset Tablet
+        </ModalHeader>
+        <ModalBody>
+          <Form>
+            <Row className="g-3">
+              <Col lg={12}>
+                <div>
+                  <Label htmlFor="box_id" className="form-label">
+                    Box ID
+                  </Label>
+                  <Input
+                    name="box_id"
+                    id="box_id"
+                    className="form-control"
+                    type="select"
+                    validate={{
+                      required: { value: true },
+                    }}
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.box_id}
+                    invalid={
+                      validation.touched.box_id && validation.errors.box_id
+                        ? true
+                        : false
+                    }
+                  >
+                    <option
+                      value={undefined}
+                      defaultValue={validation.values.current_tablet_id}
+                    >
+                      Select Box ID
+                    </option>
+                    {boxes &&
+                      boxes?.map((box: any) => (
+                        <option
+                          key={box.id}
+                          value={box.id}
+                          defaultValue={box.id}
+                        >
+                          {box.id}
+                        </option>
+                      ))}
+                  </Input>
+
+                  {validation.touched.box_id && validation.errors.box_id ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.box_id}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+              </Col>
+              <Col lg={12}>
+                <div>
+                  <Label htmlFor="tablet_id" className="form-label">
+                    Tablet ID
+                  </Label>
+                  <Input
+                    name="tablet_id"
+                    id="tablet_id"
+                    className="form-control"
+                    type="select"
+                    validate={{
+                      required: { value: true },
+                    }}
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    value={validation.values.tablet_id || ""}
+                    invalid={
+                      validation.touched.tablet_id &&
+                      validation.errors.tablet_id
+                        ? true
+                        : false
+                    }
+                  >
+                    <option
+                      value={undefined}
+                      defaultValue={validation.values.current_tablet_id}
+                    >
+                      Select Tablet ID
+                    </option>
+                    {tablets &&
+                      tablets?.map((tablet: any) => (
+                        <option
+                          key={tablet.id}
+                          value={tablet.id}
+                          defaultValue={tablet.id}
+                        >
+                          {tablet.serial_number}
+                        </option>
+                      ))}
+                  </Input>
+                  {validation.touched.tablet_id &&
+                  validation.errors.tablet_id ? (
+                    <FormFeedback type="invalid">
+                      {validation.errors.tablet_id}
+                    </FormFeedback>
+                  ) : null}
+                </div>
+              </Col>
+            </Row>
+          </Form>
+        </ModalBody>
+        <div className="modal-footer">
+          <div className="hstack gap-2 justify-content-end">
+            <button
+              onClick={toggleResetTablet}
+              type="button"
+              className="btn btn-light"
+            >
+              Close
+            </button>
+            <button type="submit" className="btn btn-success" id="reset-btn">
+              {"Reset Tablet"}
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
         isOpen={modal}
         toggle={toggle}
         centered
@@ -404,7 +453,7 @@ const TabletsData = () => {
         modalClassName="zoomIn"
       >
         <ModalHeader toggle={toggle} className="p-3 bg-info-subtle">
-          {!!isEdit ? "Edit Tablet" : "Add Tablet"}
+          {isEdit ? "Edit Tablet" : "Add Tablet"}
         </ModalHeader>
         <Form
           className="tablelist-form"
