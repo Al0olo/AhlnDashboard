@@ -356,7 +356,7 @@ const Navdata = () => {
             { id: 1, label: "Boxes", link: "/boxes" },
             { id: 2, label: "Box Generation", link: "/box-generation" },
             { id: 3, label: "Tablets", link: "/tablets" },
-            { id: 4, label: "Addresses", link: "/addresses" },
+            { id: 4, label: "Address", link: "/address" },
             { id: 5, label: "Boxes Locker", link: "/apps-tickets-details" },
             { id: 6, label: "Boxes Images", link: "/boxes-images" },
             { id: 7, label: "User Boxes", link: "/user-boxes" },
@@ -401,6 +401,8 @@ const Navdata = () => {
           childItems: [
             { id: 1, label: "Audit Trail", link: "/audit-trail" },
             { id: 2, label: "System Log", link: "/system-log" },
+            { id: 3, label: "Country", link: "/country" },
+            { id: 4, label: "City", link: "/city" },
           ],
         },
         {

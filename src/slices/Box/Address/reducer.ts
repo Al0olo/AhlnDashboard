@@ -8,13 +8,11 @@ import {
 } from "./thunk";
 
 export const initialState: any = {
-  message: null,
+  addressList: [],
+  oneAddress: {},
+  loadingOne: true,
   loading: true,
-  data: null,
-  success: false,
-  spinner: false,
-  error: false,
-  addresses: [],
+  error: {},
 };
 
 const addressReducer = createSlice({
@@ -27,80 +25,71 @@ const addressReducer = createSlice({
       state.error = false;
     });
     builder.addCase(GetAddressesAction.fulfilled, (state, action: any) => {
-      state.data = action?.payload;
-      state.success = true;
+      state.addressList = action?.payload;
       state.loading = false;
     });
     builder.addCase(GetAddressesAction.rejected, (state, { payload }: any) => {
       state.loading = false;
-      state.success = false;
       state.error = payload;
     });
 
     builder.addCase(AddAddressAction.pending, (state) => {
-      state.spinner = true;
+      state.loading = true;
       state.error = false;
     });
     builder.addCase(AddAddressAction.fulfilled, (state, action: any) => {
-      state.addresses.push(action.payload);
-      state.success = true;
-      state.spinner = false;
+      state.addressList.push(action.payload);
+      state.loading = false;
     });
     builder.addCase(AddAddressAction.rejected, (state, { payload }: any) => {
-      state.spinner = false;
-      state.success = false;
+      state.loading = false;
       state.error = payload;
     });
 
     builder.addCase(DeleteAddressAction.pending, (state) => {
-      state.spinner = true;
+      state.loading = true;
       state.error = false;
     });
     builder.addCase(DeleteAddressAction.fulfilled, (state, action: any) => {
       const deletedAddressId = action.payload.id;
-      state.addresses = state.addresses.filter(
+      state.addressList = state.addressList.filter(
         (address: any) => address.id !== deletedAddressId
       );
-      state.success = true;
-      state.spinner = false;
+      state.loading = false;
     });
     builder.addCase(DeleteAddressAction.rejected, (state, { payload }: any) => {
-      state.spinner = false;
-      state.success = false;
+      state.loading = false;
       state.error = payload;
     });
 
     builder.addCase(GetOneAddressAction.pending, (state) => {
-      state.loading = true;
+      state.loadingOne = true;
       state.error = false;
     });
     builder.addCase(GetOneAddressAction.fulfilled, (state, action: any) => {
-      state.address = action?.payload;
-      state.success = true;
-      state.loading = false;
+      state.addressList = action?.payload;
+      state.loadingOne = false;
     });
     builder.addCase(GetOneAddressAction.rejected, (state, { payload }: any) => {
-      state.loading = false;
-      state.success = false;
+      state.loadingOne = false;
       state.error = payload;
     });
 
     builder.addCase(UpdateAddressAction.pending, (state) => {
-      state.spinner = true;
+      state.loading = true;
       state.error = false;
     });
     builder.addCase(UpdateAddressAction.fulfilled, (state, action: any) => {
       const updatedAddress = action?.payload;
       const index = state.addresses.findIndex(
-        (address: any) => address.id === updatedAddress.id
+        (addressList: any) => addressList.id === updatedAddress.id
       );
       state.addresses[index] = updatedAddress;
       state.success = true;
-      state.spinner = false;
+      state.loading = false;
     });
     builder.addCase(UpdateAddressAction.rejected, (state, { payload }: any) => {
-      state.spinner = false;
-      state.success = false;
+      state.loading = false;
       state.error = payload;
     });
   },

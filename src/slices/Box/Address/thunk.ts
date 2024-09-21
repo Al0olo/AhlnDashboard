@@ -5,7 +5,7 @@ import {
   deleteAddress,
   updateAddress,
   getOneAddress,
-} from "../../../helpers/fakebackend_helper";
+} from "../../../helpers/backend_apis/box/address";
 
 export const GetAddressesAction = createAsyncThunk(
   "address/get-all",

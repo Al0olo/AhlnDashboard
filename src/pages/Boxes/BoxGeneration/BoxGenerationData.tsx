@@ -54,12 +54,11 @@ const BoxGenerationsData = () => {
     height: "",
     color: "",
     model_image: "",
-    has_outside_camera: false,
-    has_inside_camera: false,
-    has_tablet: false,
+    has_outside_camera: true,
+    has_inside_camera: true,
+    has_tablet: true,
   });
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  // const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
 
   const toggle = useCallback(() => {
@@ -71,15 +70,12 @@ const BoxGenerationsData = () => {
     enableReinitialize: true,
 
     initialValues: {
-      id: boxGeneration.id ? boxGeneration.id : "",
-      model_name: boxGeneration.model_name ? boxGeneration.model_name : "",
-      number_of_doors: boxGeneration.number_of_doors
-        ? boxGeneration.number_of_doors
-        : "",
-      width: boxGeneration.width ? boxGeneration.width : "",
-      height: boxGeneration.height ? boxGeneration.height : "",
-      color: boxGeneration.color ? boxGeneration.color : "",
-      model_image: boxGeneration.model_image ? boxGeneration.model_image : "",
+      model_name: isEdit ? boxGeneration.model_name : "",
+      number_of_doors: isEdit ? boxGeneration.number_of_doors : "",
+      width: isEdit ? boxGeneration.width : "",
+      height: isEdit ? boxGeneration.height : "",
+      color: isEdit ? boxGeneration.color : "",
+      model_image: isEdit ? boxGeneration.model_image : "",
       has_outside_camera: boxGeneration.has_outside_camera,
       has_inside_camera: boxGeneration.has_inside_camera,
       has_tablet: boxGeneration.has_tablet,
@@ -95,7 +91,7 @@ const BoxGenerationsData = () => {
     onSubmit: async (values) => {
       if (isEdit) {
         const updateBoxGenerations = {
-          id: values.id,
+          id: boxGeneration.id,
           model_name: values.model_name,
           number_of_doors: values.number_of_doors,
           width: values.width,
@@ -208,80 +204,9 @@ const BoxGenerationsData = () => {
     dispatch(GetBoxGenerationsAction());
   }, [dispatch]);
 
-  // Checked All
-  // const checkedAll = useCallback(() => {
-  //   const checkall: any = document.getElementById("checkBoxGenerationAll");
-  //   const ele = document.querySelectorAll(".boxGenerationCheckBoxGeneration");
-
-  //   if (checkall.checked) {
-  //     ele.forEach((ele: any) => {
-  //       ele.checked = true;
-  //     });
-  //   } else {
-  //     ele.forEach((ele: any) => {
-  //       ele.checked = false;
-  //     });
-  //   }
-  //   deleteCheckboxGeneration();
-  // }, []);
-
-  // Delete Multiple
-  // const [
-  //   selectedCheckBoxGenerationDelete,
-  //   setSelectedCheckBoxGenerationDelete,
-  // ] = useState<any>([]);
-  // const [isMultiDeleteButton, setIsMultiDeleteButton] =
-  //   useState<boolean>(false);
-
-  // const deleteMultiple = () => {
-  //   const checkall: any = document.getElementById("checkBoxGenerationAll");
-  //   selectedCheckBoxGenerationDelete.forEach((element: any) => {
-  //     console.log(element.value, "value");
-
-  //     dispatch(DeleteBoxGenerationAction(element.value));
-  //     setTimeout(() => {
-  //       toast.clearWaitingQueue();
-  //     }, 3000);
-  //   });
-  //   setIsMultiDeleteButton(false);
-  //   checkall.checked = false;
-  // };
-
-  // const deleteCheckboxGeneration = () => {
-  //   const ele = document.querySelectorAll(
-  //     ".boxGenerationCheckBoxGeneration:checked"
-  //   );
-  //   console.log(ele, "ele");
-
-  //   ele.length > 0
-  //     ? setIsMultiDeleteButton(true)
-  //     : setIsMultiDeleteButton(false);
-  //   setSelectedCheckBoxGenerationDelete(ele);
-  // };
-
   const columns = useMemo(
     () => [
       {
-        // header: (
-        //   <input
-        //     type="checkbox"
-        //     id="checkBoxGenerationAll"
-        //     className="form-check-input"
-        //     onClick={() => checkedAll()}
-        //   />
-        // ),
-        // cell: (cell: any) => {
-        //   console.log(cell.getValue(), "ceelkl");
-
-        //   return (
-        //     <input
-        //       type="checkbox"
-        //       className="boxGenerationCheckBoxGeneration form-check-input"
-        //       value={cell.getValue()}
-        //       onChange={() => deleteCheckboxGeneration()}
-        //     />
-        //   );
-        // },
         id: "#",
         accessorKey: "id",
         enableColumnFilter: false,
@@ -399,12 +324,6 @@ const BoxGenerationsData = () => {
               <i className="ri-more-fill align-middle"></i>
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-end">
-              {/* <li>
-                <DropdownItem href="/apps-boxGenerations-details">
-                  <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
-                  View
-                </DropdownItem>
-              </li> */}
               <li>
                 <DropdownItem
                   className="edit-item-btn"
@@ -448,14 +367,6 @@ const BoxGenerationsData = () => {
           onDeleteClick={handleDeleteBoxGeneration}
           onCloseClick={() => setDeleteModal(false)}
         />
-        {/* <DeleteModal
-          show={deleteModalMulti}
-          onDeleteClick={() => {
-            deleteMultiple();
-            setDeleteModalMulti(false);
-          }}
-          onCloseClick={() => setDeleteModalMulti(false)}
-        /> */}
         <Col lg={12}>
           <Card>
             <CardHeader className="border-0">
@@ -473,14 +384,6 @@ const BoxGenerationsData = () => {
                       <i className="ri-add-line align-bottom"></i> Create Box
                       Generation
                     </button>{" "}
-                    {/* {isMultiDeleteButton && (
-                      <button
-                        className="btn btn-soft-danger"
-                        onClick={() => setDeleteModalMulti(true)}
-                      >
-                        <i className="ri-delete-bin-2-line"></i>
-                      </button>
-                    )} */}
                   </div>
                 </div>
               </div>

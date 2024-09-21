@@ -17,27 +17,6 @@ export const SOCIAL_LOGIN = "/social-login";
 
 
 
-//BOX
-export const GET_BOXES = "/box/get-all";
-export const GET_ONE_BOX = "/box/get-one";
-export const ADD_BOX = "/box/new";
-export const UPDATE_BOX = "/box/update";
-export const DELETE_BOX = "/box/delete";
-
-
-
-// BOX GENERATION
-export const GET_BOX_GENERATIONS = "/box-generation/get-all";
-export const GET_ONE_BOX_GENERATION = "/box-generation/get-one";
-export const ADD_BOX_GENERATION = "/box-generation/new";
-export const UPDATE_BOX_GENERATION = "/box-generation/update";
-export const DELETE_BOX_GENERATION = "/box-generation/delete";
-
-export const GET_ADDRESS = "/address/get-all";
-export const GET_ONE_ADDRESS = "/address/get-one";
-export const ADD_ADDRESS = "/address/new";
-export const UPDATE_ADDRESS = "/address/update";
-export const DELETE_ADDRESS = "/address/delete";
 
 // USER BOX
 export const GET_USER_BOXES = "/user-box/get-all";

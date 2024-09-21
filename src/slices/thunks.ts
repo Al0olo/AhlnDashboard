@@ -18,6 +18,8 @@ export * from "./userManagement/userPermission/thunk";
 export * from "./admin/constactUs/thunk";
 export * from "./admin/auditTrail/thunk";
 export * from "./admin/systemLog/thunk";
+export * from "./admin/country/thunk";
+export * from "./admin/city/thunk";
 
 // Users
 export * from "./users/thunk";

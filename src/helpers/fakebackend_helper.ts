@@ -11,73 +11,9 @@ export const getLoggedInUser = () => {
   return null;
 };
 
-// BOX
-// Fetches boxes for a given user
-export const getBoxes = () => {
-  return api.get(url.GET_BOXES);
-};
-// Get One Box
-export const getOneBox = (data: any) => {
-  return api.get(url.GET_ONE_BOX, data);
-};
-// Add Box
-export const addBox = (data: any) => {
-  return api.create(url.ADD_BOX, data);
-};
-// Update Exsiting Box
-export const updateBox = (data: any) => {
-  return api.update(`${url.UPDATE_BOX}/${data.id}`, data);
-};
-// Delete Box
-export const deleteBox = (data: any) => {
-  return api.delete(`${url.DELETE_BOX}/${data}`);
-};
 
 
 
-// BOX GENERATION
-// Get BoxGenerations
-export const getBoxGenerations = () => {
-  return api.get(url.GET_BOX_GENERATIONS);
-};
-// Get One BoxGeneration
-export const getOneBoxGeneration = (data: any) => {
-  return api.get(url.GET_BOX_GENERATIONS);
-};
-// Add BoxGeneration
-export const addBoxGeneration = (data: any) => {
-  return api.create(url.ADD_BOX_GENERATION, data);
-};
-// Update Exsiting BoxGeneration
-export const updateBoxGeneration = (data: any) => {
-  return api.update(`${url.UPDATE_BOX_GENERATION}/${data.id}`, data);
-};
-// Delete BoxGeneration
-export const deleteBoxGeneration = (data: any) => {
-  return api.delete(`${url.DELETE_BOX_GENERATION}/${data}`);
-};
-
-// ADDRESS
-// Get Addresses
-export const getAddresses = () => {
-  return api.get(url.GET_ADDRESS);
-};
-// Get One Address
-export const getOneAddress = (data: any) => {
-  return api.get(url.GET_ADDRESS);
-};
-// Add Address
-export const addAddress = (data: any) => {
-  return api.create(url.ADD_ADDRESS, data);
-};
-// Update Exsiting Address
-export const updateAddress = (data: any) => {
-  return api.update(`${url.UPDATE_ADDRESS}/${data.id}`, data);
-};
-// Delete Address
-export const deleteAddress = (data: any) => {
-  return api.delete(`${url.DELETE_ADDRESS}/${data}`);
-};
 
 // Get All Box Images
 export const getBoxImages = () => {

@@ -200,6 +200,8 @@ import CustomersView from "../pages/Ecommerce/EcommerceCustomers/Customers/index
 import PermissionView from "pages/UserManagement/Permission";
 import RolePermissionView from "pages/UserManagement/RolePermission";
 import UserPermissionView from "pages/UserManagement/UserPermission";
+import CountryView from "pages/Admin/Country";
+import CityView from "pages/Admin/City";
 
 const authProtectedRoutes = [
   { path: "/dashboard-analytics", component: <DashboardAnalytics /> },
@@ -292,7 +294,7 @@ const authProtectedRoutes = [
   { path: "/boxes", component: <BoxView /> },
   { path: "/box-generation", component: <BoxGenerationView /> },
   { path: "/tablets", component: <TabletView /> },
-  { path: "/addresses", component: <AddressView /> },
+  { path: "/address", component: <AddressView /> },
   { path: "/user-boxes", component: <UserBoxesView /> },
   { path: "/boxes-images", component: <BoxImagesView /> },
 
@@ -310,6 +312,8 @@ const authProtectedRoutes = [
   { path: "/audit-trail", component: <AuditTrailView /> },
   { path: "/system-log", component: <SystemLogView /> },
   { path: "/users", component: <UserView /> },
+  { path: "/country", component: <CountryView /> },
+  { path: "/city", component: <CityView /> },
 
   //charts
   { path: "/charts-apex-line", component: <LineCharts /> },

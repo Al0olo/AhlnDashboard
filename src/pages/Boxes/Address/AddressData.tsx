@@ -18,7 +18,7 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import TableContainer from "../../../Components/Common/TableContainer";
 import {
   DeleteAddressAction,
@@ -27,9 +27,11 @@ import {
   UpdateAddressAction,
   AddAddressAction,
   getCustomers,
+  GetCountryAction,
+  GetCityAction,
+  GetCityInCountryAction,
 } from "../../../slices/thunks";
 
-import Flatpickr from "react-flatpickr";
 import * as moment from "moment";
 
 // Formik
@@ -40,44 +42,35 @@ import DeleteModal from "../../../Components/Common/DeleteModal";
 
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { createSelector } from "reselect";
 import Loader from "Components/Common/Loader";
-import { country } from "common/data";
+import { useAppSelector } from "redux-hooks";
 
 const AddressesData = () => {
   const dispatch: any = useDispatch();
-  const selectLayoutState = (state: any) => state.Address;
 
-  const selectLayoutProperties = createSelector(selectLayoutState, (state) => ({
-    addressList: state.data,
-    isAddressSuccess: state.isAddressSuccess,
-    error: state.error,
-    loader: state.loading,
-  }));
-
-  // Inside your component
-  const { addressList, isAddressSuccess, error, loader } = useSelector(
-    selectLayoutProperties
+  const { addressList, loading, oneAddress, error } = useAppSelector(
+    (state) => state.Address
   );
-
-  const ecomCustomerProperties = createSelector(
-    (state: any) => state.Ecommerce,
-    (ecom) => ({
-      customers: ecom.data,
-      isCustomerSuccess: ecom.isCustomerSuccess,
-      error: ecom.error,
-      loader: ecom.loading,
-    })
-  );
-  // Inside your component
-  const { customers, isCustomerSuccess } = useSelector(ecomCustomerProperties);
+  const { countryList } = useAppSelector((state) => state.Country);
+  const { cityList, cityInCountryList } = useAppSelector((state) => state.City);
+  const { users } = useAppSelector((state) => state.Users);
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [address, setAddress] = useState<any>([]);
+  const [address, setAddress] = useState<any>({
+    id: "",
+    country_id: "",
+    city_id: "",
+    district: "",
+    street: "",
+    building_type: "",
+    building_number: "",
+    floor: "",
+    apartment_number: "",
+    user_id: "",
+  });
 
   // Delete Addresses
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
 
   const toggle = useCallback(() => {
@@ -90,22 +83,19 @@ const AddressesData = () => {
     enableReinitialize: true,
 
     initialValues: {
-      id: address.id ? address.id : "",
-      country: address.country ? address.country : "",
-      city: address.city ? address.city : "",
-      district: address.district ? address.district : "",
-      street: address.street ? address.street : "",
-      building_type: address.building_type ? address.building_type : "",
-      building_number: address.building_number ? address.building_number : "",
-      floor: address.floor ? address.floor : "",
-      apartment_number: address.apartment_number
-        ? address.apartment_number
-        : "",
-      user_id: address.user_id ? address.user_id : "",
+      country_id: isEdit ? address.country_id : "",
+      city_id: isEdit ? address.city_id : "",
+      district: isEdit ? address.district : "",
+      street: isEdit ? address.street : "",
+      building_type: isEdit ? address.building_type : "",
+      building_number: isEdit ? address.building_number : "",
+      floor: isEdit ? address.floor : "",
+      apartment_number: isEdit ? address.apartment_number : "",
+      user_id: isEdit ? address.user_id : "",
     },
     validationSchema: Yup.object({
-      country: Yup.string().required("Country is required"),
-      city: Yup.string().required("City is required"),
+      country_id: Yup.string().required("Country is required"),
+      city_id: Yup.string().required("City is required"),
       district: Yup.string().required("District is required"),
       street: Yup.string().required("Street is required"),
       building_type: Yup.string().required("Building type is required"),
@@ -117,50 +107,35 @@ const AddressesData = () => {
     onSubmit: async (values) => {
       if (isEdit) {
         const updateAddresses = {
-          id: values.id,
-          country: values.country || undefined,
-          city: values.city || undefined,
-          district: values.district || undefined,
-          street: values.street || undefined,
-          building_type: values.building_type || undefined,
-          building_number: values.building_number || undefined,
-          floor: values.floor || undefined,
-          apartment_number: values.apartment_number || undefined,
-          user_id: values.user_id || undefined,
+          id: address.id,
+          country_id: values.country_id,
+          city_id: values.city_id,
+          district: values.district,
+          street: values.street,
+          building_type: values.building_type,
+          building_number: values.building_number,
+          floor: values.floor,
+          apartment_number: values.apartment_number,
+          user_id: values.user_id,
         };
-
-        const updatedAddressObj = Object.keys(updateAddresses)
-          .filter(
-            (key) =>
-              updateAddresses[key as keyof typeof updateAddresses] !== undefined
-          )
-          .reduce((obj: any, key) => {
-            obj[key] = updateAddresses[key as keyof typeof updateAddresses];
-            return obj;
-          }, {});
-
-        if (Object.values(updatedAddressObj).some((val) => val !== undefined)) {
-          const result = await dispatch(UpdateAddressAction(updatedAddressObj));
-          if (result && result.payload) {
-            setAddress(async (prevUserBoxs: any[]) => {
-              const updatedTablet = Array.isArray(prevUserBoxs)
-                ? [...prevUserBoxs]
-                : [];
-              const newUserBoxs = result.payload.data;
-              if (Array.isArray(newUserBoxs)) {
-                updatedTablet.push(...newUserBoxs);
-              }
-
-              return await dispatch(GetAddressesAction());
+        dispatch(UpdateAddressAction(updateAddresses)).then((result: any) => {
+          if (result.type === "address/update/fulfilled") {
+            toast.success("Address Updated Successfully", {
+              autoClose: 3000,
+            });
+            toggle();
+          } else {
+            toast.error(`Error ${result.payload}`, {
+              autoClose: 3000,
             });
           }
-        }
+        });
 
         validation.resetForm();
       } else {
         const newAddress = {
-          country: values.country,
-          city: values.city,
+          country_id: values.country_id,
+          city_id: values.city_id,
           district: values.district,
           street: values.street,
           building_type: values.building_type,
@@ -170,14 +145,21 @@ const AddressesData = () => {
           user_id: values.user_id,
         };
         // save new address
-        const result = await dispatch(AddAddressAction(newAddress));
-        if (result && result.payload) {
-          toggle();
-          return await dispatch(GetAddressesAction());
-        }
+        dispatch(AddAddressAction(newAddress)).then((result: any) => {
+          if (result.type === "address/new/fulfilled") {
+            toast.success("Address Added Successfully", {
+              autoClose: 3000,
+            });
+            toggle();
+          } else {
+            toast.error(`Error ${result.payload}`, {
+              autoClose: 3000,
+            });
+          }
+        });
+
         validation.resetForm();
       }
-      toggle();
     },
   });
 
@@ -189,10 +171,17 @@ const AddressesData = () => {
 
   const handleDeleteAddress = async () => {
     if (address) {
-      const result = await dispatch(DeleteAddressAction(address.id));
-      if (result && result.payload) {
-        await dispatch(GetAddressesAction());
-      }
+      dispatch(DeleteAddressAction(address.id)).then((result: any) => {
+        if (result.type === "address/delete/fulfilled") {
+          toast.success("Address Deleted Successfully", {
+            autoClose: 3000,
+          });
+        } else {
+          toast.error(`Error ${result.payload}`, {
+            autoClose: 3000,
+          });
+        }
+      });
       setDeleteModal(false);
     }
   };
@@ -203,8 +192,8 @@ const AddressesData = () => {
       setIsEdit(true);
       setAddress({
         id: arg.id,
-        country: arg.country,
-        city: arg.city,
+        country_id: arg.country_id,
+        city_id: arg.city_id,
         district: arg.district,
         street: arg.street,
         building_type: arg.building_type,
@@ -223,75 +212,16 @@ const AddressesData = () => {
   useEffect(() => {
     dispatch(GetAddressesAction());
     dispatch(getCustomers());
-  }, [dispatch]);
-
-  // Checked All
-  const checkedAll = useCallback(() => {
-    const checkall: any = document.getElementById("checkAddressAll");
-    const ele = document.querySelectorAll(".addressCheckAddress");
-
-    if (checkall.checked) {
-      ele.forEach((ele: any) => {
-        ele.checked = true;
-      });
-    } else {
-      ele.forEach((ele: any) => {
-        ele.checked = false;
-      });
-    }
-    deleteCheckaddress();
-  }, []);
-
-  // Delete Multiple
-  const [selectedCheckAddressDelete, setSelectedCheckAddressDelete] =
-    useState<any>([]);
-  const [isMultiDeleteButton, setIsMultiDeleteButton] =
-    useState<boolean>(false);
-
-  const deleteMultiple = () => {
-    const checkall: any = document.getElementById("checkAddressAll");
-    selectedCheckAddressDelete.forEach((element: any) => {
-      //   dispatch(deleteAddress(element.value));
-      setTimeout(() => {
-        toast.clearWaitingQueue();
-      }, 3000);
+    dispatch(GetCountryAction()).then((result: any) => {
+      if (result.type === "country/get/fulfilled") {
+        dispatch(GetCityInCountryAction(result.payload.id));
+      }
     });
-    setIsMultiDeleteButton(false);
-    checkall.checked = false;
-  };
-
-  const deleteCheckaddress = () => {
-    const ele = document.querySelectorAll(".addressCheckAddress:checked");
-    ele.length > 0
-      ? setIsMultiDeleteButton(true)
-      : setIsMultiDeleteButton(false);
-    setSelectedCheckAddressDelete(ele);
-  };
+  }, [dispatch, GetCountryAction]);
+  console.log(users);
 
   const columns = useMemo(
     () => [
-      {
-        header: (
-          <input
-            type="checkaddress"
-            id="checkAddressAll"
-            className="form-check-input"
-            onClick={() => checkedAll()}
-          />
-        ),
-        cell: (cell: any) => (
-          <input
-            type="checkaddress"
-            className="addressCheckAddress form-check-input"
-            value={cell.getValue()}
-            onChange={() => deleteCheckaddress()}
-          />
-        ),
-        id: "#",
-        accessorKey: "",
-        enableColumnFilter: false,
-        enableSorting: false,
-      },
       {
         header: "ID",
         accessorKey: "id",
@@ -304,12 +234,12 @@ const AddressesData = () => {
       },
       {
         header: "Country",
-        accessorKey: "country",
+        accessorKey: "country_name",
         enableColumnFilter: false,
       },
       {
         header: "City",
-        accessorKey: "city",
+        accessorKey: "city_name",
         enableColumnFilter: false,
       },
       {
@@ -400,7 +330,7 @@ const AddressesData = () => {
         ),
       },
     ],
-    [checkedAll]
+    [handleAddressesClick]
   );
 
   return (
@@ -411,19 +341,12 @@ const AddressesData = () => {
           onDeleteClick={handleDeleteAddress}
           onCloseClick={() => setDeleteModal(false)}
         />
-        <DeleteModal
-          show={deleteModalMulti}
-          onDeleteClick={() => {
-            deleteMultiple();
-            setDeleteModalMulti(false);
-          }}
-          onCloseClick={() => setDeleteModalMulti(false)}
-        />
+
         <Col lg={12}>
           <Card>
             <CardHeader className="border-0">
               <div className="d-flex align-items-center">
-                <h5 className="card-title mb-0 flex-grow-1">Addresses</h5>
+                <h5 className="card-title mb-0 flex-grow-1">Address</h5>
                 <div className="flex-shrink-0">
                   <div className="d-flex flex-wrap gap-2">
                     <button
@@ -436,20 +359,12 @@ const AddressesData = () => {
                       <i className="ri-add-line align-bottom"></i> Create
                       Address
                     </button>{" "}
-                    {isMultiDeleteButton && (
-                      <button
-                        className="btn btn-soft-danger"
-                        onClick={() => setDeleteModalMulti(true)}
-                      >
-                        <i className="ri-delete-bin-2-line"></i>
-                      </button>
-                    )}
                   </div>
                 </div>
               </div>
             </CardHeader>
             <CardBody className="pt-0">
-              {loader ? (
+              {loading ? (
                 <Loader error={error} />
               ) : (
                 <TableContainer
@@ -491,56 +406,89 @@ const AddressesData = () => {
             <Row className="g-3">
               <Col lg={12}>
                 <div>
-                  <Label htmlFor="country-field" className="form-label">
-                    Country
+                  <Label htmlFor="country_id" className="form-label">
+                    Country Name
                   </Label>
                   <Input
-                    name="country"
-                    id="country-field"
-                    className="form-control"
-                    placeholder="Enter Country"
-                    type="text"
-                    validate={{
-                      required: { value: true },
+                    name="country_id"
+                    type="select"
+                    id="country_id"
+                    onChange={(e) => {
+                      validation.handleChange(e);
+                      dispatch(GetCityInCountryAction(e.target.value[0]));
                     }}
-                    onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.country || ""}
+                    value={validation.values.country_id}
                     invalid={
-                      validation.touched.country && validation.errors.country
+                      validation.touched.country_id &&
+                      validation.errors.country_id
                         ? true
                         : false
                     }
-                  />
-                  {validation.touched.country && validation.errors.country ? (
+                  >
+                    <option
+                      value={undefined}
+                      defaultValue={validation.values.country_id}
+                    >
+                      Select Country
+                    </option>
+                    {countryList &&
+                      countryList?.map((country: any) => (
+                        <option
+                          key={country.id}
+                          value={country.id}
+                          defaultValue={country.id}
+                        >
+                          {country.name}
+                        </option>
+                      ))}
+                  </Input>
+                  {validation.touched.country_id &&
+                  validation.errors.country_id ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.country}
+                      {validation.errors.country_id}
                     </FormFeedback>
                   ) : null}
                 </div>
               </Col>
               <Col lg={6}>
                 <div>
-                  <Label htmlFor="city-field" className="form-label">
-                    City
+                  <Label htmlFor="city_id" className="form-label">
+                    City Name
                   </Label>
                   <Input
-                    name="city"
-                    type="text"
-                    id="city-field"
-                    placeholder="Enter City"
+                    name="city_id"
+                    type="select"
+                    id="city_id"
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.city || ""}
+                    value={validation.values.city_id}
                     invalid={
-                      validation.touched.city && validation.errors.city
+                      validation.touched.city_id && validation.errors.city_id
                         ? true
                         : false
                     }
-                  />
-                  {validation.touched.city && validation.errors.city ? (
+                  >
+                    <option
+                      value={undefined}
+                      defaultValue={validation.values.city_id}
+                    >
+                      Select City
+                    </option>
+                    {cityInCountryList &&
+                      cityInCountryList?.map((city: any) => (
+                        <option
+                          key={city.id}
+                          value={city.id}
+                          defaultValue={city.id}
+                        >
+                          {city.name}
+                        </option>
+                      ))}
+                  </Input>
+                  {validation.touched.city_id && validation.errors.city_id ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.city}
+                      {validation.errors.city_id}
                     </FormFeedback>
                   ) : null}
                 </div>
@@ -564,10 +512,14 @@ const AddressesData = () => {
                     }
                   >
                     <option value="">Select Customer</option>
-                    {customers &&
-                      customers?.map((customer: any) => (
-                        <option key={customer.id} value={customer.id}>
-                          {customer.email}
+                    {users &&
+                      users?.map((user: any) => (
+                        <option
+                          key={user.id}
+                          value={user.id}
+                          defaultValue={user.id}
+                        >
+                          {user.email}
                         </option>
                       ))}
                   </Input>

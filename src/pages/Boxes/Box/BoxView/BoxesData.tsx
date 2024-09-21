@@ -48,7 +48,7 @@ const BoxesData = () => {
   const [filterTablet, setFilterTablet] = useState<any>([]);
   const [filterAddress, setFilterAddress] = useState<any>([]);
 
-  const [addressData, setAddressData] = useState<any>({});
+  const [setAddressData] = useState<any>({});
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [box, setBox] = useState<any>({
@@ -62,9 +62,8 @@ const BoxesData = () => {
     address_id: "",
   });
 
-  // Delete Boxes
+  // Delete Box
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  // const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
 
   const toggle = useCallback(() => {
@@ -77,14 +76,13 @@ const BoxesData = () => {
     enableReinitialize: true,
 
     initialValues: {
-      id: box.id ? box.id : "",
-      serial_number: box.serial_number ? box.serial_number : "",
-      box_label: box.box_label ? box.box_label : "",
-      has_empty_lockers: box.has_empty_lockers ? box.has_empty_lockers : "",
-      box_model_id: box.box_model_id ? box.box_model_id : "",
-      current_tablet_id: box.current_tablet_id ? box.current_tablet_id : "",
-      previous_tablet_id: box.previous_tablet_id ? box.previous_tablet_id : "",
-      address_id: box.address_id ? box.address_id : "",
+      serial_number: isEdit ? box.serial_number : "",
+      box_label: isEdit ? box.box_label : "",
+      has_empty_lockers: isEdit ? box.has_empty_lockers : "",
+      box_model_id: isEdit ? box.box_model_id : "",
+      current_tablet_id: isEdit ? box.current_tablet_id : "",
+      previous_tablet_id: isEdit ? box.previous_tablet_id : "",
+      address_id: isEdit ? box.address_id : "",
     },
     validationSchema: Yup.object({
       serial_number: Yup.string().required("Please Enter Serial Number"),
@@ -101,12 +99,11 @@ const BoxesData = () => {
     onSubmit: (values) => {
       if (isEdit) {
         const updateBoxes = {
-          id: values.id,
           serial_number: values.serial_number,
           box_label: values.box_label,
           has_empty_lockers: values.has_empty_lockers,
           current_tablet_id: values.current_tablet_id,
-          previous_tablet_id: values.previous_tablet_id || null,
+          previous_tablet_id: values.previous_tablet_id,
           box_model_id: values.box_model_id,
           address_id: values.address_id,
         };
@@ -155,12 +152,6 @@ const BoxesData = () => {
     setDeleteModal(true);
   };
 
-  const handleOnChange = (event: any) => {
-    console.log(event.target.value, "AAASSS");
-
-    const value = event.target.value;
-    setAddressData(value);
-  };
   const handleDeleteBox = () => {
     if (box) {
       dispatch(DeleteBoxAction(box.id)).then((result: any) => {
@@ -201,25 +192,7 @@ const BoxesData = () => {
     dispatch(GetBoxGenerationsAction());
     dispatch(GetTabletsAction()).then((res: any) => {
       if (res.type === "tablet/get-all/fulfilled") {
-        // setFilterTablet(
-        //   [box, ...res.payload.filter((obj: any) => !obj.box_id)].filter(
-        //     (v, i, a) =>
-        //       a.findIndex(
-        //         (t) => t.current_tablet_id === v.current_tablet_id
-        //       ) === i
-        //   )
-        // );
-        console.log(res.payload, "res.payload.before");
-
-        setFilterTablet(
-          res.payload.filter((obj: any) => !obj.box_id)
-          // res.payload.filter((obj: any) => ({
-          //   box_id: !obj.box_id,
-          //   current_tablet_id: obj.tablet_id,
-          // }))
-        );
-        // setFilterTablet(res.payload.filter((obj: any) => !obj.box_id));
-        console.log("res.payload", res.payload);
+        setFilterTablet(res.payload.filter((obj: any) => !obj.box_id));
       }
     });
     dispatch(GetAddressesAction()).then((res: any) => {
@@ -228,51 +201,6 @@ const BoxesData = () => {
       }
     });
   }, [dispatch]);
-
-  console.log("filterTablet", filterTablet);
-
-  // Checked All
-  // const checkedAll = useCallback(() => {
-  //   const checkall: any = document.getElementById("checkBoxAll");
-  //   const ele = document.querySelectorAll(".boxCheckBox");
-
-  //   if (checkall.checked) {
-  //     ele.forEach((ele: any) => {
-  //       ele.checked = true;
-  //     });
-  //   } else {
-  //     ele.forEach((ele: any) => {
-  //       ele.checked = false;
-  //     });
-  //   }
-  //   deleteCheckbox();
-  // }, []);
-
-  // // Delete Multiple
-  // const [selectedCheckBoxDelete, setSelectedCheckBoxDelete] = useState<any>([]);
-  // const [isMultiDeleteButton, setIsMultiDeleteButton] =
-  //   useState<boolean>(false);
-
-  // const deleteMultiple = () => {
-  //   const checkall: any = document.getElementById("checkBoxAll");
-  //   selectedCheckBoxDelete.forEach((element: any) => {
-  //     dispatch(DeleteBoxAction(element.id));
-  //     setTimeout(() => {
-  //       toast.clearWaitingQueue();
-  //     }, 3000);
-  //   });
-  //   setIsMultiDeleteButton(false);
-  //   checkall.checked = false;
-  // };
-
-  // const deleteCheckbox = () => {
-  //   const ele = document.querySelectorAll(".boxCheckBox:checked");
-  //   ele?.length > 0
-  //     ? setIsMultiDeleteButton(true)
-  //     : setIsMultiDeleteButton(false);
-  //   setSelectedCheckBoxDelete(ele);
-  // };
-  console.log("filterTablet", filterTablet);
 
   const columns = useMemo(
     () => [
@@ -349,47 +277,6 @@ const BoxesData = () => {
             >
               <i className="ri-close-circle-line "></i>{" "}
             </a>
-            {/* <UncontrolledDropdown>
-              <DropdownToggle tag="a" className="btn btn-soft-secondary btn-sm">
-                <i className="ri-more-fill align-middle"></i>
-              </DropdownToggle>
-              <DropdownMenu className="dropdown-menu-end"> */}
-            {/* <li>
-                  <DropdownItem href="/apps-boxs-details">
-                    <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
-                    View
-                  </DropdownItem>
-                </li> */}
-            {/* <li>
-                  <DropdownItem
-                    className="edit-item-btn"
-                    href="#showModal"
-                    data-bs-toggle="modal"
-                    onClick={() => {
-                      const BoxData = cell.row.original;
-                      handleBoxesClick(BoxData);
-                    }}
-                  >
-                    <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>{" "}
-                    Edit
-                  </DropdownItem>
-                </li> */}
-            {/* <li>
-                  <DropdownItem
-                    className="remove-item-btn"
-                    data-bs-toggle="modal"
-                    href="#deleteOrder"
-                    onClick={() => {
-                      const boxData = cell.row.original;
-                      onClickDelete(boxData);
-                    }}
-                  >
-                    <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
-                    Delete
-                  </DropdownItem>
-              </li> */}
-            {/* </DropdownMenu>
-          </UncontrolledDropdown> */}
           </>
         ),
       },
@@ -405,14 +292,6 @@ const BoxesData = () => {
           onDeleteClick={handleDeleteBox}
           onCloseClick={() => setDeleteModal(false)}
         />
-        {/* <DeleteModal
-          show={deleteModalMulti}
-          onDeleteClick={() => {
-            deleteMultiple();
-            setDeleteModalMulti(false);
-          }}
-          onCloseClick={() => setDeleteModalMulti(false)}
-        /> */}
         <Col lg={12}>
           <Card className="">
             <CardHeader className="card-round">
@@ -535,37 +414,11 @@ const BoxesData = () => {
                   ) : null}
                 </div>
               </Col>
-              {/* <Col lg={6}>
-                <div>
-                  <Label htmlFor="assignedtoName-field" className="form-label">
-                    Assigned To
-                  </Label>
-                  <Input
-                    name="assigned"
-                    type="text"
-                    id="assignedtoName-field"
-                    placeholder="Enter Assigned Name"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.assigned || ""}
-                    invalid={
-                      validation.touched.assigned && validation.errors.assigned
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.assigned && validation.errors.assigned ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.assigned}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-              </Col> */}
 
               <Col lg={6}>
                 <div>
                   <Label htmlFor="current_tablet_id" className="form-label">
-                    Tablet ID
+                    Tablet ID by Serial Number
                   </Label>
                   <Input
                     name="current_tablet_id"
@@ -585,7 +438,7 @@ const BoxesData = () => {
                       value={undefined}
                       defaultValue={validation.values.current_tablet_id}
                     >
-                      Select Tablet ID
+                      Select Tablet Serial Number
                     </option>
                     {filterTablet &&
                       filterTablet?.map((tablet: any) => (
@@ -594,7 +447,7 @@ const BoxesData = () => {
                           value={tablet.id}
                           defaultValue={tablet.id}
                         >
-                          {tablet.id}
+                          {tablet.serial_number}
                         </option>
                       ))}
                   </Input>
@@ -609,7 +462,7 @@ const BoxesData = () => {
               <Col lg={6}>
                 <div>
                   <Label htmlFor="address_id" className="form-label">
-                    Address ID
+                    Address ID by User Email
                   </Label>
                   <Input
                     name="address_id"
@@ -629,12 +482,12 @@ const BoxesData = () => {
                       value={undefined}
                       defaultValue={validation.values.address_id}
                     >
-                      Select Address ID
+                      Select Address
                     </option>
                     {filterAddress &&
                       filterAddress?.map((address: any) => (
                         <option value={address.id} key={address.id}>
-                          {address.id}
+                          {address.email}
                         </option>
                       ))}
                   </Input>

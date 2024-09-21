@@ -13,8 +13,9 @@ import { verifySlices } from "./auth/verifyOtp/reducer";
 // Admin
 import { roleSlices } from "./userManagement/role/reducer";
 import { permissionSlices } from "./userManagement/permission/reducer";
-
 import { rolePermissionSlices } from "./userManagement/rolePermission/reducer";
+import { countrySlices } from "./admin/country/reducer";
+import { citySlices } from "./admin/city/reducer";
 
 import ProfileReducer from "./auth/profile/reducer";
 
@@ -103,6 +104,8 @@ import { userPermissionSlices } from "./userManagement/userPermission/reducer";
 const rootReducer = combineReducers({
   Users: usersSlices,
   Role: roleSlices,
+  Country: countrySlices,
+  City: citySlices,
   Permission: permissionSlices,
   RolePermission: rolePermissionSlices,
   UserPermission: userPermissionSlices,

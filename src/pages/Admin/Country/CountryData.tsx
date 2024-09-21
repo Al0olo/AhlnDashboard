@@ -20,13 +20,6 @@ import {
 //redux
 import { useDispatch } from "react-redux";
 import TableContainer from "../../../Components/Common/TableContainer";
-import {
-  getShippingCompanies,
-  addShippingCompany,
-  updateShippingCompany,
-  deleteShippingCompany,
-} from "../../../slices/thunks";
-
 import * as moment from "moment";
 
 // Formik
@@ -38,22 +31,26 @@ import DeleteModal from "../../../Components/Common/DeleteModal";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../Components/Common/Loader";
+import {
+  AddCountryAction,
+  DeleteCountryAction,
+  UpdateCountryAction,
+  GetCountryAction,
+} from "slices/admin/country/thunk";
 import { useAppSelector } from "redux-hooks";
 
-const ShippingCompaniesData = () => {
+const CountryData = () => {
   const dispatch: any = useDispatch();
-  const { shippingCompanies, error, loadingShippingCompany } = useAppSelector(
-    (state) => state.Delivery
+  const { countryList, loading, spinner } = useAppSelector(
+    (state) => state.Country
   );
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [shippingCompany, setShippingCompany] = useState<any>({
-    title: "",
-    logo: "",
-    tracking_system: "",
+  const [country, setCountry] = useState<any>({
+    id: "",
+    name: "",
+    code: "",
   });
-
-  // Delete ShippingCompanies
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
 
@@ -63,59 +60,27 @@ const ShippingCompaniesData = () => {
 
   // validation
   const validation: any = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
 
     initialValues: {
-      title: isEdit ? shippingCompany.title : "",
-      logo: isEdit ? shippingCompany.logo : "",
-      tracking_system: isEdit ? shippingCompany.tracking_system : "",
+      name: isEdit ? country.name : "",
+      code: isEdit ? country.code : "",
     },
     validationSchema: Yup.object({
-      title: Yup.string().required("Title is required"),
-      logo: Yup.string().required("Logo is required"),
-      // tracking_system: Yup.string().required("Tracking system is required"),
+      name: Yup.string().required("Country Name is required"),
+      code: Yup.string().required("Country Code is required"),
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       if (isEdit) {
-        const updateShippingCompanies = {
-          title: values.title,
-          logo: values.logo,
-          tracking_system: values.tracking_system,
-          id: shippingCompany.id,
-        };
-        // update shippingCompany
-        dispatch(updateShippingCompany(updateShippingCompanies)).then(
-          (result: any) => {
-            if (
-              result.type ===
-              "shippingCompanies/updateShippingCompany/fulfilled"
-            ) {
-              toast.success("Shipping Company Updated Successfully", {
-                autoClose: 3000,
-              });
-              toggle();
-            } else {
-              toast.error(`Error ${result.payload}`, {
-                autoClose: 3000,
-              });
-            }
-          }
-        );
-        validation.resetForm();
-      } else {
-        const newShippingCompany = {
-          title: values.title,
-          logo: values.logo,
-          tracking_system: values.tracking_system,
+        const updateCountry = {
+          id: country.id,
+          name: values.name,
+          code: values.code,
         };
 
-        // save new shippingCompany
-        dispatch(addShippingCompany(newShippingCompany)).then((result: any) => {
-          if (
-            result.type === "shippingCompanies/addShippingCompany/fulfilled"
-          ) {
-            toast.success("Shipping Company Added Successfully", {
+        dispatch(UpdateCountryAction(updateCountry)).then((result: any) => {
+          if (result.type === "country/update/fulfilled") {
+            toast.success("Country Updated Successfully", {
               autoClose: 3000,
             });
             toggle();
@@ -125,47 +90,63 @@ const ShippingCompaniesData = () => {
             });
           }
         });
+
+        validation.resetForm();
+      } else {
+        const newCountry = {
+          name: values.name,
+          code: values.code,
+        };
+        // save new country
+        dispatch(AddCountryAction(newCountry)).then((result: any) => {
+          if (result.type === "country/new/fulfilled") {
+            toast.success("Country Added Successfully", {
+              autoClose: 3000,
+            });
+            toggle();
+          } else {
+            toast.error(`Error ${result.payload}`, {
+              autoClose: 3000,
+            });
+          }
+        });
+
         validation.resetForm();
       }
     },
   });
 
   // Delete Data
-  const onClickDelete = (shippingCompany: any) => {
-    setShippingCompany(shippingCompany);
+  const onClickDelete = (country: any) => {
+    setCountry(country);
     setDeleteModal(true);
   };
 
-  const handleDeleteShippingCompany = () => {
-    if (shippingCompany) {
-      dispatch(deleteShippingCompany(shippingCompany.id)).then(
-        (result: any) => {
-          if (
-            result.type === "shippingCompanies/deleteShippingCompany/fulfilled"
-          ) {
-            toast.success("Shipping Company Deleted Successfully", {
-              autoClose: 3000,
-            });
-          } else {
-            toast.error(`Error ${result.payload}`, {
-              autoClose: 3000,
-            });
-          }
+  const handleDeleteCountry = () => {
+    if (country) {
+      dispatch(DeleteCountryAction(country.id)).then((result: any) => {
+        if (result.type === "country/delete/fulfilled") {
+          toast.success("Country Deleted Successfully", {
+            autoClose: 3000,
+          });
+        } else {
+          toast.error(`Error ${result.payload}`, {
+            autoClose: 3000,
+          });
         }
-      );
+      });
       setDeleteModal(false);
     }
   };
 
   // Update Data
-  const handleShippingCompaniesClick = useCallback(
+  const handleCountryClick = useCallback(
     (arg: any) => {
       setIsEdit(true);
-      setShippingCompany({
+      setCountry({
         id: arg.id,
-        title: arg.title,
-        logo: arg.logo,
-        tracking_system: arg.tracking_system,
+        name: arg.name,
+        code: arg.code,
       });
       toggle();
     },
@@ -175,40 +156,37 @@ const ShippingCompaniesData = () => {
   // Get Data
 
   useEffect(() => {
-    dispatch(getShippingCompanies());
+    dispatch(GetCountryAction());
   }, [dispatch]);
 
   const columns = useMemo(
     () => [
       {
         id: "#",
-        accessorKey: "",
+        accessorKey: "id",
         enableColumnFilter: false,
         enableSorting: false,
       },
       {
-        header: "ID",
-        accessorKey: "id",
+        header: "Country Name",
+        accessorKey: "name",
         enableColumnFilter: false,
       },
       {
-        header: "Title",
-        accessorKey: "title",
+        header: "Country Code",
+        accessorKey: "code",
         enableColumnFilter: false,
       },
-      {
-        header: "Tracking System",
-        accessorKey: "tracking_system",
-        enableColumnFilter: false,
-      },
-      {
-        header: "Logo",
-        accessorKey: "logo",
-        enableColumnFilter: false,
-      },
+
       {
         header: "Create Date",
         accessorKey: "createdat",
+        enableColumnFilter: false,
+        cell: (cell: any) => moment(cell.getValue()).format("DD MMMM, YYYY"),
+      },
+      {
+        header: "Updated Date",
+        accessorKey: "updatedat",
         enableColumnFilter: false,
         cell: (cell: any) => moment(cell.getValue()).format("DD MMMM, YYYY"),
       },
@@ -220,20 +198,14 @@ const ShippingCompaniesData = () => {
               <i className="ri-more-fill align-middle"></i>
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-end">
-              {/* <li>
-                <DropdownItem href="/apps-shippingCompanys-details">
-                  <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
-                  View
-                </DropdownItem>
-              </li> */}
               <li>
                 <DropdownItem
                   className="edit-item-btn"
                   href="#showModal"
                   data-bs-toggle="modal"
                   onClick={() => {
-                    const ShippingCompanyData = cell.row.original;
-                    handleShippingCompaniesClick(ShippingCompanyData);
+                    const CountryData = cell.row.original;
+                    handleCountryClick(CountryData);
                   }}
                 >
                   <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>{" "}
@@ -246,8 +218,7 @@ const ShippingCompaniesData = () => {
                   data-bs-toggle="modal"
                   href="#deleteOrder"
                   onClick={() => {
-                    const shippingCompanyData = cell.row.original;
-                    onClickDelete(shippingCompanyData);
+                    onClickDelete(cell.row.original);
                   }}
                 >
                   <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
@@ -259,7 +230,7 @@ const ShippingCompaniesData = () => {
         ),
       },
     ],
-    [handleShippingCompaniesClick]
+    [country]
   );
 
   return (
@@ -267,17 +238,14 @@ const ShippingCompaniesData = () => {
       <Row>
         <DeleteModal
           show={deleteModal}
-          onDeleteClick={handleDeleteShippingCompany}
+          onDeleteClick={handleDeleteCountry}
           onCloseClick={() => setDeleteModal(false)}
         />
-
         <Col lg={12}>
           <Card>
             <CardHeader className="border-0">
               <div className="d-flex align-items-center">
-                <h5 className="card-title mb-0 flex-grow-1">
-                  Shipping Companies
-                </h5>
+                <h5 className="card-title mb-0 flex-grow-1">Country</h5>
                 <div className="flex-shrink-0">
                   <div className="d-flex flex-wrap gap-2">
                     <button
@@ -288,24 +256,24 @@ const ShippingCompaniesData = () => {
                       }}
                     >
                       <i className="ri-add-line align-bottom"></i> Create
-                      Shipping Company
+                      Country
                     </button>{" "}
                   </div>
                 </div>
               </div>
             </CardHeader>
             <CardBody className="pt-0">
-              {loadingShippingCompany ? (
-                <Loader error={error} />
+              {loading ? (
+                <Loader error={spinner} />
               ) : (
                 <TableContainer
                   columns={columns}
-                  data={shippingCompanies}
+                  data={countryList}
                   isGlobalFilter={true}
                   customPageSize={10}
                   divClass="table-responsive table-card mb-3"
                   tableClass="align-middle table-nowrap mb-0"
-                  SearchPlaceholder="Search for shippingCompany details or something..."
+                  SearchPlaceholder="Search for Country details or something..."
                 />
               )}
               <ToastContainer closeButton={false} limit={1} />
@@ -323,13 +291,13 @@ const ShippingCompaniesData = () => {
         modalClassName="zoomIn"
       >
         <ModalHeader toggle={toggle} className="p-3 bg-info-subtle">
-          {!!isEdit ? "Edit Shipping Company" : "Add Shipping Company"}
+          {!!isEdit ? "Edit Country" : "Add Country"}
         </ModalHeader>
         <Form
           className="tablelist-form"
-          onSubmit={(e) => {
+          onSubmit={(e: any) => {
             e.preventDefault();
-            validation.submitForm();
+            validation.handleSubmit();
             return false;
           }}
         >
@@ -337,84 +305,60 @@ const ShippingCompaniesData = () => {
             <Row className="g-3">
               <Col lg={12}>
                 <div>
-                  <Label htmlFor="title" className="form-label">
-                    Title
+                  <Label htmlFor="name" className="form-label">
+                    Country Name
                   </Label>
                   <Input
-                    name="title"
-                    id="title"
+                    name="name"
+                    id="name"
                     className="form-control"
-                    placeholder="Enter Title"
+                    placeholder="Enter Model Name"
                     type="text"
                     validate={{
                       required: { value: true },
                     }}
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.title || ""}
+                    value={validation.values.name || ""}
                     invalid={
-                      validation.touched.title && validation.errors.title
+                      validation.touched.name && validation.errors.name
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.title && validation.errors.title ? (
+                  {validation.touched.name && validation.errors.name ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.title}
+                      {validation.errors.name}
                     </FormFeedback>
                   ) : null}
                 </div>
               </Col>
               <Col lg={12}>
                 <div>
-                  <Label htmlFor="logo" className="form-label">
-                    Logo
+                  <Label htmlFor="code" className="form-label">
+                    Country Code
                   </Label>
                   <Input
-                    name="logo"
+                    name="code"
+                    id="code"
+                    className="form-control"
+                    placeholder="Enter Country Code"
                     type="text"
-                    id="logo"
-                    placeholder="Enter Logo Link"
+                    validate={{
+                      required: { value: true },
+                    }}
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.logo || ""}
+                    value={validation.values.code || ""}
                     invalid={
-                      validation.touched.logo && validation.errors.logo
+                      validation.touched.code && validation.errors.code
                         ? true
                         : false
                     }
                   />
-                  {validation.touched.logo && validation.errors.logo ? (
+                  {validation.touched.code && validation.errors.code ? (
                     <FormFeedback type="invalid">
-                      {validation.errors.logo}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-              </Col>
-              <Col lg={12}>
-                <div>
-                  <Label htmlFor="tracking_system" className="form-label">
-                    Tracking System
-                  </Label>
-                  <Input
-                    name="tracking_system"
-                    type="text"
-                    id="tracking_system"
-                    placeholder="Enter Tracking System Api"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.tracking_system || ""}
-                    invalid={
-                      validation.touched.tracking_system &&
-                      validation.errors.tracking_system
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.tracking_system &&
-                  validation.errors.tracking_system ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.tracking_system}
+                      {validation.errors.code}
                     </FormFeedback>
                   ) : null}
                 </div>
@@ -427,7 +371,7 @@ const ShippingCompaniesData = () => {
                 Close
               </button>
               <button type="submit" className="btn btn-success" id="add-btn">
-                {!!isEdit ? "Update" : "Add Shipping Company"}
+                {!!isEdit ? "Update" : "Add Country"}
               </button>
             </div>
           </div>
@@ -437,4 +381,4 @@ const ShippingCompaniesData = () => {
   );
 };
 
-export default ShippingCompaniesData;
+export default CountryData;

@@ -5,7 +5,7 @@ import {
   deleteBox,
   updateBox,
   getOneBox,
-} from "../../../helpers/fakebackend_helper";
+} from "../../../helpers/backend_apis/box/box";
 
 export const GetBoxesAction = createAsyncThunk(
   "box/get-all",

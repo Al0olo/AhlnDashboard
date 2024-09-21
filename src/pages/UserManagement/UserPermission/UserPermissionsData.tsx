@@ -60,7 +60,7 @@ const UserPermissionsData = () => {
   const validation: any = useFormik({
     enableReinitialize: true,
     initialValues: {
-      id: isEdit ? userPermission.id : "",
+      // id: isEdit ? userPermission.id : "",
       user_id: isEdit ? userPermission.title : "",
       permission_id: isEdit ? userPermission.description : "",
     },
@@ -126,9 +126,8 @@ const UserPermissionsData = () => {
     (arg: any) => {
       setIsEdit(true);
       setUserPermission({
-        id: arg.id,
-        title: arg.title,
-        description: arg.description,
+        user_id: arg.user_id,
+        permission_id: arg.permission_id,
       });
 
       toggle();
@@ -147,9 +146,8 @@ const UserPermissionsData = () => {
   useEffect(() => {
     if (userPermission) {
       validation.setValues({
-        id: userPermission.id || "",
-        title: userPermission.title || "",
-        description: userPermission.description || "",
+        user_id: userPermission.user_id || "",
+        permission_id: userPermission.permission_id || "",
       });
     }
   }, [userPermission]);

@@ -1,20 +1,20 @@
 import React from "react";
 import { Container } from "reactstrap";
 import BreadCrumb from "../../../Components/Common/BreadCrumb";
-import AddressData from "./AddressData";
+import CountryData from "./CountryData";
 
-const BoxView = () => {
-  document.title = "Address List | Ahln - React Admin & Dashboard";
+const CountryView = () => {
+  document.title = "Country List | Ahln - React Admin & Dashboard";
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <BreadCrumb title="Address List" pageTitle="Address" />
-          <AddressData />
+          <BreadCrumb title="Country List" pageTitle="Country" />
+          <CountryData />
         </Container>
       </div>
     </React.Fragment>
   );
 };
 
-export default BoxView;
+export default CountryView;
