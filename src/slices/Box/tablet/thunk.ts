@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   addTablet,
-  getOneTablet,
+  // getOneTablet,
   getTablets,
   deleteTablet,
   updateTablet,
@@ -20,17 +20,17 @@ export const GetTabletsAction = createAsyncThunk(
   }
 );
 
-export const GetOneTabletAction = createAsyncThunk(
-  "tablet/get-one",
-  async (tablet: any, thunkApi) => {
-    try {
-      const response = await getOneTablet(tablet);
-      return response.data;
-    } catch (error: any) {
-      return thunkApi.rejectWithValue(error || error.message);
-    }
-  }
-);
+// export const GetOneTabletAction = createAsyncThunk(
+//   "tablet/get-one",
+//   async (tablet: any, thunkApi) => {
+//     try {
+//       const response = await getOneTablet(tablet);
+//       return response.data;
+//     } catch (error: any) {
+//       return thunkApi.rejectWithValue(error || error.message);
+//     }
+//   }
+// );
 
 export const AddTabletAction = createAsyncThunk(
   "tablet/new",

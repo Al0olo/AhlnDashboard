@@ -2,13 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { GetBoxesImagesAction } from "./thunk";
 
 export const initialState: any = {
-  boxImgesError: null,
-  message: null,
   loading: true,
-  data: null,
-  success: false,
-  error: false,
-  boxImgess: [],
+  error: {},
+  boxImgesList: [],
 };
 
 const boxImgesReducer = createSlice({
@@ -21,15 +17,13 @@ const boxImgesReducer = createSlice({
       state.error = false;
     });
     builder.addCase(GetBoxesImagesAction.fulfilled, (state, action: any) => {
-      state.data = action?.payload;
-      state.success = true;
+      state.boxImgesList = action?.payload;
       state.loading = false;
     });
     builder.addCase(
       GetBoxesImagesAction.rejected,
       (state, { payload }: any) => {
         state.loading = false;
-        state.success = false;
         state.error = payload;
       }
     );

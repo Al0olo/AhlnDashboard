@@ -34,7 +34,6 @@ import * as Yup from "yup";
 
 import DeleteModal from "../../../../Components/Common/DeleteModal";
 
-import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAppSelector } from "redux-hooks";
@@ -44,11 +43,10 @@ const BoxesData = () => {
 
   const { boxes, loading, spinner } = useAppSelector((state) => state.Boxes);
   const { boxGenerations } = useAppSelector((state) => state.BoxGeneration);
+  const { addressList } = useAppSelector((state) => state.Address);
 
   const [filterTablet, setFilterTablet] = useState<any>([]);
   const [filterAddress, setFilterAddress] = useState<any>([]);
-
-  const [setAddressData] = useState<any>({});
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [box, setBox] = useState<any>({
@@ -91,18 +89,15 @@ const BoxesData = () => {
       has_empty_lockers: Yup.string().required(
         "Please Enter Has Empty Lockers"
       ),
-      current_tablet_id: Yup.string().required(
-        "Please Enter Current Tablet Id"
-      ),
-      address_id: Yup.string().required("Please Enter Address Id"),
     }),
     onSubmit: (values) => {
       if (isEdit) {
         const updateBoxes = {
+          id: box.id,
           serial_number: values.serial_number,
           box_label: values.box_label,
           has_empty_lockers: values.has_empty_lockers,
-          current_tablet_id: values.current_tablet_id,
+          current_tablet_id: values.current_tablet_id || box.current_tablet_id,
           previous_tablet_id: values.previous_tablet_id,
           box_model_id: values.box_model_id,
           address_id: values.address_id,
@@ -123,13 +118,8 @@ const BoxesData = () => {
           box_label: values.box_label,
           has_empty_lockers: values.has_empty_lockers,
           box_model_id: values.box_model_id,
-          current_tablet_id: values.current_tablet_id
-            ? values.current_tablet_id
-            : null,
-          previous_tablet_id: values.current_tablet_id
-            ? values.previous_tablet_id
-            : null,
-          address_id: values.address_id ? values.address_id : null,
+          current_tablet_id: values.current_tablet_id,
+          address_id: values.address_id,
         };
 
         // save new box
@@ -190,6 +180,7 @@ const BoxesData = () => {
   useEffect(() => {
     dispatch(GetBoxesAction());
     dispatch(GetBoxGenerationsAction());
+    dispatch(GetAddressesAction());
     dispatch(GetTabletsAction()).then((res: any) => {
       if (res.type === "tablet/get-all/fulfilled") {
         setFilterTablet(res.payload.filter((obj: any) => !obj.box_id));
@@ -200,7 +191,8 @@ const BoxesData = () => {
         setFilterAddress(res.payload.filter((obj: any) => !obj.box_id));
       }
     });
-  }, [dispatch]);
+  }, [dispatch, GetAddressesAction]);
+  console.log(box.address_id, "box.address_id");
 
   const columns = useMemo(
     () => [
@@ -250,9 +242,6 @@ const BoxesData = () => {
         header: "Actions",
         cell: (cell: any) => (
           <>
-            <Link to={`/apps-boxs-details`} className="text-muted">
-              <i className="ri-edit-box-line "></i>{" "}
-            </Link>
             <a
               href="#showModal"
               data-bs-toggle="modal"
@@ -445,9 +434,9 @@ const BoxesData = () => {
                         <option
                           key={tablet.id}
                           value={tablet.id}
-                          defaultValue={tablet.id}
+                          defaultValue={box.current_tablet_id}
                         >
-                          {tablet.serial_number}
+                          {tablet.id}
                         </option>
                       ))}
                   </Input>
@@ -478,18 +467,28 @@ const BoxesData = () => {
                         : false
                     }
                   >
-                    <option
-                      value={undefined}
-                      defaultValue={validation.values.address_id}
-                    >
-                      Select Address
-                    </option>
-                    {filterAddress &&
-                      filterAddress?.map((address: any) => (
-                        <option value={address.id} key={address.id}>
-                          {address.email}
-                        </option>
-                      ))}
+                    <option value="">Select Address</option>
+                    {isEdit
+                      ? addressList &&
+                        addressList?.map((address: any) => (
+                          <option
+                            key={address.id}
+                            value={address.id}
+                            defaultValue={box.address_id}
+                          >
+                            {address.id}
+                          </option>
+                        ))
+                      : filterAddress &&
+                        filterAddress?.map((address: any) => (
+                          <option
+                            key={address.id}
+                            value={address.id}
+                            defaultValue={box.address_id}
+                          >
+                            {address.id}
+                          </option>
+                        ))}
                   </Input>
                   {validation.touched.address_id &&
                   validation.errors.address_id ? (

@@ -18,17 +18,17 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import TableContainer from "../../../Components/Common/TableContainer";
 import {
   AssignUserBoxAction,
   GetUserBoxesAction,
   DeleteUserBoxAction,
   // GetOneUserBoxAction,
-  UpdateUserBoxAction,
-  updateUserBoxStatus,
+  // UpdateUserBoxAction,
   GetBoxesAction,
   getCustomers,
+  GetAddressesAction,
 } from "../../../slices/thunks";
 
 // Formik
@@ -40,126 +40,71 @@ import DeleteModal from "../../../Components/Common/DeleteModal";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../Components/Common/Loader";
-import { createSelector } from "reselect";
 import moment from "moment";
+import { useAppSelector } from "redux-hooks";
 
 const UserBoxesData = () => {
   const dispatch: any = useDispatch();
 
-  const selectLayoutStateBox = (state: any) => state.Boxes;
-  const selectLayoutPropertiesBox = createSelector(
-    selectLayoutStateBox,
-    (state) => ({
-      boxsList: state.data,
-      isBoxSuccess: state.isBoxSuccess,
-      error: state.error,
-      loader: state.loading,
-    })
+  const { userBoxesList, loading, error } = useAppSelector(
+    (state) => state.UserBox
   );
-
-  // Inside your component
-  const { boxsList } = useSelector(selectLayoutPropertiesBox);
-
-  const selectLayoutState = (state: any) => state.UserBox;
-
-  const selectLayoutProperties = createSelector(selectLayoutState, (state) => ({
-    userBoxsList: state.data,
-    isuserBoxSuccess: state.isuserBoxSuccess,
-    error: state.error,
-    loader: state.loading,
-  }));
-
-  // Inside your component
-  const { userBoxsList, isuserBoxSuccess, error, loader } = useSelector(
-    selectLayoutProperties
-  );
-
-  const ecomCustomerProperties = createSelector(
-    (state: any) => state.Ecommerce,
-    (ecom) => ({
-      customers: ecom.data,
-      isCustomerSuccess: ecom.isCustomerSuccess,
-      error: ecom.error,
-      loader: ecom.loading,
-    })
-  );
-  // Inside your component
-  const { customers, isCustomerSuccess } = useSelector(ecomCustomerProperties);
+  const { boxes } = useAppSelector((state) => state.Boxes);
+  const { users } = useAppSelector((state) => state.Users);
+  const { addressList } = useAppSelector((state) => state.Address);
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [userBox, setUserBox] = useState<any>([]);
+  const [userBox, setUserBox] = useState<any>({
+    user_box_id: "",
+    user_id: "",
+    box_id: "",
+    is_active: true,
+    address_id: "",
+  });
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
 
   const toggle = useCallback(() => {
     setModal((prevState) => !prevState);
-  }, []);
+  }, [modal]);
 
-  const updateStatusUserBox = (id: string, is_active: boolean) => {
-    dispatch(updateUserBoxStatus({ id, is_active }));
-    setModal(false);
-  };
   // validation
   const validation: any = useFormik({
     enableReinitialize: true,
     initialValues: {
-      id: userBox.id ? userBox.id : "",
-      user_id: userBox.user_id ? userBox.user_id : "",
-      box_id: userBox.box_id ? userBox.box_id : "",
+      user_box_id: userBox.id,
+      user_id: userBox.user_id,
+      box_id: userBox.box_id,
+      is_active: userBox.is_active || true,
+      address_id: userBox.address_id,
     },
     validationSchema: Yup.object({
-      user_id: Yup.string().required("Please Enter UserBox Title"),
+      user_id: Yup.string().required("Please Enter User ID"),
+      box_id: Yup.string().required("Please Enter Box ID"),
+      address_id: Yup.string().required("Please Enter Address ID"),
     }),
     onSubmit: async (values) => {
-      if (isEdit) {
-        const updateUserBoxs: any = {
-          id: values.id,
-          user_id: values.user_id || undefined,
-          box_id: values.box_id || undefined,
-        };
-        const updatedUserBoxObj = Object.keys(updateUserBoxs)
-          .filter(
-            (key) =>
-              updateUserBoxs[key as keyof typeof updateUserBoxs] !== undefined
-          )
-          .reduce((obj: any, key) => {
-            obj[key] = updateUserBoxs[key as keyof typeof updateUserBoxs];
-            return obj;
-          }, {});
+      const newUserBox = {
+        user_box_id: values.user_box_id,
+        userId: values.user_id,
+        boxId: values.box_id,
+        is_active: values.is_active || true,
+        addressId: values.address_id,
+      };
 
-        if (Object.values(updatedUserBoxObj).some((val) => val !== undefined)) {
-          const result = await dispatch(UpdateUserBoxAction(updatedUserBoxObj));
-          if (result && result.payload) {
-            setUserBox(async (prevUserBoxs: any[]) => {
-              const updatedUserBoxs = Array.isArray(prevUserBoxs)
-                ? [...prevUserBoxs]
-                : [];
-              const newUserBoxs = result.payload.data;
-              if (Array.isArray(newUserBoxs)) {
-                updatedUserBoxs.push(...newUserBoxs);
-              }
-
-              return await dispatch(GetUserBoxesAction());
-            });
-          }
-        }
-        validation.resetForm();
-      } else {
-        const newUserBox = {
-          userId: values.user_id,
-          boxId: values.box_id,
-        };
-        const result = await dispatch(AssignUserBoxAction(newUserBox));
-        if (result && result.payload) {
+      dispatch(AssignUserBoxAction(newUserBox)).then((result: any) => {
+        if (result.type === "userBox/assign/fulfilled") {
+          toast.success("User Box Added Successfully", {
+            autoClose: 3000,
+          });
           toggle();
-          return await dispatch(GetUserBoxesAction());
+        } else {
+          toast.error(`Error ${result.payload}`, {
+            autoClose: 3000,
+          });
         }
-        validation.resetForm();
-      }
-
+      });
       validation.resetForm();
-      toggle();
     },
   });
 
@@ -171,10 +116,18 @@ const UserBoxesData = () => {
 
   const handleDeleteuserBox = async () => {
     if (userBox) {
-      const result = await dispatch(DeleteUserBoxAction(userBox.user_box_id));
-      if (result && result.payload) {
-        await dispatch(GetUserBoxesAction());
-      }
+      dispatch(DeleteUserBoxAction(userBox.user_box_id)).then((result: any) => {
+        if (result.type === "userBox/delete/fulfilled") {
+          toast.success("User Box Deleted Successfully", {
+            autoClose: 3000,
+          });
+        } else {
+          toast.error(`Error ${result.payload}`, {
+            autoClose: 3000,
+          });
+        }
+      });
+
       setDeleteModal(false);
     }
   };
@@ -184,96 +137,28 @@ const UserBoxesData = () => {
     (arg: any) => {
       setIsEdit(true);
       setUserBox({
-        id: arg.user_box_id,
+        user_box_id: arg.user_box_id,
         user_id: arg.user_id,
         box_id: arg.box_id,
+        is_active: arg.is_active,
+        address_id: arg.address_id,
       });
-
       toggle();
     },
     [toggle]
   );
-
   // Get Data
 
   useEffect(() => {
     dispatch(GetUserBoxesAction());
     dispatch(GetBoxesAction());
     dispatch(getCustomers());
+    dispatch(GetAddressesAction());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (userBox) {
-      validation.setValues({
-        id: userBox.id || "",
-        user_id: userBox.user_id || "",
-        box_id: userBox.box_id || "",
-      });
-    }
-  }, [userBox]);
-
-  // Checked All
-  const checkedAll = useCallback(() => {
-    const checkall: any = document.getElementById("checkuserBoxAll");
-    const ele = document.querySelectorAll(".userBoxCheckuserBox");
-
-    if (checkall.checked) {
-      ele.forEach((ele: any) => {
-        ele.checked = true;
-      });
-    } else {
-      ele.forEach((ele: any) => {
-        ele.checked = false;
-      });
-    }
-    deleteCheckuserBox();
-  }, []);
-
-  // Delete Multiple
-  const [selectedCheckuserBoxDelete, setSelectedCheckuserBoxDelete] =
-    useState<any>([]);
-  const [isMultiDeleteButton, setIsMultiDeleteButton] =
-    useState<boolean>(false);
-
-  const deleteMultiple = () => {
-    const checkall: any = document.getElementById("checkuserBoxAll");
-    selectedCheckuserBoxDelete.forEach((element: any) => {
-      dispatch(DeleteUserBoxAction(element.user_box_id));
-      setTimeout(() => {
-        toast.clearWaitingQueue();
-      }, 3000);
-    });
-    setIsMultiDeleteButton(false);
-    checkall.checked = false;
-  };
-
-  const deleteCheckuserBox = () => {
-    const ele = document.querySelectorAll(".userBoxCheckuserBox:checked");
-    ele?.length > 0
-      ? setIsMultiDeleteButton(true)
-      : setIsMultiDeleteButton(false);
-    setSelectedCheckuserBoxDelete(ele);
-  };
 
   const columns = useMemo(
     () => [
       {
-        header: (
-          <input
-            type="checkuserBox"
-            id="checkuserBoxAll"
-            className="form-check-input"
-            onClick={() => checkedAll()}
-          />
-        ),
-        cell: (cell: any) => (
-          <input
-            type="checkuserBox"
-            className="userBoxCheckuserBox form-check-input"
-            value={cell.getValue()}
-            onChange={() => deleteCheckuserBox()}
-          />
-        ),
         id: "#",
         accessorKey: "",
         enableColumnFilter: false,
@@ -325,12 +210,7 @@ const UserBoxesData = () => {
                 type="switch"
                 value={cellProps.getValue() === true ? "Active" : "Block"}
                 className="form-check-input"
-                onChange={(e) => {
-                  updateStatusUserBox(
-                    cellProps.row.original.user_box_id,
-                    e.target.checked
-                  );
-                }}
+                disabled={true}
                 defaultChecked={cellProps.getValue() === true ? true : false}
               ></Input>
             </div>
@@ -345,26 +225,6 @@ const UserBoxesData = () => {
               <i className="ri-more-fill align-middle"></i>
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-end">
-              <li>
-                <DropdownItem href="/apps-userBox-details">
-                  <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
-                  View
-                </DropdownItem>
-              </li>
-              <li>
-                <DropdownItem
-                  className="edit-item-btn"
-                  href="#showModal"
-                  data-bs-toggle="modal"
-                  onClick={() => {
-                    const userBoxData = cell.row.original;
-                    handleUserBoxsClick(userBoxData);
-                  }}
-                >
-                  <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>{" "}
-                  Edit
-                </DropdownItem>
-              </li>
               <li>
                 <DropdownItem
                   className="remove-item-btn"
@@ -384,7 +244,7 @@ const UserBoxesData = () => {
         ),
       },
     ],
-    [checkedAll]
+    [handleUserBoxsClick, userBoxesList]
   );
 
   return (
@@ -394,14 +254,6 @@ const UserBoxesData = () => {
           show={deleteModal}
           onDeleteClick={handleDeleteuserBox}
           onCloseClick={() => setDeleteModal(false)}
-        />
-        <DeleteModal
-          show={deleteModalMulti}
-          onDeleteClick={() => {
-            deleteMultiple();
-            setDeleteModalMulti(false);
-          }}
-          onCloseClick={() => setDeleteModalMulti(false)}
         />
         <Col lg={12}>
           <Card>
@@ -420,25 +272,17 @@ const UserBoxesData = () => {
                       <i className="ri-add-line align-bottom"></i> Assign New
                       User Box
                     </button>{" "}
-                    {isMultiDeleteButton && (
-                      <button
-                        className="btn btn-soft-danger"
-                        onClick={() => setDeleteModalMulti(true)}
-                      >
-                        <i className="ri-delete-bin-2-line"></i>
-                      </button>
-                    )}
                   </div>
                 </div>
               </div>
             </CardHeader>
             <CardBody className="pt-0">
-              {loader ? (
+              {loading ? (
                 <Loader error={error} />
               ) : (
                 <TableContainer
                   columns={columns}
-                  data={userBoxsList}
+                  data={userBoxesList}
                   isGlobalFilter={true}
                   customPageSize={10}
                   divClass="table-responsive table-card mb-3"
@@ -461,7 +305,7 @@ const UserBoxesData = () => {
         modalClassName="zoomIn"
       >
         <ModalHeader toggle={toggle} className="p-3 bg-info-subtle">
-          {!!isEdit ? "Edit UserBox" : "Assign User Box"}
+          {"Assign User Box"}
         </ModalHeader>{" "}
         <Form
           className="tablelist-form"
@@ -493,8 +337,8 @@ const UserBoxesData = () => {
                       }
                     >
                       <option value="">Select Customer</option>
-                      {customers &&
-                        customers?.map((customer: any) => (
+                      {users &&
+                        users?.map((customer: any) => (
                           <option key={customer.id} value={customer.id}>
                             {customer.email}
                           </option>
@@ -528,8 +372,8 @@ const UserBoxesData = () => {
                       }
                     >
                       <option value="">Select Box</option>
-                      {boxsList &&
-                        boxsList?.map((box: any) => (
+                      {boxes &&
+                        boxes?.map((box: any) => (
                           <option key={box.id} value={box.id}>
                             {box.serial_number}
                           </option>
@@ -538,6 +382,65 @@ const UserBoxesData = () => {
                     {validation.touched.box_id && validation.errors.box_id ? (
                       <FormFeedback type="invalid">
                         {validation.errors.box_id}
+                      </FormFeedback>
+                    ) : null}
+                  </div>
+                }
+              </Col>
+              <Col lg={4}>
+                <Label htmlFor="is_active">User Status</Label>
+                <Input
+                  type="checkbox"
+                  defaultChecked={userBox.is_active ? true : false}
+                  name="is_active"
+                  className="form-check-input mx-3"
+                  id="is_active"
+                  onBlur={validation.handleBlur}
+                  onChange={validation.handleChange}
+                  invalid={
+                    validation.touched.is_active && validation.errors.is_active
+                      ? true
+                      : false
+                  }
+                />
+                {validation.touched.is_active && validation.errors.is_active ? (
+                  <FormFeedback type="invalid">
+                    {validation.errors.is_active}
+                  </FormFeedback>
+                ) : null}
+              </Col>
+              <Col lg={12}>
+                {
+                  <div className="mb-3">
+                    <Label htmlFor="address_id-field" className="form-label">
+                      Select Address ID
+                    </Label>
+                    <Input
+                      name="address_id"
+                      type="select"
+                      id="address_id-field"
+                      onChange={validation.handleChange}
+                      onBlur={validation.handleBlur}
+                      value={validation.values.address_id}
+                      invalid={
+                        validation.touched.address_id &&
+                        validation.errors.address_id
+                          ? true
+                          : false
+                      }
+                    >
+                      <option value="">Select Address</option>
+                      {addressList &&
+                        addressList?.map((address: any) => (
+                          <option key={address.id} value={address.id}>
+                            {address.id}
+                          </option>
+                        ))}
+                    </Input>
+                    {validation.touched.address_id &&
+                    validation.errors.address_id ? (
+                      <FormFeedback type="invalid">
+                        {validation.errors.address_id}
                       </FormFeedback>
                     ) : null}
                   </div>

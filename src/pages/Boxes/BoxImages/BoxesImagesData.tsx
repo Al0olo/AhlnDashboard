@@ -1,31 +1,22 @@
 import React, { useEffect, useMemo } from "react";
 import { Card, CardBody, CardHeader, Col, Row } from "reactstrap";
 //redux
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import TableContainer from "../../../Components/Common/TableContainer";
 import { GetBoxesImagesAction } from "../../../slices/thunks";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../Components/Common/Loader";
-import { createSelector } from "reselect";
 import moment from "moment";
+import { useAppSelector } from "redux-hooks";
 
 const BoxImagesData = () => {
   const dispatch: any = useDispatch();
 
-  const selectLayoutState = (state: any) => state.BoxImages;
-
-  const selectLayoutProperties = createSelector(selectLayoutState, (state) => ({
-    boxImagesList: state.data,
-    isuserBoxSuccess: state.isuserBoxSuccess,
-    error: state.error,
-    loader: state.loading,
-  }));
-
-  // Inside your component
-  const { boxImagesList, error, loader } = useSelector(selectLayoutProperties);
-
+  const { boxImgesList, error, loading } = useAppSelector(
+    (state) => state.BoxImages
+  );
   useEffect(() => {
     dispatch(GetBoxesImagesAction());
   }, [dispatch]);
@@ -85,12 +76,12 @@ const BoxImagesData = () => {
               </div>
             </CardHeader>
             <CardBody className="pt-0">
-              {loader ? (
+              {loading ? (
                 <Loader error={error} />
               ) : (
                 <TableContainer
                   columns={columns}
-                  data={boxImagesList}
+                  data={boxImgesList}
                   isGlobalFilter={true}
                   customPageSize={50}
                   divClass="table-responsive table-card mb-3"

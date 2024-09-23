@@ -7,7 +7,7 @@ import {
 } from "./thunk";
 
 export const initialState: any = {
-  boxGeneration: [],
+  boxGenerations: [],
   loading: true,
   error: {},
 };
@@ -82,6 +82,8 @@ const boxGenerationReducer = createSlice({
           (boxGeneration: any) => boxGeneration.id === updatedBoxGeneration.id
         );
         state.boxGenerations[index] = updatedBoxGeneration;
+        console.log(state.boxGenerations, "State");
+
         state.loading = false;
       }
     );

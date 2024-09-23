@@ -32,7 +32,6 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../Components/Common/Loader";
 import {
-  // GetOneTabletAction,
   AddTabletAction,
   DeleteTabletAction,
   GetTabletsAction,
@@ -53,31 +52,28 @@ const TabletsData = () => {
     android_id: "",
   });
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  const [resetTabletModal, setResetTabletModal] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
-  const [modalReset, setModalReset] = useState<boolean>(false);
+  const [resetTabletModal, setResetTabletModal] = useState<boolean>(false);
 
   const toggle = useCallback(() => {
     setModal((prevState) => !prevState);
-  }, [modal]);
+  }, []);
 
   const toggleResetTablet = useCallback(() => {
-    setModalReset((prevState) => !prevState);
-  }, [modalReset]);
+    setResetTabletModal((prevState) => !prevState);
+  }, []);
 
-  // validation
+  // Formik for validation
   const validation: any = useFormik({
     enableReinitialize: true,
-
     initialValues: {
       id: isEdit ? tablet?.id : "",
       serial_number: isEdit ? tablet?.serial_number : "",
       android_id: isEdit ? tablet?.android_id : "",
     },
-
     validationSchema: Yup.object({
       serial_number: Yup.string().required("Please Enter Tablet Serial Number"),
-      android_id: Yup.string().required("Please Enter Android Number"),
+      android_id: Yup.string().required("Please Enter Android ID"),
     }),
     onSubmit: async (values) => {
       if (isEdit) {
@@ -100,7 +96,6 @@ const TabletsData = () => {
           serial_number: values.serial_number,
           android_id: values.android_id,
         };
-        // save new tablet
         dispatch(AddTabletAction(newTablet)).then((result: any) => {
           if (result.type === "tablet/new/fulfilled") {
             toast.success("Tablet Added Successfully", { autoClose: 3000 });
@@ -110,21 +105,34 @@ const TabletsData = () => {
           }
         });
         validation.resetForm();
-      } else if (resetTabletModal) {
-        const resetTablet = {
-          boxId: boxes?.id,
-          tabletId: values.id,
-        };
-        dispatch(resetTabletToBoxAction(resetTablet)).then((result: any) => {
-          if (result.type === "tablet/reset/fulfilled") {
-            toast.success("Tablet Reset Successfully", { autoClose: 3000 });
-            toggleResetTablet();
-          } else {
-            toast.error(`Error ${result.payload}`, { autoClose: 3000 });
-          }
-        });
-        validation.resetForm();
       }
+    },
+  });
+
+  // Reset Tablet to Box
+  const resetTabletFormik = useFormik({
+    initialValues: {
+      box_id: "",
+      tablet_id: "",
+    },
+    validationSchema: Yup.object({
+      box_id: Yup.string().required("Please select a Box ID"),
+      tablet_id: Yup.string().required("Please select a Tablet ID"),
+    }),
+    onSubmit: async (values) => {
+      const resetTablet = {
+        boxId: values.box_id,
+        tabletId: values.tablet_id,
+      };
+      dispatch(resetTabletToBoxAction(resetTablet)).then((result: any) => {
+        if (result.type === "tablet/reset/fulfilled") {
+          toast.success("Tablet Reset Successfully", { autoClose: 3000 });
+          toggleResetTablet();
+        } else {
+          toast.error(`Error ${result.payload}`, { autoClose: 3000 });
+        }
+      });
+      resetTabletFormik.resetForm();
     },
   });
 
@@ -158,11 +166,10 @@ const TabletsData = () => {
       });
       toggle();
     },
-    [toggle, isEdit, tablet]
+    [toggle]
   );
 
   // Get Data
-
   useEffect(() => {
     dispatch(GetTabletsAction());
     dispatch(GetBoxesAction());
@@ -171,9 +178,10 @@ const TabletsData = () => {
   const columns = useMemo(
     () => [
       {
-        header: "Tablet ID",
+        id: "#",
         accessorKey: "id",
         enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         header: "Serial Number",
@@ -184,6 +192,18 @@ const TabletsData = () => {
         header: "Android ID",
         accessorKey: "android_id",
         enableColumnFilter: false,
+      },
+      {
+        header: "Created At",
+        accessorKey: "createdat",
+        enableColumnFilter: false,
+        cell: (cell: any) => moment(cell.getValue()).format("DD MMMM, YYYY"),
+      },
+      {
+        header: "Updated At",
+        accessorKey: "updatedat",
+        enableColumnFilter: false,
+        cell: (cell: any) => moment(cell.getValue()).format("DD MMMM, YYYY"),
       },
       {
         header: "Box ID",
@@ -201,12 +221,6 @@ const TabletsData = () => {
         enableColumnFilter: false,
       },
       {
-        header: "Create Date",
-        accessorKey: "createdat",
-        enableColumnFilter: false,
-        cell: (cell: any) => moment(cell.getValue()).format("DD MMMM, YYYY"),
-      },
-      {
         header: "Actions",
         cell: (cell: any) => (
           <UncontrolledDropdown>
@@ -215,19 +229,13 @@ const TabletsData = () => {
             </DropdownToggle>
             <DropdownMenu className="dropdown-menu-end">
               <li>
-                <DropdownItem href="/apps-tablets-details">
-                  <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
-                  View
-                </DropdownItem>
-              </li>
-              <li>
                 <DropdownItem
                   className="edit-item-btn"
                   href="#showModal"
                   data-bs-toggle="modal"
                   onClick={() => {
-                    const TabletData = cell.row.original;
-                    handleTabletsClick(TabletData);
+                    const tabletData = cell.row.original;
+                    handleTabletsClick(tabletData);
                   }}
                 >
                   <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>{" "}
@@ -240,8 +248,7 @@ const TabletsData = () => {
                   data-bs-toggle="modal"
                   href="#deleteOrder"
                   onClick={() => {
-                    const tabletData = cell.row.original;
-                    onClickDelete(tabletData);
+                    onClickDelete(cell.row.original);
                   }}
                 >
                   <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
@@ -253,7 +260,7 @@ const TabletsData = () => {
         ),
       },
     ],
-    [tablets]
+    [handleTabletsClick]
   );
 
   return (
@@ -275,7 +282,6 @@ const TabletsData = () => {
                       className="btn btn-primary add-btn"
                       onClick={() => {
                         setIsEdit(false);
-                        setResetTabletModal(false);
                         toggle();
                       }}
                     >
@@ -283,11 +289,7 @@ const TabletsData = () => {
                     </button>{" "}
                     <button
                       className="btn btn-success"
-                      onClick={() => {
-                        setResetTabletModal(true);
-                        setIsEdit(false);
-                        toggleResetTablet();
-                      }}
+                      onClick={toggleResetTablet}
                     >
                       <i className="ri-pencil-fill align-bottom"></i> Reset
                       Tablet To Box
@@ -316,8 +318,9 @@ const TabletsData = () => {
         </Col>
       </Row>
 
+      {/* Reset Tablet Modal */}
       <Modal
-        isOpen={modalReset}
+        isOpen={resetTabletModal}
         toggle={toggleResetTablet}
         centered
         size="lg"
@@ -327,8 +330,8 @@ const TabletsData = () => {
         <ModalHeader className="p-3 bg-info-subtle" toggle={toggleResetTablet}>
           Reset Tablet
         </ModalHeader>
-        <ModalBody>
-          <Form>
+        <Form onSubmit={resetTabletFormik.handleSubmit}>
+          <ModalBody>
             <Row className="g-3">
               <Col lg={12}>
                 <div>
@@ -338,43 +341,31 @@ const TabletsData = () => {
                   <Input
                     name="box_id"
                     id="box_id"
-                    className="form-control"
                     type="select"
-                    validate={{
-                      required: { value: true },
-                    }}
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.box_id}
+                    onChange={resetTabletFormik.handleChange}
+                    onBlur={resetTabletFormik.handleBlur}
+                    value={resetTabletFormik.values.box_id}
                     invalid={
-                      validation.touched.box_id && validation.errors.box_id
+                      resetTabletFormik.touched.box_id &&
+                      resetTabletFormik.errors.box_id
                         ? true
                         : false
                     }
                   >
-                    <option
-                      value={undefined}
-                      defaultValue={validation.values.current_tablet_id}
-                    >
-                      Select Box ID
-                    </option>
+                    <option value="">Select Box ID</option>
                     {boxes &&
-                      boxes?.map((box: any) => (
-                        <option
-                          key={box.id}
-                          value={box.id}
-                          defaultValue={box.id}
-                        >
+                      boxes.map((box: any) => (
+                        <option key={box.id} value={box.id}>
                           {box.id}
                         </option>
                       ))}
                   </Input>
-
-                  {validation.touched.box_id && validation.errors.box_id ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.box_id}
-                    </FormFeedback>
-                  ) : null}
+                  {resetTabletFormik.touched.box_id &&
+                    resetTabletFormik.errors.box_id && (
+                      <FormFeedback type="invalid">
+                        {resetTabletFormik.errors.box_id}
+                      </FormFeedback>
+                    )}
                 </div>
               </Col>
               <Col lg={12}>
@@ -385,63 +376,50 @@ const TabletsData = () => {
                   <Input
                     name="tablet_id"
                     id="tablet_id"
-                    className="form-control"
                     type="select"
-                    validate={{
-                      required: { value: true },
-                    }}
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.tablet_id || ""}
+                    onChange={resetTabletFormik.handleChange}
+                    onBlur={resetTabletFormik.handleBlur}
+                    value={resetTabletFormik.values.tablet_id}
                     invalid={
-                      validation.touched.tablet_id &&
-                      validation.errors.tablet_id
+                      resetTabletFormik.touched.tablet_id &&
+                      resetTabletFormik.errors.tablet_id
                         ? true
                         : false
                     }
                   >
-                    <option
-                      value={undefined}
-                      defaultValue={validation.values.current_tablet_id}
-                    >
-                      Select Tablet ID
-                    </option>
+                    <option value="">Select Tablet ID</option>
                     {tablets &&
-                      tablets?.map((tablet: any) => (
-                        <option
-                          key={tablet.id}
-                          value={tablet.id}
-                          defaultValue={tablet.id}
-                        >
+                      tablets.map((tablet: any) => (
+                        <option key={tablet.id} value={tablet.id}>
                           {tablet.serial_number}
                         </option>
                       ))}
                   </Input>
-                  {validation.touched.tablet_id &&
-                  validation.errors.tablet_id ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.tablet_id}
-                    </FormFeedback>
-                  ) : null}
+                  {resetTabletFormik.touched.tablet_id &&
+                    resetTabletFormik.errors.tablet_id && (
+                      <FormFeedback type="invalid">
+                        {resetTabletFormik.errors.tablet_id}
+                      </FormFeedback>
+                    )}
                 </div>
               </Col>
             </Row>
-          </Form>
-        </ModalBody>
-        <div className="modal-footer">
-          <div className="hstack gap-2 justify-content-end">
-            <button
-              onClick={toggleResetTablet}
-              type="button"
-              className="btn btn-light"
-            >
-              Close
-            </button>
-            <button type="submit" className="btn btn-success" id="reset-btn">
-              {"Reset Tablet"}
-            </button>
+          </ModalBody>
+          <div className="modal-footer">
+            <div className="hstack gap-2 justify-content-end">
+              <button
+                onClick={toggleResetTablet}
+                type="button"
+                className="btn btn-light"
+              >
+                Close
+              </button>
+              <button type="submit" className="btn btn-success">
+                Reset Tablet
+              </button>
+            </div>
           </div>
-        </div>
+        </Form>
       </Modal>
 
       <Modal
@@ -476,12 +454,9 @@ const TabletsData = () => {
                     className="form-control"
                     placeholder="Enter Serial Number"
                     type="text"
-                    validate={{
-                      required: { value: true },
-                    }}
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.serial_number || ""}
+                    value={validation.values.serial_number}
                     invalid={
                       validation.touched.serial_number &&
                       validation.errors.serial_number
@@ -508,12 +483,9 @@ const TabletsData = () => {
                     className="form-control"
                     placeholder="Enter Android ID"
                     type="text"
-                    validate={{
-                      required: { value: true },
-                    }}
                     onChange={validation.handleChange}
                     onBlur={validation.handleBlur}
-                    value={validation.values.android_id || ""}
+                    value={validation.values.android_id}
                     invalid={
                       validation.touched.android_id &&
                       validation.errors.android_id
@@ -522,11 +494,11 @@ const TabletsData = () => {
                     }
                   />
                   {validation.touched.android_id &&
-                  validation.errors.android_id ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.android_id}
-                    </FormFeedback>
-                  ) : null}
+                    validation.errors.android_id && (
+                      <FormFeedback type="invalid">
+                        {validation.errors.android_id}
+                      </FormFeedback>
+                    )}
                 </div>
               </Col>
             </Row>
@@ -536,8 +508,8 @@ const TabletsData = () => {
               <button onClick={toggle} type="button" className="btn btn-light">
                 Close
               </button>
-              <button type="submit" className="btn btn-success" id="add-btn">
-                {!!isEdit ? "Update" : "Add Tablet"}
+              <button type="submit" className="btn btn-success">
+                {isEdit ? "Update" : "Add Tablet"}
               </button>
             </div>
           </div>

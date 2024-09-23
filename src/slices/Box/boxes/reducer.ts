@@ -39,14 +39,15 @@ const boxReducer = createSlice({
     });
     builder.addCase(AddBoxAction.fulfilled, (state, action: any) => {
       state.boxes.push(action.payload);
-      state.error = false;
+      state.loading = false;
     });
     builder.addCase(AddBoxAction.rejected, (state, { payload }: any) => {
+      state.loading = false;
       state.error = payload;
     });
 
     builder.addCase(DeleteBoxAction.pending, (state) => {
-      state.spinner = true;
+      state.loading = true;
       state.error = false;
     });
     builder.addCase(DeleteBoxAction.fulfilled, (state, action: any) => {
@@ -55,6 +56,7 @@ const boxReducer = createSlice({
       state.loading = false;
     });
     builder.addCase(DeleteBoxAction.rejected, (state, { payload }: any) => {
+      state.loading = false;
       state.error = payload;
     });
 
