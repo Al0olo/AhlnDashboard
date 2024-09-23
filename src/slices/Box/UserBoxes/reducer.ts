@@ -35,9 +35,6 @@ const userBoxReducer = createSlice({
     });
     builder.addCase(AssignUserBoxAction.fulfilled, (state, action: any) => {
       state.userBoxesList.push(action.payload);
-      console.log(state.userBoxesList, "state");
-      console.log(action.payload, "action");
-
       state.loading = false;
     });
     builder.addCase(AssignUserBoxAction.rejected, (state, { payload }: any) => {
