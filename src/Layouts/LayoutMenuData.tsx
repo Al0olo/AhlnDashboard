@@ -357,7 +357,7 @@ const Navdata = () => {
             { id: 2, label: "Box Generation", link: "/box-generation" },
             { id: 3, label: "Tablets", link: "/tablets" },
             { id: 4, label: "Address", link: "/address" },
-            { id: 5, label: "Boxes Locker", link: "/apps-tickets-details" },
+            { id: 5, label: "Boxes Locker", link: "/box-locker" },
             { id: 6, label: "Boxes Images", link: "/boxes-images" },
             { id: 7, label: "User Boxes", link: "/user-boxes" },
           ],

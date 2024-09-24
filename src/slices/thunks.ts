@@ -27,6 +27,9 @@ export * from "./users/thunk";
 //Boxes
 export * from "./Box/boxes/thunk";
 
+//Box Locker
+export * from "./Box/boxLocker/thunk";
+
 // Box Generation
 export * from "./Box/boxGeneration/thunk";
 

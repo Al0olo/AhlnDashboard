@@ -202,6 +202,7 @@ import RolePermissionView from "pages/UserManagement/RolePermission";
 import UserPermissionView from "pages/UserManagement/UserPermission";
 import CountryView from "pages/Admin/Country";
 import CityView from "pages/Admin/City";
+import BoxLockerView from "pages/Boxes/BoxLocker";
 
 const authProtectedRoutes = [
   { path: "/dashboard-analytics", component: <DashboardAnalytics /> },
@@ -297,6 +298,7 @@ const authProtectedRoutes = [
   { path: "/address", component: <AddressView /> },
   { path: "/user-boxes", component: <UserBoxesView /> },
   { path: "/boxes-images", component: <BoxImagesView /> },
+  { path: "/box-locker", component: <BoxLockerView /> },
 
   // Delivery Packages
   { path: "/delivery-packages", component: <DeliveryView /> },

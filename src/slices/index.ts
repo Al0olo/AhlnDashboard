@@ -21,6 +21,7 @@ import ProfileReducer from "./auth/profile/reducer";
 
 //Boxes
 import { boxSlices } from "./Box/boxes/reducer";
+import { boxLockerSlices } from "./Box/boxLocker/reducer";
 
 //Tablets
 import { tabletSlices } from "./Box/tablet/reducer";
@@ -105,6 +106,7 @@ const rootReducer = combineReducers({
   Users: usersSlices,
   Role: roleSlices,
   Country: countrySlices,
+  BoxLocker: boxLockerSlices,
   City: citySlices,
   Permission: permissionSlices,
   RolePermission: rolePermissionSlices,
