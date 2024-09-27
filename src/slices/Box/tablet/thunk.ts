@@ -1,18 +1,18 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   addTablet,
-  getOneTablet,
+  // getOneTablet,
   getTablets,
   deleteTablet,
   updateTablet,
-} from "../../../helpers/fakebackend_helper";
+  resetTabletToBox,
+} from "../../../helpers/backend_apis/box/tablet";
 
 export const GetTabletsAction = createAsyncThunk(
   "tablet/get-all",
   async (_, thunkApi) => {
     try {
       const response = await getTablets();
-
       return response.data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error || error.message);
@@ -20,17 +20,17 @@ export const GetTabletsAction = createAsyncThunk(
   }
 );
 
-export const GetOneTabletAction = createAsyncThunk(
-  "tablet/get-one",
-  async (tablet: any, thunkApi) => {
-    try {
-      const response = await getOneTablet(tablet);
-      return response.data;
-    } catch (error: any) {
-      return thunkApi.rejectWithValue(error || error.message);
-    }
-  }
-);
+// export const GetOneTabletAction = createAsyncThunk(
+//   "tablet/get-one",
+//   async (tablet: any, thunkApi) => {
+//     try {
+//       const response = await getOneTablet(tablet);
+//       return response.data;
+//     } catch (error: any) {
+//       return thunkApi.rejectWithValue(error || error.message);
+//     }
+//   }
+// );
 
 export const AddTabletAction = createAsyncThunk(
   "tablet/new",
@@ -63,6 +63,18 @@ export const DeleteTabletAction = createAsyncThunk(
   async (tablet: string, thunkApi) => {
     try {
       const response = await deleteTablet(tablet);
+      return response.data;
+    } catch (error: any) {
+      return thunkApi.rejectWithValue(error || error.message);
+    }
+  }
+);
+
+export const resetTabletToBoxAction = createAsyncThunk(
+  "tablet/reset",
+  async (data: any, thunkApi) => {
+    try {
+      const response = await resetTabletToBox(data);
       return response.data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error || error.message);

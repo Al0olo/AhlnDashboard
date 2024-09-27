@@ -36,12 +36,12 @@ import { useFormik } from "formik";
 import { useSelector, useDispatch } from "react-redux";
 
 //Import actions
-import {
-  getOrders as onGetOrders,
-  addNewOrder as onAddNewOrder,
-  updateOrder as onUpdateOrder,
-  deleteOrder as onDeleteOrder,
-} from "../../../slices/thunks";
+// import {
+//   getOrders as onGetOrders,
+//   addNewOrder as onAddNewOrder,
+//   updateOrder as onUpdateOrder,
+//   deleteOrder as onDeleteOrder,
+// } from "../../../slices/thunks";
 
 import Loader from "../../../Components/Common/Loader";
 import { toast, ToastContainer } from "react-toastify";
@@ -145,7 +145,7 @@ const EcommerceOrders = () => {
 
   const handleDeleteOrder = () => {
     if (order) {
-      dispatch(onDeleteOrder(order.id));
+      // dispatch(onDeleteOrder(order.id));
       setDeleteModal(false);
     }
   };
@@ -205,7 +205,7 @@ const EcommerceOrders = () => {
           status: values.status,
         };
         // update order
-        dispatch(onUpdateOrder(updateOrder));
+        // dispatch(onUpdateOrder(updateOrder));
         validation.resetForm();
       } else {
         const newOrder = {
@@ -219,7 +219,7 @@ const EcommerceOrders = () => {
           status: values["status"],
         };
         // save new order
-        dispatch(onAddNewOrder(newOrder));
+        // dispatch(onAddNewOrder(newOrder));
         validation.resetForm();
       }
       toggle();
@@ -228,7 +228,7 @@ const EcommerceOrders = () => {
 
   useEffect(() => {
     if (orders && !orders.length) {
-      dispatch(onGetOrders());
+      // dispatch(onGetOrders());
     }
   }, [dispatch, orders]);
 
@@ -297,7 +297,7 @@ const EcommerceOrders = () => {
   const deleteMultiple = () => {
     const checkall: any = document.getElementById("checkBoxAll");
     selectedCheckBoxDelete.forEach((element: any) => {
-      dispatch(onDeleteOrder(element.value));
+      // dispatch(onDeleteOrder(element.value));
       setTimeout(() => {
         toast.clearWaitingQueue();
       }, 3000);

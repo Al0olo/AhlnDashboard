@@ -1,10 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
-  getOneAuditTrailApi,
   getAuditTrailApi,
   deleteAuditTrailApi,
-} from "../../../helpers/fakebackend_helper";
-import { toast } from "react-toastify";
+} from "../../../helpers/backend_apis/admin/auditTrail";
 
 export const GetAuditTrailAction = createAsyncThunk(
   "auditTrail/get-all",
@@ -14,19 +12,7 @@ export const GetAuditTrailAction = createAsyncThunk(
 
       return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
-    }
-  }
-);
-
-export const GetOneAuditTrailAction = createAsyncThunk(
-  "auditTrail/get-one",
-  async (auditTrail: any, thunkApi) => {
-    try {
-      const response = await getOneAuditTrailApi(auditTrail);
-      return response.data;
-    } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );
@@ -36,11 +22,10 @@ export const DeleteAuditTrailAction = createAsyncThunk(
   async (auditTrail: string, thunkApi) => {
     try {
       const response = await deleteAuditTrailApi(auditTrail);
-      const data = response;
-      toast.success("Audit Trail Deleted Successfully", { autoClose: 3000 });
-      return data;
+
+      return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );

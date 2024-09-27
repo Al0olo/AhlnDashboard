@@ -3,8 +3,7 @@ import {
   getOneSystemLogApi,
   getSystemLogApi,
   deleteSystemLogApi,
-} from "../../../helpers/fakebackend_helper";
-import { toast } from "react-toastify";
+} from "../../../helpers/backend_apis/admin/systemLog";
 
 export const GetSystemLogAction = createAsyncThunk(
   "systemLog/get-all",
@@ -14,7 +13,7 @@ export const GetSystemLogAction = createAsyncThunk(
 
       return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );
@@ -26,7 +25,7 @@ export const GetOneSystemLogAction = createAsyncThunk(
       const response = await getOneSystemLogApi(systemLog);
       return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );
@@ -36,11 +35,9 @@ export const DeleteSystemLogAction = createAsyncThunk(
   async (systemLog: string, thunkApi) => {
     try {
       const response = await deleteSystemLogApi(systemLog);
-      const data = response;
-      toast.success("Audit Trail Deleted Successfully", { autoClose: 3000 });
-      return data;
+      return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );

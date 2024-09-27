@@ -11,19 +11,27 @@ export * from "./auth/verify/thunk";
 export * from "./auth/verifyOtp/thunk";
 
 // Admin
-export * from "./admin/role/thunk";
+export * from "./userManagement/role/thunk";
+export * from "./userManagement/permission/thunk";
+export * from "./userManagement/rolePermission/thunk";
+export * from "./userManagement/userPermission/thunk";
 export * from "./admin/constactUs/thunk";
 export * from "./admin/auditTrail/thunk";
 export * from "./admin/systemLog/thunk";
+export * from "./admin/country/thunk";
+export * from "./admin/city/thunk";
+
+// Users
+export * from "./users/thunk";
 
 //Boxes
 export * from "./Box/boxes/thunk";
 
+//Box Locker
+export * from "./Box/boxLocker/thunk";
+
 // Box Generation
 export * from "./Box/boxGeneration/thunk";
-
-// Relative Customer
-export * from "./Box/RelativeCustomer/thunk";
 
 // User Boxes
 export * from "./Box/UserBoxes/thunk";
@@ -38,17 +46,12 @@ export * from "./Box/tablet/thunk";
 export * from "./Box/Address/thunk";
 
 //Delivery Package
-export * from "./delivery/deliveryPackage/thunk";
-
-// Shipping Companies
-export * from "./delivery/shippingCompany/thunk";
+export * from "./delivery/thunk";
 
 //Calendar
 export * from "./calendar/thunk";
 //Chat
 export * from "./chat/thunk";
-//Ecommerce
-export * from "./ecommerce/thunk";
 
 //Project
 export * from "./projects/thunk";

@@ -11,7 +11,7 @@ import {
   Modal,
   ModalBody,
   ModalHeader,
-  Row
+  Row,
 } from "reactstrap";
 //redux
 import { useDispatch } from "react-redux";
@@ -34,7 +34,6 @@ import * as Yup from "yup";
 
 import DeleteModal from "../../../../Components/Common/DeleteModal";
 
-import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAppSelector } from "redux-hooks";
@@ -44,11 +43,10 @@ const BoxesData = () => {
 
   const { boxes, loading, spinner } = useAppSelector((state) => state.Boxes);
   const { boxGenerations } = useAppSelector((state) => state.BoxGeneration);
+  const { addressList } = useAppSelector((state) => state.Address);
 
   const [filterTablet, setFilterTablet] = useState<any>([]);
   const [filterAddress, setFilterAddress] = useState<any>([]);
-
-  const [addressData, setAddressData] = useState<any>({});
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [box, setBox] = useState<any>({
@@ -62,9 +60,8 @@ const BoxesData = () => {
     address_id: "",
   });
 
-  // Delete Boxes
+  // Delete Box
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  // const [deleteModalMulti, setDeleteModalMulti] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
 
   const toggle = useCallback(() => {
@@ -77,14 +74,13 @@ const BoxesData = () => {
     enableReinitialize: true,
 
     initialValues: {
-      id: box.id ? box.id : "",
-      serial_number: box.serial_number ? box.serial_number : "",
-      box_label: box.box_label ? box.box_label : "",
-      has_empty_lockers: box.has_empty_lockers ? box.has_empty_lockers : "",
-      box_model_id: box.box_model_id ? box.box_model_id : "",
-      current_tablet_id: box.current_tablet_id ? box.current_tablet_id : "",
-      previous_tablet_id: box.previous_tablet_id ? box.previous_tablet_id : "",
-      address_id: box.address_id ? box.address_id : "",
+      serial_number: isEdit ? box.serial_number : "",
+      box_label: isEdit ? box.box_label : "",
+      has_empty_lockers: isEdit ? box.has_empty_lockers : "",
+      box_model_id: isEdit ? box.box_model_id : "",
+      current_tablet_id: isEdit ? box.current_tablet_id : "",
+      previous_tablet_id: isEdit ? box.previous_tablet_id : "",
+      address_id: isEdit ? box.address_id : "",
     },
     validationSchema: Yup.object({
       serial_number: Yup.string().required("Please Enter Serial Number"),
@@ -93,20 +89,16 @@ const BoxesData = () => {
       has_empty_lockers: Yup.string().required(
         "Please Enter Has Empty Lockers"
       ),
-      current_tablet_id: Yup.string().required(
-        "Please Enter Current Tablet Id"
-      ),
-      address_id: Yup.string().required("Please Enter Address Id"),
     }),
     onSubmit: (values) => {
       if (isEdit) {
         const updateBoxes = {
-          id: values.id,
+          id: box.id,
           serial_number: values.serial_number,
           box_label: values.box_label,
           has_empty_lockers: values.has_empty_lockers,
-          current_tablet_id: values.current_tablet_id,
-          previous_tablet_id: values.previous_tablet_id || null,
+          current_tablet_id: values.current_tablet_id || box.current_tablet_id,
+          previous_tablet_id: values.previous_tablet_id,
           box_model_id: values.box_model_id,
           address_id: values.address_id,
         };
@@ -126,13 +118,8 @@ const BoxesData = () => {
           box_label: values.box_label,
           has_empty_lockers: values.has_empty_lockers,
           box_model_id: values.box_model_id,
-          current_tablet_id: values.current_tablet_id
-            ? values.current_tablet_id
-            : null,
-          previous_tablet_id: values.current_tablet_id
-            ? values.previous_tablet_id
-            : null,
-          address_id: values.address_id ? values.address_id : null,
+          current_tablet_id: values.current_tablet_id,
+          address_id: values.address_id,
         };
 
         // save new box
@@ -155,12 +142,6 @@ const BoxesData = () => {
     setDeleteModal(true);
   };
 
-  const handleOnChange = (event: any) => {
-    console.log(event.target.value, "AAASSS");
-
-    const value = event.target.value;
-    setAddressData(value);
-  };
   const handleDeleteBox = () => {
     if (box) {
       dispatch(DeleteBoxAction(box.id)).then((result: any) => {
@@ -199,27 +180,10 @@ const BoxesData = () => {
   useEffect(() => {
     dispatch(GetBoxesAction());
     dispatch(GetBoxGenerationsAction());
+    dispatch(GetAddressesAction());
     dispatch(GetTabletsAction()).then((res: any) => {
       if (res.type === "tablet/get-all/fulfilled") {
-        // setFilterTablet(
-        //   [box, ...res.payload.filter((obj: any) => !obj.box_id)].filter(
-        //     (v, i, a) =>
-        //       a.findIndex(
-        //         (t) => t.current_tablet_id === v.current_tablet_id
-        //       ) === i
-        //   )
-        // );
-        console.log(res.payload, "res.payload.before");
-
-        setFilterTablet(
-          res.payload.filter((obj: any) => !obj.box_id)
-          // res.payload.filter((obj: any) => ({
-          //   box_id: !obj.box_id,
-          //   current_tablet_id: obj.tablet_id,
-          // }))
-        );
-        // setFilterTablet(res.payload.filter((obj: any) => !obj.box_id));
-        console.log("res.payload", res.payload);
+        setFilterTablet(res.payload.filter((obj: any) => !obj.box_id));
       }
     });
     dispatch(GetAddressesAction()).then((res: any) => {
@@ -227,52 +191,8 @@ const BoxesData = () => {
         setFilterAddress(res.payload.filter((obj: any) => !obj.box_id));
       }
     });
-  }, [dispatch]);
-
-  console.log("filterTablet", filterTablet);
-
-  // Checked All
-  // const checkedAll = useCallback(() => {
-  //   const checkall: any = document.getElementById("checkBoxAll");
-  //   const ele = document.querySelectorAll(".boxCheckBox");
-
-  //   if (checkall.checked) {
-  //     ele.forEach((ele: any) => {
-  //       ele.checked = true;
-  //     });
-  //   } else {
-  //     ele.forEach((ele: any) => {
-  //       ele.checked = false;
-  //     });
-  //   }
-  //   deleteCheckbox();
-  // }, []);
-
-  // // Delete Multiple
-  // const [selectedCheckBoxDelete, setSelectedCheckBoxDelete] = useState<any>([]);
-  // const [isMultiDeleteButton, setIsMultiDeleteButton] =
-  //   useState<boolean>(false);
-
-  // const deleteMultiple = () => {
-  //   const checkall: any = document.getElementById("checkBoxAll");
-  //   selectedCheckBoxDelete.forEach((element: any) => {
-  //     dispatch(DeleteBoxAction(element.id));
-  //     setTimeout(() => {
-  //       toast.clearWaitingQueue();
-  //     }, 3000);
-  //   });
-  //   setIsMultiDeleteButton(false);
-  //   checkall.checked = false;
-  // };
-
-  // const deleteCheckbox = () => {
-  //   const ele = document.querySelectorAll(".boxCheckBox:checked");
-  //   ele?.length > 0
-  //     ? setIsMultiDeleteButton(true)
-  //     : setIsMultiDeleteButton(false);
-  //   setSelectedCheckBoxDelete(ele);
-  // };
-  console.log("filterTablet", filterTablet);
+  }, [dispatch, GetAddressesAction]);
+  console.log(box.address_id, "box.address_id");
 
   const columns = useMemo(
     () => [
@@ -322,75 +242,36 @@ const BoxesData = () => {
         header: "Actions",
         cell: (cell: any) => (
           <>
-            <Link to={`/apps-boxs-details`} className="text-muted">
-              <i className="ri-edit-box-line "></i>{" "}
-            </Link>
-            <a href="#showModal"
+            <a
+              href="#showModal"
               data-bs-toggle="modal"
               onClick={(e: any) => {
-                e.preventDefault()
+                e.preventDefault();
                 const BoxData = cell.row.original;
                 handleBoxesClick(BoxData);
-              }} className="text-muted">
+              }}
+              className="text-muted"
+            >
               <i className="ri-pencil-fill "></i>{" "}
             </a>
-            <a data-bs-toggle="modal"
+            <a
+              data-bs-toggle="modal"
               href="#deleteOrder"
               onClick={(e: any) => {
-                e.preventDefault()
+                e.preventDefault();
                 const boxData = cell.row.original;
                 onClickDelete(boxData);
-              }} className="text-muted">
+              }}
+              className="text-muted"
+            >
               <i className="ri-close-circle-line "></i>{" "}
             </a>
-            {/* <UncontrolledDropdown>
-              <DropdownToggle tag="a" className="btn btn-soft-secondary btn-sm">
-                <i className="ri-more-fill align-middle"></i>
-              </DropdownToggle>
-              <DropdownMenu className="dropdown-menu-end"> */}
-            {/* <li>
-                  <DropdownItem href="/apps-boxs-details">
-                    <i className="ri-eye-fill align-bottom me-2 text-muted"></i>{" "}
-                    View
-                  </DropdownItem>
-                </li> */}
-            {/* <li>
-                  <DropdownItem
-                    className="edit-item-btn"
-                    href="#showModal"
-                    data-bs-toggle="modal"
-                    onClick={() => {
-                      const BoxData = cell.row.original;
-                      handleBoxesClick(BoxData);
-                    }}
-                  >
-                    <i className="ri-pencil-fill align-bottom me-2 text-muted"></i>{" "}
-                    Edit
-                  </DropdownItem>
-                </li> */}
-            {/* <li>
-                  <DropdownItem
-                    className="remove-item-btn"
-                    data-bs-toggle="modal"
-                    href="#deleteOrder"
-                    onClick={() => {
-                      const boxData = cell.row.original;
-                      onClickDelete(boxData);
-                    }}
-                  >
-                    <i className="ri-delete-bin-fill align-bottom me-2 text-muted"></i>{" "}
-                    Delete
-                  </DropdownItem>
-              </li> */}
-            {/* </DropdownMenu>
-          </UncontrolledDropdown> */}
           </>
         ),
       },
     ],
     [handleBoxesClick]
   );
-  console.log(validation.values, "validation values");
 
   return (
     <React.Fragment>
@@ -400,17 +281,9 @@ const BoxesData = () => {
           onDeleteClick={handleDeleteBox}
           onCloseClick={() => setDeleteModal(false)}
         />
-        {/* <DeleteModal
-          show={deleteModalMulti}
-          onDeleteClick={() => {
-            deleteMultiple();
-            setDeleteModalMulti(false);
-          }}
-          onCloseClick={() => setDeleteModalMulti(false)}
-        /> */}
         <Col lg={12}>
-          <Card className="" >
-            <CardHeader className="card-round" >
+          <Card className="">
+            <CardHeader className="card-round">
               <div className="d-flex align-items-center">
                 <h5 className="card-title mb-0 flex-grow-1 ahln-module-title">
                   Boxes
@@ -426,7 +299,6 @@ const BoxesData = () => {
                     >
                       <i className="ri-add-line align-bottom"></i> Create Box
                     </Form>
-
                   </div>
                 </div>
               </div>
@@ -448,23 +320,8 @@ const BoxesData = () => {
               <ToastContainer closeButton={false} limit={1} />
             </CardBody>
           </Card>
-          {/* <CardBody className="pt-0"> */}
-          {loading ? (
-            <Loader error={spinner} />
-          ) : (
-            <TableContainer
-              modelName={`boxes`}
-              columns={columns}
-              data={boxes}
-              isGlobalFilter={true}
-              customPageSize={8}
-              divClass="table-responsive table-card mb-3"
-              tableClass="align-middle table-nowrap mb-0"
-              SearchPlaceholder="Search for box details or something..."
-            />
-          )}
+
           <ToastContainer closeButton={false} limit={1} />
-          {/* </CardBody> */}
         </Col>
       </Row>
 
@@ -505,13 +362,13 @@ const BoxesData = () => {
                     onChange={validation.handleChange}
                     invalid={
                       validation.errors.serial_number &&
-                        validation.touched.serial_number
+                      validation.touched.serial_number
                         ? true
                         : false
                     }
                   />
                   {validation.errors.serial_number &&
-                    validation.touched.serial_number ? (
+                  validation.touched.serial_number ? (
                     <FormFeedback type="invalid">
                       {validation.errors.serial_number}
                     </FormFeedback>
@@ -533,50 +390,24 @@ const BoxesData = () => {
                     value={validation.values.box_label || ""}
                     invalid={
                       validation.touched.box_label &&
-                        validation.errors.box_label
+                      validation.errors.box_label
                         ? true
                         : false
                     }
                   />
                   {validation.touched.box_label &&
-                    validation.errors.box_label ? (
+                  validation.errors.box_label ? (
                     <FormFeedback type="invalid">
                       {validation.errors.box_label}
                     </FormFeedback>
                   ) : null}
                 </div>
               </Col>
-              {/* <Col lg={6}>
-                <div>
-                  <Label htmlFor="assignedtoName-field" className="form-label">
-                    Assigned To
-                  </Label>
-                  <Input
-                    name="assigned"
-                    type="text"
-                    id="assignedtoName-field"
-                    placeholder="Enter Assigned Name"
-                    onChange={validation.handleChange}
-                    onBlur={validation.handleBlur}
-                    value={validation.values.assigned || ""}
-                    invalid={
-                      validation.touched.assigned && validation.errors.assigned
-                        ? true
-                        : false
-                    }
-                  />
-                  {validation.touched.assigned && validation.errors.assigned ? (
-                    <FormFeedback type="invalid">
-                      {validation.errors.assigned}
-                    </FormFeedback>
-                  ) : null}
-                </div>
-              </Col> */}
 
               <Col lg={6}>
                 <div>
                   <Label htmlFor="current_tablet_id" className="form-label">
-                    Tablet ID
+                    Tablet ID by Serial Number
                   </Label>
                   <Input
                     name="current_tablet_id"
@@ -587,7 +418,7 @@ const BoxesData = () => {
                     value={validation.values.current_tablet_id}
                     invalid={
                       validation.touched.current_tablet_id &&
-                        validation.errors.current_tablet_id
+                      validation.errors.current_tablet_id
                         ? true
                         : false
                     }
@@ -596,21 +427,21 @@ const BoxesData = () => {
                       value={undefined}
                       defaultValue={validation.values.current_tablet_id}
                     >
-                      Select Tablet ID
+                      Select Tablet Serial Number
                     </option>
                     {filterTablet &&
                       filterTablet?.map((tablet: any) => (
                         <option
                           key={tablet.id}
                           value={tablet.id}
-                          defaultValue={tablet.id}
+                          defaultValue={box.current_tablet_id}
                         >
                           {tablet.id}
                         </option>
                       ))}
                   </Input>
                   {validation.touched.current_tablet_id &&
-                    validation.errors.current_tablet_id ? (
+                  validation.errors.current_tablet_id ? (
                     <FormFeedback type="invalid">
                       {validation.errors.current_tablet_id}
                     </FormFeedback>
@@ -620,7 +451,7 @@ const BoxesData = () => {
               <Col lg={6}>
                 <div>
                   <Label htmlFor="address_id" className="form-label">
-                    Address ID
+                    Address ID by User Email
                   </Label>
                   <Input
                     name="address_id"
@@ -631,26 +462,36 @@ const BoxesData = () => {
                     value={validation.values.address_id}
                     invalid={
                       validation.touched.address_id &&
-                        validation.errors.address_id
+                      validation.errors.address_id
                         ? true
                         : false
                     }
                   >
-                    <option
-                      value={undefined}
-                      defaultValue={validation.values.address_id}
-                    >
-                      Select Address ID
-                    </option>
-                    {filterAddress &&
-                      filterAddress?.map((address: any) => (
-                        <option value={address.id} key={address.id}>
-                          {address.id}
-                        </option>
-                      ))}
+                    <option value="">Select Address</option>
+                    {isEdit
+                      ? addressList &&
+                        addressList?.map((address: any) => (
+                          <option
+                            key={address.id}
+                            value={address.id}
+                            defaultValue={box.address_id}
+                          >
+                            {address.id}
+                          </option>
+                        ))
+                      : filterAddress &&
+                        filterAddress?.map((address: any) => (
+                          <option
+                            key={address.id}
+                            value={address.id}
+                            defaultValue={box.address_id}
+                          >
+                            {address.id}
+                          </option>
+                        ))}
                   </Input>
                   {validation.touched.address_id &&
-                    validation.errors.address_id ? (
+                  validation.errors.address_id ? (
                     <FormFeedback type="invalid">
                       {validation.errors.address_id}
                     </FormFeedback>
@@ -671,7 +512,7 @@ const BoxesData = () => {
                     value={validation.values.box_model_id}
                     invalid={
                       validation.touched.box_model_id &&
-                        validation.errors.box_model_id
+                      validation.errors.box_model_id
                         ? true
                         : false
                     }
@@ -690,7 +531,7 @@ const BoxesData = () => {
                       ))}
                   </Input>
                   {validation.touched.box_model_id &&
-                    validation.errors.box_model_id ? (
+                  validation.errors.box_model_id ? (
                     <FormFeedback type="invalid">
                       {validation.errors.box_model_id}
                     </FormFeedback>
@@ -709,13 +550,13 @@ const BoxesData = () => {
                   onChange={validation.handleChange}
                   invalid={
                     validation.touched.has_empty_lockers &&
-                      validation.errors.has_empty_lockers
+                    validation.errors.has_empty_lockers
                       ? true
                       : false
                   }
                 />
                 {validation.touched.has_empty_lockers &&
-                  validation.errors.has_empty_lockers ? (
+                validation.errors.has_empty_lockers ? (
                   <FormFeedback type="invalid">
                     {validation.errors.has_empty_lockers}
                   </FormFeedback>
@@ -725,11 +566,18 @@ const BoxesData = () => {
           </ModalBody>
           <div className="modal-footer">
             <div className="hstack gap-2 justify-content-end">
-
-              <button type="submit" className="btn btn-success btn-lg ahln-btn-module" id="add-btn">
+              <button
+                type="submit"
+                className="btn btn-success btn-lg ahln-btn-module"
+                id="add-btn"
+              >
                 {!!isEdit ? "Update" : "Add Box"}
               </button>
-              <button onClick={toggle} type="button" className="btn btn-light ahln-btn-muted text-center">
+              <button
+                onClick={toggle}
+                type="button"
+                className="btn btn-light ahln-btn-muted text-center"
+              >
                 Close
               </button>
             </div>

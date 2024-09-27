@@ -3,8 +3,7 @@ import {
   getOneContactUsApi,
   getContactUsApi,
   deleteContactUsApi,
-} from "../../../helpers/fakebackend_helper";
-import { toast } from "react-toastify";
+} from "../../../helpers/backend_apis/admin/contactUs";
 
 export const GetContactUsAction = createAsyncThunk(
   "contactUs/get-all",
@@ -14,7 +13,7 @@ export const GetContactUsAction = createAsyncThunk(
 
       return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );
@@ -26,7 +25,7 @@ export const GetOneContactUsAction = createAsyncThunk(
       const response = await getOneContactUsApi(contactUs);
       return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );
@@ -36,11 +35,9 @@ export const DeleteContactUsAction = createAsyncThunk(
   async (contactUs: string, thunkApi) => {
     try {
       const response = await deleteContactUsApi(contactUs);
-      const data = response;
-      toast.success("Contact Us Deleted Successfully", { autoClose: 3000 });
-      return data;
+      return response.data;
     } catch (error: any) {
-      return thunkApi.rejectWithValue(error.response?.data || error.message);
+      return thunkApi.rejectWithValue(error || error.message);
     }
   }
 );

@@ -6,13 +6,11 @@ import {
 } from "./thunk";
 
 export const initialState: any = {
-  contactUsError: null,
-  message: null,
+  contactUsList: [],
   loading: true,
-  data: null,
-  success: false,
-  error: false,
-  contactUs: [],
+  loadingOne: true,
+  error: {},
+  oneContactUs: {},
 };
 
 const contactUsReducer = createSlice({
@@ -25,13 +23,11 @@ const contactUsReducer = createSlice({
       state.error = false;
     });
     builder.addCase(GetContactUsAction.fulfilled, (state, action: any) => {
-      state.data = action?.payload;
-      state.success = true;
+      state.contactUsList = action?.payload;
       state.loading = false;
     });
     builder.addCase(GetContactUsAction.rejected, (state, { payload }: any) => {
       state.loading = false;
-      state.success = false;
       state.error = payload;
     });
 
@@ -41,35 +37,31 @@ const contactUsReducer = createSlice({
     });
     builder.addCase(DeleteContactUsAction.fulfilled, (state, action: any) => {
       const deletedContactUsId = action.payload.id;
-      state.contactUs = state.contactUs.filter(
-        (contactUs: any) => contactUs.id !== deletedContactUsId
+      state.contactUsList = state.contactUsList.filter(
+        (contactUsList: any) => contactUsList.id !== deletedContactUsId
       );
-      state.success = true;
       state.loading = false;
     });
     builder.addCase(
       DeleteContactUsAction.rejected,
       (state, { payload }: any) => {
         state.loading = false;
-        state.success = false;
         state.error = payload;
       }
     );
 
     builder.addCase(GetOneContactUsAction.pending, (state) => {
-      state.loading = true;
+      state.loadingOne = true;
       state.error = false;
     });
     builder.addCase(GetOneContactUsAction.fulfilled, (state, action: any) => {
-      state.contactUs = action?.payload;
-      state.success = true;
-      state.loading = false;
+      state.oneContactUs = action?.payload;
+      state.loadingOne = false;
     });
     builder.addCase(
       GetOneContactUsAction.rejected,
       (state, { payload }: any) => {
-        state.loading = false;
-        state.success = false;
+        state.loadingOne = false;
         state.error = payload;
       }
     );
